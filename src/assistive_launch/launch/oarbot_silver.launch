@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 <group ns="oarbot_silver">
-	<machine name="oarbot_silver-NUC" address="192.168.1.101" env-loader="/home/oarbot_silver/catkin_ws_assistive/scripts/env_oarbot_silver.sh" user="oarbot_silver" password="1234" default="true"/>
+	<machine name="oarbot-silver-NUC" address="192.168.1.101" env-loader="/home/oarbot_silver/catkin_ws_assistive/scripts/env_oarbot_silver.sh" user="oarbot_silver" password="1234" default="true"/>
 
 	<node name="ctrl_inv_kin" pkg="oarbot_control" type="inv_kin.py">
 		<rosparam file="$(find assistive_launch)/config/oarbot_silver_control_info.yaml"/>
