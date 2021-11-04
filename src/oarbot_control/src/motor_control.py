@@ -3,7 +3,7 @@ import rospy
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Float32 # For battery voltages
 from assistive_msgs.msg import MotorStatus, MotorCmd
-from roboteq_handler import RoboteqHandler
+from .roboteq_handler import RoboteqHandler
 import roboteq_commands as cmds
 import threading
 
