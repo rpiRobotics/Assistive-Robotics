@@ -16,6 +16,7 @@ SCRIPTS=(
     source ~/catkin_ws_assistive/devel/setup.bash;
     echo 1234 | sudo -S apt install -y spacenavd;
     echo 1234 | sudo -S apt install -y ros-noetic-spacenav-node;
+    echo 1234 | sudo -S apt install -y ros-noetic-twist-mux;
     echo 1234 | sudo -S usermod -a -G dialout tablet
     "
 
@@ -33,6 +34,7 @@ SCRIPTS=(
     source ~/catkin_ws_assistive/devel/setup.bash;
     echo rockie | sudo -S apt install -y spacenavd;
     echo rockie | sudo -S apt install -y ros-noetic-spacenav-node;
+    echo rockie | sudo -S apt install -y ros-noetic-twist-mux;
     echo rockie | sudo -S usermod -a -G dialout rockie
     "
 
@@ -47,6 +49,7 @@ SCRIPTS=(
     source ~/.bashrc;
     source ~/catkin_ws_assistive/devel/setup.bash;
     echo 1234 | sudo -S usermod -a -G dialout oarbot_silver
+    echo 1234 | sudo -S apt install -y ros-noetic-twist-mux;
     "
     
     "cd; 
@@ -60,6 +63,7 @@ SCRIPTS=(
     source ~/.bashrc;
     source ~/catkin_ws_assistive/devel/setup.bash;
     echo 1234 | sudo -S usermod -a -G dialout oarbot_blue
+    echo 1234 | sudo -S apt install -y ros-noetic-twist-mux;
     ")
 
 echo ${SCRIPTS}
