@@ -1,0 +1,22 @@
+velocity_feedback_topic_name: "vel_feedback"
+motor_command_topic_name: "motor_command"
+motor_feedback_topic_name: "motor_feedback"
+republished_spacemouse: "e_stop_cmd_vel"
+serial_front: "/dev/serial/by-path/pci-0000:00:14.0-usb-0:4.1:1.0"
+serial_back: "/dev/serial/by-path/pci-0000:00:14.0-usb-0:4.2:1.0"
+
+radius_wheel: 0.1015 # wheel radius
+l_x: 0.214 # meter
+l_y: 0.238 # meter
+total_gear_ratio: 113.4 # FineTuningConstant * 1/((Chain Driver Ratio)*(gear_ratio)) = (56./60.) * 1/((10.0/15.0)*(1.0/81.0))
+
+battery_voltage_f_topic_name: volts_f
+battery_voltage_b_topic_name: volts_b
+
+stat_flag_topic_name: stat_flags
+
+skid_steer_mode: false # WARNING: DONT FORGET TO CHECK l_x l_y later
+
+x_vel_scaling: 1.00742979473618 # carpet # x direction speed scaling factor based on the floor material under the robot, found experimentally
+y_vel_scaling: 1.06072659771944 # carpet # y direction speed scaling factor based on the floor material under the robot, found experimentally
+th_vel_scaling: 1.01522842639594

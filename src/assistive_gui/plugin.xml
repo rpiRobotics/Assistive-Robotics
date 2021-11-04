@@ -1,0 +1,20 @@
+<library path="src">
+  <class name="swarm_gui" type="swarm_gui.swarm_gui.SWARMGUI" base_class_type="rqt_gui_py::Plugin">
+    <description>
+      GUI for SWARM RPI ARM project
+    </description>
+    <qtgui>
+      <!-- optional grouping...
+      <group>
+        <label>Group</label>
+      </group>
+      <group>
+        <label>Subgroup</label>
+      </group>
+      -->
+      <label>SWARM GUI</label>
+      <icon type="theme">system-help</icon>
+      <statustip>User interface to drive multiple robots.</statustip>
+    </qtgui>
+  </class>
+</library>

@@ -1,0 +1,3 @@
+arduino_deadman_switch_topic: "deadman_switch"
+arduino_e_stop_topic: "/e_stop"
+com_port: "/dev/serial/by-path/pci-0000:00:14.0-usb-0:1.1:1.0"

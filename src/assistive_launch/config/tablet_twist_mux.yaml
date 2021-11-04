@@ -1,0 +1,10 @@
+topics:
+- name    : spacemouse
+  topic   : spacenav/twist
+  timeout : 0.5
+  priority: 10
+locks:
+- name    : deadman_switch
+  topic   : deadman_switch
+  timeout : 0.5
+  priority: 255

@@ -1,0 +1,40 @@
+number_of_robots: 2
+# command_topics: 
+#   - "/spacenav/twist/repub"
+#   - "/spacenav/twist/repub2"
+#   - "/spacenav/twist/repub3"
+closed_loop_swarm_command_topic: "/desired_swarm_vel"
+
+open_loop_swarm_command_topic: "/just_swarm_vel"
+
+resize_scaling_factor: 0.05
+
+closed_loop_command_topics:
+  - "/just_robot_vel_0"
+  - "/just_robot_vel_1"
+
+open_loop_command_topics:
+  - "/oarbot_silver/cmd_vel"
+  - "/oarbot_blue/cmd_vel"
+
+robot_node_names:
+  - ["/uwb_front_oarbot_silver","/uwb_back_oarbot_silver","/sensor_fusion_oarbot_silver","/oarbot_silver_ctrl"]
+  - ["/uwb_front_oarbot_blue","/uwb_back_oarbot_blue","/sensor_fusion_oarbot_blue","/oarbot_blue_ctrl"]
+
+robot_type_information:
+  - "OB_S"
+  - "OB_B"
+
+input_command_topic: 'deadman_switch_spacenav_twist'
+
+tf_changer_topic: "tf_changer"
+
+swarm_tf_frame: "swarm_frame"
+
+robot_tf_frames:
+  - "tf_robot_0"
+  - "tf_robot_1"
+
+real_robot_tf_frames:
+  - "oarbot_silver_fusion"
+  - "oarbot_blue_fusion"
