@@ -3,7 +3,7 @@ import time
 import rospy
 from rospy.core import logwarn
 # message
-class RoboteqHandler:
+class RoboteqHandler():
     """
     Create a roboteq device object for communication
     """

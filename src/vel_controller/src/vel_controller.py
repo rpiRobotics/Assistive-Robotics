@@ -109,7 +109,7 @@ class Controller:
 		self.q_desired = self.q_desired + dt * q_desired_dot
 		self.q_desired[2] = wrapToPi(self.q_desired[2])
 
-	 	desired_state = np.block([[self.q_desired],[q_desired_dot]])
+		desired_state = np.block([[self.q_desired],[q_desired_dot]])
 		self.process_desired_state(desired_state)
 		# Publish TF frame
 		tf_desired = xyt2TF(self.q_desired, "map", self.frame_name);
