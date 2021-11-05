@@ -14,7 +14,7 @@ from assistive_msgs.msg import State2D # Custom message
 
 import tf_conversions # quaternion stuff
 
-from .velocity_control_law import *
+from velocity_control_law.velocity_control_law import *
 
 '''
 closed_loop_velocity_controller.py

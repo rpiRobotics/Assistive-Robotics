@@ -49,3 +49,5 @@ CATKIN_IGNORE
 
 src/CMakeLists.txt
 .catkin_workspace
+
+*.DS_Store
