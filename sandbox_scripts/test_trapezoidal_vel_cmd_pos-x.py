@@ -37,7 +37,7 @@ class CmdVelTalker():
     def __init__(self):
         rospy.init_node('cmd_vel_talker', anonymous=True)
 
-        self.cmd_vel_pub = rospy.Publisher("/husky_black/cmd_vel", Twist, queue_size=1)
+        self.cmd_vel_pub = rospy.Publisher("/oarbot_silver/e_stop_cmd_vel", Twist, queue_size=1)
         self.direction = 1
 
         # rospy.Timer(rospy.Duration(0.5), self.switch)

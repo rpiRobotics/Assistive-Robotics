@@ -24,6 +24,7 @@ class OarbotControl_InvKin():
         rospy.Subscriber(self.teleop_command_name, Twist, self.callback, queue_size=1)
 
     def callback(self, msg):
+        rospy.loginfo("asdddddddddddddddddddddddddddddddddddddddddddddddd")
         msg.linear.x *= self.x_vel_scale
         msg.linear.y *= self.y_vel_scale
         msg.angular.z *= self.th_vel_scale
