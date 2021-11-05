@@ -54,10 +54,10 @@ class OarbotControl_InvKin():
 
         # Generate and publish the MotorCmd message
         motor_cmd = MotorCmd()
-        motor_cmd.v_fl = v_fl #* 200.0
-        motor_cmd.v_fr = v_fr # *200.0
-        motor_cmd.v_bl = v_bl # *200.0
-        motor_cmd.v_br = v_br # *200.0
+        motor_cmd.v_fl = int(v_fl) #* 200.0
+        motor_cmd.v_fr = int(v_fr) # *200.0
+        motor_cmd.v_bl = int(v_bl) # *200.0
+        motor_cmd.v_br = int(v_br)# *200.0
         rospy.loginfo("1111111111111111111111111111111111111111111111")
 
         try:
