@@ -24,7 +24,7 @@ class OarbotControl_InvKin():
         rospy.Subscriber(self.teleop_command_name, Twist, self.callback, queue_size=1)
 
     def callback(self, msg):
-        rospy.loginfo("asdddddddddddddddddddddddddddddddddddddddddddddddd")
+        
         msg.linear.x *= self.x_vel_scale
         msg.linear.y *= self.y_vel_scale
         msg.angular.z *= self.th_vel_scale
@@ -58,8 +58,10 @@ class OarbotControl_InvKin():
         motor_cmd.v_fr = v_fr # *200.0
         motor_cmd.v_bl = v_bl # *200.0
         motor_cmd.v_br = v_br # *200.0
+        rospy.loginfo("1111111111111111111111111111111111111111111111")
 
         self.motor_cmd_pub.publish(motor_cmd)
+        rospy.loginfo("222222222222222222222222222222222222222222222222")
 
 
     def inverse_kin_skid_steer(self, msg):
