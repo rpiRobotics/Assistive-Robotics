@@ -69,7 +69,7 @@ class RoboteqHandler():
             if char_echo.decode() != raw_command:
                 rospy.logwarn("char_echo: '" + str(char_echo.decode())  + "' is not the same as the raw command: '" + str(raw_command) + "'" )
 
-            return result
+            return result.decode()
         except serial.serialutil.SerialException:
             if(not(self.ser == None)):
                 self.ser.close()
