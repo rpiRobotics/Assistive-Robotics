@@ -46,7 +46,7 @@ class CmdVelTalker():
 
         self.timer_talk = WallTimer(self.duration,self.talk)
 
-        self.delta_x = 4.0 # meters # Amount of displacement
+        self.delta_x = 1.0 # meters # Amount of displacement
         # OARBOTs Velocity/Acc limits (experimentally found)
         self.v_lim = 0.3
         self.a_lim = 0.3 #0.6

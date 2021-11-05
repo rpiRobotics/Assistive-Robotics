@@ -58,13 +58,11 @@ class OarbotControl_InvKin():
         motor_cmd.v_fr = int(v_fr) # *200.0
         motor_cmd.v_bl = int(v_bl) # *200.0
         motor_cmd.v_br = int(v_br)# *200.0
-        rospy.loginfo("1111111111111111111111111111111111111111111111")
 
         try:
             self.motor_cmd_pub.publish(motor_cmd)
         except Exception as e:
             rospy.logerr(str(e))
-        rospy.loginfo("2222222222222222222222222222222222222222222222222")
 
     def inverse_kin_skid_steer(self, msg):
         v_lin = msg.linear
@@ -86,12 +84,15 @@ class OarbotControl_InvKin():
 
         # Generate and publish the MotorCmd message
         motor_cmd = MotorCmd()
-        motor_cmd.v_fl = v_fl
-        motor_cmd.v_fr = v_fr
-        motor_cmd.v_bl = v_bl
-        motor_cmd.v_br = v_br
+        motor_cmd.v_fl = int(v_fl) #* 200.0
+        motor_cmd.v_fr = int(v_fr) # *200.0
+        motor_cmd.v_bl = int(v_bl) # *200.0
+        motor_cmd.v_br = int(v_br)# *200.0
 
-        self.motor_cmd_pub.publish(motor_cmd)
+        try:
+            self.motor_cmd_pub.publish(motor_cmd)
+        except Exception as e:
+            rospy.logerr(str(e))
         
 if __name__ == "__main__":
     oarbotControl_InvKin = OarbotControl_InvKin()
