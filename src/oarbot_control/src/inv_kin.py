@@ -60,9 +60,11 @@ class OarbotControl_InvKin():
         motor_cmd.v_br = v_br # *200.0
         rospy.loginfo("1111111111111111111111111111111111111111111111")
 
-        self.motor_cmd_pub.publish(motor_cmd)
-        rospy.loginfo("222222222222222222222222222222222222222222222222")
-
+        try:
+            self.motor_cmd_pub.publish(motor_cmd)
+        except Exception as e:
+            rospy.logerr(str(e))
+        rospy.loginfo("2222222222222222222222222222222222222222222222222")
 
     def inverse_kin_skid_steer(self, msg):
         v_lin = msg.linear

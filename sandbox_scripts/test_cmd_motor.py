@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import rospy
-from swarm_msgs.msg import MotorCmd
+from assistive_msgs.msg import MotorCmd
 
 
 import threading
