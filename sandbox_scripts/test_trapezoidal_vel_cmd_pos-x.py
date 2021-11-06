@@ -89,7 +89,7 @@ class CmdVelTalker():
 
                 
         msg = Twist()
-        msg.linear.x = -v
+        msg.linear.x = v
         msg.linear.y = 0.
         msg.linear.z = 0.
         msg.angular.x = 0.
