@@ -122,10 +122,10 @@ class OarbotControl_Motor():
         # Read the executed motor velocities
         try:
             motor_feedback_msg = MotorCmd()
-            motor_feedback_msg.v_fl = -self.format_speed(self.controller_f.read_value(cmds.READ_SPEED, 2))
-            motor_feedback_msg.v_fr = self.format_speed(self.controller_f.read_value(cmds.READ_SPEED, 1))
-            motor_feedback_msg.v_bl = -self.format_speed(self.controller_b.read_value(cmds.READ_SPEED, 1))
-            motor_feedback_msg.v_br = self.format_speed(self.controller_b.read_value(cmds.READ_SPEED, 2))
+            motor_feedback_msg.v_fl = int(-self.format_speed(self.controller_f.read_value(cmds.READ_SPEED, 2)))
+            motor_feedback_msg.v_fr = int(self.format_speed(self.controller_f.read_value(cmds.READ_SPEED, 1)))
+            motor_feedback_msg.v_bl = int(-self.format_speed(self.controller_b.read_value(cmds.READ_SPEED, 1)))
+            motor_feedback_msg.v_br = int(self.format_speed(self.controller_b.read_value(cmds.READ_SPEED, 2)))
             self.motor_feedback_pub.publish(motor_feedback_msg)
         except Exception as ex:
             template = "An exception of type {0} occurred while reading the executed motor velocities. Arguments:\n{1!r}"
