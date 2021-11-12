@@ -46,11 +46,12 @@ SCRIPTS=(
     git clone https://github.com/rpiRobotics/Assistive-Robotics.git .;
     source /opt/ros/noetic/setup.bash;
     catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;assistive_launch;arduino_talker';
-    grep -qxF 'source ~/catkin_ws_oarbots/devel/setup.bash' ~/.bashrc || echo 'source ~/catkin_ws_assistive/devel/setup.bash' >> ~/.bashrc;
+    grep -qxF 'source ~/catkin_ws_assistive/devel/setup.bash' ~/.bashrc || echo 'source ~/catkin_ws_assistive/devel/setup.bash' >> ~/.bashrc;
     source ~/.bashrc;
     source ~/catkin_ws_assistive/devel/setup.bash;
-    echo 1234 | sudo -S usermod -a -G dialout oarbot_silver
+    echo 1234 | sudo -S usermod -a -G dialout oarbot_silver;
     echo 1234 | sudo -S apt install -y ros-noetic-twist-mux;
+    echo 1234 | sudo -S apt install -y python3-pip;
     pip3 install pyserial
     "
     
@@ -61,11 +62,12 @@ SCRIPTS=(
     git clone https://github.com/rpiRobotics/Assistive-Robotics.git .;
     source /opt/ros/noetic/setup.bash;
     catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;assistive_launch;arduino_talker';
-    grep -qxF 'source ~/catkin_ws_oarbots/devel/setup.bash' ~/.bashrc || echo 'source ~/catkin_ws_assistive/devel/setup.bash' >> ~/.bashrc;
+    grep -qxF 'source ~/catkin_ws_assistive/devel/setup.bash' ~/.bashrc || echo 'source ~/catkin_ws_assistive/devel/setup.bash' >> ~/.bashrc;
     source ~/.bashrc;
     source ~/catkin_ws_assistive/devel/setup.bash;
-    echo 1234 | sudo -S usermod -a -G dialout oarbot_blue
+    echo 1234 | sudo -S usermod -a -G dialout oarbot_blue;
     echo 1234 | sudo -S apt install -y ros-noetic-twist-mux;
+    echo 1234 | sudo -S apt install -y python3-pip;
     pip3 install pyserial
     ")
 
