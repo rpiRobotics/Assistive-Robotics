@@ -1,0 +1,9 @@
+<launch>
+	<arg name="pkg_name" value="tf_broadcasters"/>
+	<arg name="node_name" default="tf_camera_body_single_joint_broadcaster"/>		
+	<arg name="param_file_name" default="default" doc="Specify a param file. ex:megaman"/>
+	
+    <node name="$(arg node_name)" pkg="$(arg pkg_name)" type="$(arg node_name).py" output="screen">
+    </node>
+    
+</launch>
