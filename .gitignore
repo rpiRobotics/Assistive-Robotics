@@ -52,4 +52,4 @@ src/CMakeLists.txt
 
 *.DS_Store
 .vscode/
-Azure_Kinect_ROS_Driver/
+src/Azure_Kinect_ROS_Driver/
