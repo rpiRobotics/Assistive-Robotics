@@ -1,18 +1,21 @@
 #!/usr/bin/env python  
 
 """
-Node: tf_camera_body_hand_right_broadcaster
+Author: Burak Aksoy
+Node: tf_camera_body_single_joint_broadcaster
 Description:
     Broadcasts to tf2 the trasformation between the Kinect Azure camera's
     'depth_camera_link'
-    and the first detected persons' specified joint number in the yaml file
+    and the first detected persons' specified joint in the yaml file
 
-Used yaml file:
-    - TODO
+Parameters:
+    - kinect_body_tracking_data_topic_name: topic that is the body tracking data is published by a kinect camera eg."/body_tracking_data"
+    - tracked_single_joint_name: defined in https://docs.microsoft.com/en-us/azure/kinect-dk/body-joints, eg, "JOINT_WRIST_LEFT" 
+    - tf_camera_frame_id: frame name that is the joints are related to by Kinect ROS drivers, eg, "depth_camera_link"
 Subscribes to:
     - /body_tracking_data (visualization_msgs::MarkerArray)
 Publishes to:
-    -
+    - NONE
 Broadcasts to:
     - tf2
 """
@@ -51,15 +54,9 @@ class Kinect2BodySingleJointTf():
         t.header.frame_id = self.parent_frame_id
         t.child_frame_id = self.joint_name.lower()
 
-        t.transform.translation.x = joint_marker.pose.position.x
-        t.transform.translation.y = joint_marker.pose.position.y
-        t.transform.translation.z = joint_marker.pose.position.z  
-
+        t.transform.translation = joint_marker.pose.position
         # q = tf_conversions.transformations.quaternion_from_euler(0, 0, msg.theta)
-        t.transform.rotation.x = joint_marker.pose.orientation.x # q[0]
-        t.transform.rotation.y = joint_marker.pose.orientation.y
-        t.transform.rotation.z = joint_marker.pose.orientation.z
-        t.transform.rotation.w = joint_marker.pose.orientation.w
+        t.transform.rotation = joint_marker.pose.orientation
 
         br.sendTransform(t)
 
