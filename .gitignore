@@ -53,3 +53,4 @@ src/CMakeLists.txt
 *.DS_Store
 .vscode/
 src/Azure_Kinect_ROS_Driver/
+src/kinova-ros/
