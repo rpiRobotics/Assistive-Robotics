@@ -1,0 +1,14 @@
+end_effector_pose_topic_name: '/j2n6s300_driver/out/tool_pose'
+tf_end_effector_frame_id: 'j2n6s300_end_effector'
+tf_root_camera_frame_id: 'camera_base'
+
+arm2camera_pose: 
+  orientation:
+    x: 0.5
+    y: 0.5
+    z: 0.5
+    w: -0.5
+  position: # in meters
+    x: 0.0
+    y: 0.1
+    z: 0.0

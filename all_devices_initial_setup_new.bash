@@ -37,8 +37,8 @@ SCRIPTS=(
     echo 1234 | sudo apt install -y k4a-tools;
     echo 1234 | sudo apt install -y ros-melodic-rgbd-launch;
     cd /etc/udev/rules.d;
-    echo 1234 | sudo wget https://github.com/microsoft/Azure-Kinect-Sensor-SDK/blob/develop/scripts/99-k4a.rules;
-    echo 1234 | sudo wget https://github.com/Kinovarobotics/kinova-ros/blob/melodic-devel/kinova_driver/udev/10-kinova-arm.rules;
+    echo 1234 | sudo wget https://raw.githubusercontent.com/microsoft/Azure-Kinect-Sensor-SDK/develop/scripts/99-k4a.rules;
+    echo 1234 | sudo wget https://raw.githubusercontent.com/Kinovarobotics/kinova-ros/melodic-devel/kinova_driver/udev/10-kinova-arm.rules;
     ##################
     cd; 
     mkdir catkin_ws_assistive; 
@@ -74,8 +74,8 @@ SCRIPTS=(
     echo 1234 | sudo apt install -y k4a-tools;
     echo 1234 | sudo apt install -y ros-melodic-rgbd-launch;
     cd /etc/udev/rules.d;
-    echo 1234 | sudo wget https://github.com/microsoft/Azure-Kinect-Sensor-SDK/blob/develop/scripts/99-k4a.rules;
-    echo 1234 | sudo wget https://github.com/Kinovarobotics/kinova-ros/blob/melodic-devel/kinova_driver/udev/10-kinova-arm.rules;
+    echo 1234 | sudo wget https://raw.githubusercontent.com/microsoft/Azure-Kinect-Sensor-SDK/develop/scripts/99-k4a.rules;
+    echo 1234 | sudo wget https://raw.githubusercontent.com/Kinovarobotics/kinova-ros/melodic-devel/kinova_driver/udev/10-kinova-arm.rules;
     ##################
     cd; 
     mkdir catkin_ws_assistive; 
