@@ -111,3 +111,71 @@ Please direct [here](https://github.com/eric565648/kinova-ros/tree/noetic-devel)
 #### Note
 1. The admittance control does not work.
 2. We have not do the torque calibration yet.
+
+# Installing Ubuntu 18.04 to Lenovo Thinkpad P15 Gen2 Laptops
+ See the hardware specs of this computer model in https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_P15_Gen_2/ThinkPad_P15_Gen_2_Spec.pdf
+ 
+ We have 
+ CPU: Core i7-11850H
+ GPU: NVIDIA T1200 (4GB GDDR4, 60W)
+ RAM: 16 GB DDR4-3200MHz
+ SCREEN: 1080P IPS
+ STORAGE: 512GB SSD M.2 2280 SSD PCIe NVMe
+ WIFI: Intel Wi-Fi® 6E AX210, 802.11ax 2x2 Wi-Fi + Bluetooth 5.2
+ 
+ ## Prepare the BIOS settings
+ As described here: https://download.lenovo.com/pccbbs/mobiles_pdf/tp_p1_gen2_ubuntu_18.04_lts_installation_v1.0.pdf
+ (Note that this file is for P1, not for P15, so not all of steps here works for installing ubuntu 18.04 to P15)
+ - Disable "OS Optimized Defaults" in "Restart"
+ - Make sure "Hybrid Graphics" is selected instead of "Discrete Graphics" under Config>Display settings. Later we will have to make this "Discrete Graphics" again.
+ - F10 "Save & Exit"
+ ## Install Ubuntu 18.04 with a USB
+ - Insert Ubuntu 18.04 installation USB and boot up the laptop.
+ - Press "Enter" while you are booting.
+ - Press "F12" to select the USB device.
+ - In the GRUB menu select "Install Ubuntu"
+ - Make sure you are connected to internet via Ethernet (WIFI does not work for now)
+ - Select Normal installation,
+ - For the Other options select "Download Updates while installing Ubuntu" and "Install third-party software for graphics and Wifi hardware..." options
+ - Do the storage managements as you wish (I did without encryption)
+ - For the username and computer name use the devices info table at the top of this readme file.
+ - After the installation if the computer does not boot after the GRUB menu, (see https://askubuntu.com/questions/162075/my-computer-boots-to-a-black-screen-what-options-do-i-have-to-fix-it.)
+  - Basically you will boot with nomodeset option  in the grub menu instead of quiet splash and then you will install graphics card after you boot in
+  - While booting keep pressing "shift" buttons to see GRUB menu,
+  - Press "e" while the OS that you would like to boot is selected.
+  - Go to line that starts with "linux" and erase "quiet splash" and write "nomodeset" instead.
+  - Press "Ctrl+x", you will be able to boot
+  - We will have to install NVIDIA graphics card and WIFI drivers
+## Install NVIDIA drivers
+- open a terminal and do `sudo apt update` and `sudo apt upgrade`
+- press windows key and search for "Software & Updates"
+- From ubuntu Software tab select Download From Main Server
+- From Updates tab Select Never for Notify me of a new Ubuntu version
+- From Additional Drivers tab select Using Nvidia driver metapackage from nvidia-driver495 (proprietary)
+- Press Apply Changes button and once it finished reboot
+- This will install the NVIDIA driver but you can also see options of the section 5 of [this](https://download.lenovo.com/pccbbs/mobiles_pdf/tp_p1_gen2_ubuntu_18.04_lts_installation_v1.0.pdf) for other installation options (We did not try those)
+- When it boots up, go to BIOS settings and select "Discrete Graphics" instead of "Hybrid Graphics" under Config>Display settings.
+- Save and Exit
+- Once you reboot, now without doing the "nomodeset" step in GRUB menu
+## Install Wifi Drivers
+At the time of this installation, the most up-to-date Ubuntu 18.04 kernel version is 5.4.0 (you can check yours with command `uname -a`). However, the wifi hardware used on this computer (Intel Wi-Fi® 6E AX210) requires at least kernel version 5.10 (You can verify this at [here](https://wireless.wiki.kernel.org/en/users/drivers/iwlwifi)).  
+As stated in one of the answers in [this link](https://ubuntu.forumming.com/question/14149/ubuntu-20-04-lts-driver-intel-wi-fi-6e-ax210-160mhz), "The Linux 5.10 kernel (or later) will ship as part of Ubuntu 21.04 in April. This version will also get backported to Ubuntu 20.04 LTS at a later date. It's possible to manually install a mainline kernel in Ubuntu however if it breaks you get the pieces." We will install kernel 5.11 to make the wifi adapter work, but as suggested in the same answer be warned to review the implications of installing a kernel version manually [here](https://askubuntu.com/questions/119080/how-to-update-kernel-to-the-latest-mainline-version-without-any-distro-upgrade/885165#885165). 
+### Installing Kernel 5.11
+- First install Mainline as a graphical kernel installing tool. (See details [here](https://ubuntuhandbook.org/index.php/2020/08/mainline-install-latest-kernel-ubuntu-linux-mint/))
+- run `sudo add-apt-repository ppa:cappelikan/ppa`
+- `sudo apt update`
+- `sudo apt install mainline`
+- Open Mainline Kernel Installer and install 5.11.0
+- After installation, reboot.
+- `sudo update-grub` and `sudo reboot`
+- As described [here](https://github.com/spxak1/weywot/blob/main/ax210.md#boot-with-kernel-5101), the output of `sudo dmesg | grep iwl` will show us some errors with the information about which firmware we need to install. 
+- For example we needed `iwlwifi-ty-a0-gf-a0-39` to `iwlwifi-ty-a0-gf-a0-59`.
+### Installing Firmware
+- At the output of dmesg command it is suggested to check https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/
+- Go this website and download the newest firmware (eg. as of today it was linux-firmware-20211027.tar.gz (sig))
+- It takes some time to download, be patient
+- Uncompress the file with `tar -zxvf linux-firmware-20211027.tar.gz`
+- `cd linux-firmware-20211027/`
+- Copy the firmwares to `/lib/firmware/` with command `sudo cp -ax * /lib/firmware`
+- Now reboot and the wifi should work!
+## Additional settings 
