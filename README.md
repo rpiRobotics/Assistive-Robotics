@@ -188,4 +188,3 @@ As stated in one of the answers in [this link](https://ubuntu.forumming.com/ques
 - On Power tab disable suspend when laptop lid is closed
 - Install Dconf Editor and launch
 - on /org/gnome/desktop/remote-access, disable require-encryption
-- 
