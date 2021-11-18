@@ -156,7 +156,7 @@ Please direct [here](https://github.com/eric565648/kinova-ros/tree/noetic-devel)
 - This will install the NVIDIA driver but you can also see options of the section 5 of [this](https://download.lenovo.com/pccbbs/mobiles_pdf/tp_p1_gen2_ubuntu_18.04_lts_installation_v1.0.pdf) for other installation options (We did not try those)
 - When it boots up, go to BIOS settings and select "Discrete Graphics" instead of "Hybrid Graphics" under Config>Display settings.
 - Save and Exit
-- Once you reboot, now without doing the "nomodeset" step in GRUB menu
+- Once you reboot, now without doing the "nomodeset" step in GRUB menu you will be able to login
 ## Install Wifi Drivers
 At the time of this installation, the most up-to-date Ubuntu 18.04 kernel version is 5.4.0 (you can check yours with command `uname -a`). However, the wifi hardware used on this computer (Intel Wi-Fi® 6E AX210) requires at least kernel version 5.10 (You can verify this at [here](https://wireless.wiki.kernel.org/en/users/drivers/iwlwifi)).  
 As stated in one of the answers in [this link](https://ubuntu.forumming.com/question/14149/ubuntu-20-04-lts-driver-intel-wi-fi-6e-ax210-160mhz), "The Linux 5.10 kernel (or later) will ship as part of Ubuntu 21.04 in April. This version will also get backported to Ubuntu 20.04 LTS at a later date. It's possible to manually install a mainline kernel in Ubuntu however if it breaks you get the pieces." We will install kernel 5.11 to make the wifi adapter work, but as suggested in the same answer be warned to review the implications of installing a kernel version manually [here](https://askubuntu.com/questions/119080/how-to-update-kernel-to-the-latest-mainline-version-without-any-distro-upgrade/885165#885165). 
@@ -179,3 +179,13 @@ As stated in one of the answers in [this link](https://ubuntu.forumming.com/ques
 - Copy the firmwares to `/lib/firmware/` with command `sudo cp -ax * /lib/firmware`
 - Now reboot and the wifi should work!
 ## Additional settings 
+- Connect the wifi to `OARBOT_5G`
+- Open settings on Privacy tab, disable automatic screen lock, location services enabled.
+- Sharing tab, enable sharing and screen sharing, select require a password and make the password `1234`
+- Power tab, disable dim screen when inactive, blank screen 5 minutes, Automatic suspend OFF, When power button is pressed Power Off
+- Details tab, Users tab, Unlock and enable automatic log in
+- Install GNOME Tweaks and launch
+- On Power tab disable suspend when laptop lid is closed
+- Install Dconf Editor and launch
+- on /org/gnome/desktop/remote-access, disable require-encryption
+- 
