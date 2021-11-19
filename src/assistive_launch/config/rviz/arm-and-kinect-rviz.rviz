@@ -148,6 +148,37 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        camera_base:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_body:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_visor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel
+      Robot Description: azure_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
     - Class: rviz/MarkerArray
       Enabled: false
       Marker Topic: /body_tracking_data
@@ -263,8 +294,6 @@ Visualization Manager:
           Value: false
         j2n6s300_link_finger_tip_3:
           Value: false
-        joint_wrist_left:
-          Value: true
         rgb_camera_link:
           Value: false
         root:
@@ -294,8 +323,6 @@ Visualization Manager:
                                 {}
                               depth_camera_link:
                                 imu_link:
-                                  {}
-                                joint_wrist_left:
                                   {}
                                 rgb_camera_link:
                                   {}
@@ -338,25 +365,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.233381748199463
+      Distance: 2.2034590244293213
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.6294501423835754
-        Y: 0.1002693697810173
-        Z: 0.8689579367637634
+        X: 0.40981096029281616
+        Y: -0.05669704079627991
+        Z: 0.8485280871391296
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.47979632019996643
+      Pitch: 0.7247961163520813
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.3704171180725098
+      Yaw: 1.2404162883758545
     Saved: ~
 Window Geometry:
   Displays:
