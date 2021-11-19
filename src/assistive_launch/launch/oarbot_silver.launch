@@ -66,10 +66,10 @@
         <arg name="depth_registered_processing"     value="true" />
         <arg name="disparity_processing"            value="false" />
         <arg name="disparity_registered_processing" value="false" />
-        <arg name="hw_registered_processing"        value="true" if="$(arg depth_registration)" />
+        <!-- <arg name="hw_registered_processing"        value="true" if="$(arg depth_registration)" />
         <arg name="sw_registered_processing"        value="false" if="$(arg depth_registration)" />
         <arg name="hw_registered_processing"        value="false" unless="$(arg depth_registration)" />
-        <arg name="sw_registered_processing"        value="true" unless="$(arg depth_registration)" />
+        <arg name="sw_registered_processing"        value="true" unless="$(arg depth_registration)" /> -->
 
     </include>
 
@@ -86,7 +86,7 @@
     <include file="$(find kinova_bringup)/launch/kinova_robot.launch">
         <arg name="use_urdf" value="true"/>
         <arg name="kinova_robotType" value="j2n6s300" />
-        <arg name="kinova_robotName" value="$(arg kinova_robotType)"/>
+        <!-- <arg name="kinova_robotName" value="$(arg kinova_robotType)"/> -->
         <arg name="kinova_robotSerial" value="not_set" />
         <arg name="use_jaco_v1_fingers" value="false" />
         <arg name="feedback_publish_rate" value="0.1" />

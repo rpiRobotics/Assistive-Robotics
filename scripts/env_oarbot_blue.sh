@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 export ROS_WS=/home/oarbot_blue/catkin_ws_assistive
-export ROS_NOETIC=/opt/ros/noetic
-source $ROS_NOETIC/setup.bash
+export ROS_MELODIC=/opt/ros/melodic
+source $ROS_MELODIC/setup.bash
 source $ROS_WS/devel/setup.bash
 export PATH=$ROS_ROOT/bin:$PATH
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$ROS_WS

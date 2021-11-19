@@ -3,7 +3,7 @@
 <group ns="oarbot_blue">
     <machine name="oarbot-blue-P15" address="192.168.1.102" env-loader="/home/oarbot_blue/catkin_ws_assistive/scripts/env_oarbot_blue.sh" user="oarbot_blue" password="1234"  default="true"/>
 
-    <node name="ctrl_inv_kin" pkg="oarbot_control" type="inv_kin.py">
+    <!-- <node name="ctrl_inv_kin" pkg="oarbot_control" type="inv_kin.py">
         <rosparam file="$(find assistive_launch)/config/oarbot_blue_control_info.yaml"/>
     </node>
     <node name="ctrl_motor" pkg="oarbot_control" type="motor_control.py">
@@ -21,7 +21,7 @@
         <rosparam command="load" file="$(find assistive_launch)/config/oarbot_blue_twist_mux.yaml" />
         <remap from="cmd_vel_out" to="e_stop_cmd_vel"/>
         <remap from="/diagnostics" to="diagnostics"/>
-    </node>
+    </node> -->
 
     <!-- Launch Azure Kinect -->
     <include file="$(find azure_kinect_ros_driver)/launch/kinect_rgbd.launch">
