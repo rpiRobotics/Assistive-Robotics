@@ -1,4 +1,4 @@
-end_effector_pose_topic_name: '/j2n6s300_driver/out/tool_pose'
+end_effector_pose_topic_name: 'j2n6s300_driver/out/tool_pose'
 tf_end_effector_frame_id: 'j2n6s300_end_effector'
 tf_root_camera_frame_id: 'camera_base'
 
