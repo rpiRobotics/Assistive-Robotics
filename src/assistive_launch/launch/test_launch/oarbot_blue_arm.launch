@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>   
-<group ns="oarbot_blue">
+<!-- <group ns="oarbot_blue"> -->
     <!-- <machine name="oarbot-blue-P15" address="192.168.1.102" env-loader="/home/oarbot_blue/catkin_ws_assistive/scripts/env_oarbot_blue.sh" user="oarbot_blue" password="1234"  default="true"/> -->
 
     <!-- <node name="ctrl_inv_kin" pkg="oarbot_control" type="inv_kin.py">
@@ -92,5 +92,5 @@
         <arg name="feedback_publish_rate" value="0.1" />
     </include>
 
-</group>
+<!-- </group> -->
 </launch>
