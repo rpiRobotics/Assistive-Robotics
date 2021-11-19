@@ -21,6 +21,13 @@ SCRIPTS=(
     pip3 install pyserial
     "
 
+
+
+
+
+
+
+
     "cd; 
     mkdir catkin_ws_assistive; 
     cd catkin_ws_assistive; 
@@ -39,9 +46,16 @@ SCRIPTS=(
     echo rockie | sudo -S usermod -a -G dialout rockie
     "
 
+
+
+
+
+
+
     "cd;
-    echo 1234 | sudo -S usermod -a -G dialout oarbot_blue;
+    echo 1234 | sudo -S usermod -a -G dialout oarbot_silver;
     echo 1234 | sudo -S apt install -y ros-melodic-twist-mux;
+    echo 1234 | sudo -S apt install -y ros-melodic-moveit*;
     echo 1234 | sudo -S apt install -y python3-pip;
     echo 1234 | sudo -S apt install -y python-pip;
     pip3 install pyserial;
@@ -51,12 +65,17 @@ SCRIPTS=(
         echo 1234 | sudo apt-get update;
     fi
     echo 1234 | sudo apt install -y libk4a1.4-dev;
+    # sudo apt-get --purge --reinstall install libk4a1.4-dev # If something goes wrong
     echo 1234 | sudo apt install -y libk4abt1.1-dev;
+    # sudo apt-get --purge --reinstall install libk4abt1.1-dev # If something goes wrong
     echo 1234 | sudo apt install -y k4a-tools;
+    # sudo apt-get --purge --reinstall install k4a-tools # If something goes wrong
     echo 1234 | sudo apt install -y ros-melodic-rgbd-launch;
     cd /etc/udev/rules.d;
     echo 1234 | sudo wget https://raw.githubusercontent.com/microsoft/Azure-Kinect-Sensor-SDK/develop/scripts/99-k4a.rules;
     echo 1234 | sudo wget https://raw.githubusercontent.com/Kinovarobotics/kinova-ros/melodic-devel/kinova_driver/udev/10-kinova-arm.rules;
+    echo 1234 | sudo rm 10-kinova-arm.rules.* # removes the duplicates
+    echo 1234 | sudo rm 99-k4a.rules.* # removes the duplicates
     ##################
     cd; 
     mkdir catkin_ws_assistive; 
@@ -76,9 +95,19 @@ SCRIPTS=(
     source ~/catkin_ws_assistive/devel/setup.bash;    
     "
     
+
+
+
+
+
+
+
+
+
     "cd;
     echo 1234 | sudo -S usermod -a -G dialout oarbot_blue;
     echo 1234 | sudo -S apt install -y ros-melodic-twist-mux;
+    echo 1234 | sudo -S apt install -y ros-melodic-moveit*;
     echo 1234 | sudo -S apt install -y python3-pip;
     echo 1234 | sudo -S apt install -y python-pip;
     pip3 install pyserial;
@@ -88,12 +117,17 @@ SCRIPTS=(
         echo 1234 | sudo apt-get update;
     fi
     echo 1234 | sudo apt install -y libk4a1.4-dev;
+    # sudo apt-get --purge --reinstall install libk4a1.4-dev # If something goes wrong
     echo 1234 | sudo apt install -y libk4abt1.1-dev;
+    # sudo apt-get --purge --reinstall install libk4abt1.1-dev # If something goes wrong
     echo 1234 | sudo apt install -y k4a-tools;
+    # sudo apt-get --purge --reinstall install k4a-tools # If something goes wrong
     echo 1234 | sudo apt install -y ros-melodic-rgbd-launch;
     cd /etc/udev/rules.d;
     echo 1234 | sudo wget https://raw.githubusercontent.com/microsoft/Azure-Kinect-Sensor-SDK/develop/scripts/99-k4a.rules;
     echo 1234 | sudo wget https://raw.githubusercontent.com/Kinovarobotics/kinova-ros/melodic-devel/kinova_driver/udev/10-kinova-arm.rules;
+    echo 1234 | sudo rm 10-kinova-arm.rules.* # removes the duplicates
+    echo 1234 | sudo rm 99-k4a.rules.* # removes the duplicates
     ##################
     cd; 
     mkdir catkin_ws_assistive; 
