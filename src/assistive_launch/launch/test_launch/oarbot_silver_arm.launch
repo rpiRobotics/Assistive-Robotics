@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 <group ns="oarbot_silver">
-	<!-- <machine name="oarbot-silver-P15" address="192.168.1.101" env-loader="/home/oarbot_silver/catkin_ws_assistive/scripts/env_oarbot_silver.sh" user="oarbot_silver" password="1234" default="true"/> -->
+	<machine name="oarbot-silver-P15" address="192.168.1.101" env-loader="/home/oarbot_silver/catkin_ws_assistive/scripts/env_oarbot_silver.sh" user="oarbot_silver" password="1234" default="true"/>
 
 	<!-- <node name="ctrl_inv_kin" pkg="oarbot_control" type="inv_kin.py">
 		<rosparam file="$(find assistive_launch)/config/oarbot_silver_control_info.yaml"/>
@@ -30,7 +30,7 @@
         <!-- <arg name="kinova_robotName" value="$(arg kinova_robotType)"/> -->
         <arg name="kinova_robotSerial" value="not_set" />
         <arg name="use_jaco_v1_fingers" value="false" />
-        <arg name="feedback_publish_rate" value="0.1" />
+        <arg name="feedback_publish_rate" value="0.01" />
     </include>
 
     <!-- Launch Azure Kinect -->

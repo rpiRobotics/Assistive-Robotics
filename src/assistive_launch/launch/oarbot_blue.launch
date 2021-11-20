@@ -30,7 +30,7 @@
         <!-- <arg name="kinova_robotName" value="$(arg kinova_robotType)"/> -->
         <arg name="kinova_robotSerial" value="not_set" />
         <arg name="use_jaco_v1_fingers" value="false" />
-        <arg name="feedback_publish_rate" value="0.1" />
+        <arg name="feedback_publish_rate" value="0.01" />
     </include>
 
     <!-- Launch Azure Kinect -->
