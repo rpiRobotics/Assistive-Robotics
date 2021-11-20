@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+<group ns="oarbot_silver">
+	<machine name="oarbot-silver-P15" address="192.168.1.101" env-loader="/home/oarbot_silver/catkin_ws_assistive/scripts/env_oarbot_silver.sh" user="oarbot_silver" password="1234" default="true"/>
+
+	<node name="ctrl_inv_kin" pkg="oarbot_control" type="inv_kin.py">
+		<rosparam file="$(find assistive_launch)/config/oarbot_silver_control_info.yaml"/>
+	</node>
+	<node name="ctrl_motor" pkg="oarbot_control" type="motor_control.py">
+		<rosparam file="$(find assistive_launch)/config/oarbot_silver_control_info.yaml"/>
+	</node>
+	<node name="ctrl_fwd_kin" pkg="oarbot_control" type="fwd_kin.py">
+		<rosparam file="$(find assistive_launch)/config/oarbot_silver_control_info.yaml"/>
+	</node>
+
+	<node name="cl_state" pkg="vel_controller" type="vel_controller.py">
+		<rosparam file="$(find assistive_launch)/config/oarbot_silver_cl_state.yaml"/>
+	</node>
+
+	<node pkg="twist_mux" type="twist_mux" name="twist_mux">
+    	<rosparam command="load" file="$(find assistive_launch)/config/oarbot_silver_twist_mux.yaml" />
+    	<remap from="cmd_vel_out" to="e_stop_cmd_vel"/>
+		<remap from="/diagnostics" to="diagnostics"/>
+  	</node>
+      
+</group> 
+</launch>

@@ -3,26 +3,6 @@
 <group ns="oarbot_silver">
 	<machine name="oarbot-silver-P15" address="192.168.1.101" env-loader="/home/oarbot_silver/catkin_ws_assistive/scripts/env_oarbot_silver.sh" user="oarbot_silver" password="1234" default="true"/>
 
-	<!-- <node name="ctrl_inv_kin" pkg="oarbot_control" type="inv_kin.py">
-		<rosparam file="$(find assistive_launch)/config/oarbot_silver_control_info.yaml"/>
-	</node>
-	<node name="ctrl_motor" pkg="oarbot_control" type="motor_control.py">
-		<rosparam file="$(find assistive_launch)/config/oarbot_silver_control_info.yaml"/>
-	</node>
-	<node name="ctrl_fwd_kin" pkg="oarbot_control" type="fwd_kin.py">
-		<rosparam file="$(find assistive_launch)/config/oarbot_silver_control_info.yaml"/>
-	</node>
-
-	<node name="cl_state" pkg="vel_controller" type="vel_controller.py">
-		<rosparam file="$(find assistive_launch)/config/oarbot_silver_cl_state.yaml"/>
-	</node>
-
-	<node pkg="twist_mux" type="twist_mux" name="twist_mux">
-    	<rosparam command="load" file="$(find assistive_launch)/config/oarbot_silver_twist_mux.yaml" />
-    	<remap from="cmd_vel_out" to="e_stop_cmd_vel"/>
-		<remap from="/diagnostics" to="diagnostics"/>
-  	</node> -->
-
 <!-- Launch Kinova Arm -->
     <include file="$(find kinova_bringup)/launch/kinova_robot.launch">
         <arg name="use_urdf" value="true"/>
@@ -85,11 +65,11 @@
 
     <!-- Launch Kinect Body TF broadcasters -->
     <node name="tf_arm_camera_broadcaster" pkg="tf_broadcasters" type="tf_arm_camera_broadcaster.py">
-        <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_arm_camera.yaml"/>
+        <rosparam file="$(find assistive_launch)/config/oarbot_silver_tf_arm_camera.yaml"/>
     </node>
 
     <node name="tf_camera_body_single_joint_broadcaster" pkg="tf_broadcasters" type="tf_camera_body_single_joint_broadcaster.py">
-        <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_camera_body_single_joint.yaml"/>
+        <rosparam file="$(find assistive_launch)/config/oarbot_silver_tf_camera_body_single_joint.yaml"/>
     </node>
 
 </group> 

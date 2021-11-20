@@ -85,11 +85,11 @@
 
     <!-- Launch Kinect Body TF broadcasters -->
     <node name="tf_arm_camera_broadcaster" pkg="tf_broadcasters" type="tf_arm_camera_broadcaster.py">
-        <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_arm_camera.yaml"/>
+        <rosparam file="$(find assistive_launch)/config/oarbot_silver_tf_arm_camera.yaml"/>
     </node>
 
     <node name="tf_camera_body_single_joint_broadcaster" pkg="tf_broadcasters" type="tf_camera_body_single_joint_broadcaster.py">
-        <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_camera_body_single_joint.yaml"/>
+        <rosparam file="$(find assistive_launch)/config/oarbot_silver_tf_camera_body_single_joint.yaml"/>
     </node>
 
 </group> 
