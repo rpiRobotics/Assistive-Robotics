@@ -1,0 +1,12 @@
+robot_cartesian_cmd_vel_topic_name: 'j2n6s300_driver/in/cartesian_velocity'
+
+tf_followed_body_joint_frame_name: 'JOINT_WRIST_LEFT'
+tf_end_effector_frame_name: 'j2n6s300_end_effector'
+tf_arm_base_frame_name: 'j2n6s300_link_base'
+
+v_p_gain: 3.0 
+v_d_gain: 0.0
+w_p_gain: 1.5
+w_d_gain: 0.0
+
+pub_rate: 100.0 # It is a must to be 100 Hz for Kinova arm
