@@ -22,7 +22,13 @@ import rospy
 
 import numpy as np
 import tf2_ros
+import tf2_geometry_msgs
+import geometry_msgs.msg 
+# from geometry_msgs.msg import PoseStamped, TransformStamped    
+
 import kinova_msgs.msg
+
+
 
 class BodySingleJointFollower():
     def __init__(self):
@@ -67,36 +73,62 @@ class BodySingleJointFollower():
     def followJoint(self, event=None):
         # Find the transform between the specified joint and the end effector
         try:
-            self.T_ee2joint = self.tfBuffer.lookup_transform(self.tf_body_joint_frame_name, self.tf_end_effector_frame_name, rospy.Time()) # in ee frame
+            # returns type geometry_msgs.msg.TransformStamped
+            T_ee2joint = self.tfBuffer.lookup_transform(self.tf_body_joint_frame_name, self.tf_end_effector_frame_name, rospy.Time()) # in ee frame 
+            T_base2ee = self.tfBuffer.lookup_transform(self.tf_end_effector_frame_name, self.tf_arm_base_frame_name, rospy.Time()) # in base frame 
 
-            self.T_ee2joint_in_base = self.tfBuffer.transform(self.T_ee2joint, self.tf_arm_base_frame_name) # in base frame (needed since kinova takes position cmd wrt base but orientation cmd wrt end effector)
+            # convert the obtained geometry_msgs.msg.TransformStamped to geometry_msgs.msg.PoseStamped
+            self.Pose_ee2joint = self.convert_TransformStamped2PoseStamped(T_ee2joint) # in ee frame
+
+            # Get the representation of Pose_ee2joint in base frame, 
+            # needed since kinova takes position cmd wrt base but orientation cmd wrt end effector
+            self.Pose_ee2joint_in_base = tf2_geometry_msgs.do_transform_pose(self.Pose_ee2joint, T_base2ee) # in base frame
+
+            if self.is_following_started:
+                # Calculate the error btw the desired and the current pose
+                position_error, orientation_error = self.poseErrorCalculator(self.Pose_ee2joint_desired, self.Pose_ee2joint_in_base_desired, self.Pose_ee2joint, self.Pose_ee2joint_in_base)
+
+                # With control law specify the command
+                Vx, Vy, Vz, Wx, Wy, Wz = self.controlLaw(position_error, orientation_error)
+
+                # Publish the command to move the end effector to the body joint
+                self.publishPoseVelCmd(Vx, Vy, Vz, Wx, Wy, Wz)
+
+            else:
+                # Wait for user input to start the following 
+                # For now wait 15 seconds and then start following
+                if (rospy.Time.now().to_sec() - self.initial_time) >= 15.0:
+                    self.is_following_started = True
+
+                # Save the current Pose as the desired pose btw end effector and the joint to be followed
+                self.Pose_ee2joint_desired = self.Pose_ee2joint # in ee frame
+                self.Pose_ee2joint_in_base_desired = self.Pose_ee2joint_in_base # in base frame 
         
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
-            # TODO
+            rospy.logwarn('Unable to find the transformation from %s to %s, OR transformation from %s to %s' 
+                            % self.tf_end_effector_frame_name, self.tf_body_joint_frame_name, 
+                            self.tf_arm_base_frame_name, self.tf_end_effector_frame_name)
             # Do not command the robot since the transformation could not found
             self.publishPoseVelCmd(0, 0, 0, 0, 0, 0)
 
-        if self.is_following_started:
-            # Calculate the error btw the desired and the current pose
-            position_error, orientation_error = self.poseErrorCalculator(self.T_ee2joint_desired, self.T_ee2joint_in_base_desired, self.T_ee2joint, self.T_ee2joint_in_base)
+        
 
-            # With control law specify the command
-            Vx, Vy, Vz, Wx, Wy, Wz = self.controlLaw(position_error, orientation_error)
+    def convert_TransformStamped2PoseStamped(self, msg_TransformStamped):
+        msg_PoseStamped = geometry_msgs.msg.PoseStamped()
 
-            # Publish the command to move the end effector to the body joint
-            self.publishPoseVelCmd(Vx, Vy, Vz, Wx, Wy, Wz)
+        msg_PoseStamped.header = msg_TransformStamped.header
+        
+        msg_PoseStamped.pose.position.x = msg_TransformStamped.transform.translation.x
+        msg_PoseStamped.pose.position.y = msg_TransformStamped.transform.translation.y
+        msg_PoseStamped.pose.position.z = msg_TransformStamped.transform.translation.z
 
-        else:
-            # Wait for user input to start the following 
-            # For now wait 15 seconds and then start following
-            if (rospy.Time.now().to_sec() - self.initial_time) >= 15.0:
-                self.is_following_started = True
+        msg_PoseStamped.pose.orientation.x = msg_TransformStamped.transform.rotation.x # Quaternion
+        msg_PoseStamped.pose.orientation.y = msg_TransformStamped.transform.rotation.y
+        msg_PoseStamped.pose.orientation.z = msg_TransformStamped.transform.rotation.z
+        msg_PoseStamped.pose.orientation.w = msg_TransformStamped.transform.rotation.w
 
-            # Save the current transform as the desired pose btw end effector and the desired joint
-            self.T_ee2joint_desired = self.T_ee2joint # in ee frame
-            self.T_ee2joint_in_base_desired = self.T_ee2joint_in_base # in base frame 
- 
+        return msg_PoseStamped
 
     def publishPoseVelCmd(self, Vx, Vy, Vz, Wx, Wy, Wz):
         pose_vel_msg = kinova_msgs.msg.PoseVelocity()
@@ -114,24 +146,24 @@ class BodySingleJointFollower():
         cur: current
         """
         # Position error
-        P_err_x = T_cur_in_base.transform.translation.x - T_des_in_base.transform.translation.x
-        P_err_y = T_cur_in_base.transform.translation.y - T_des_in_base.transform.translation.y
-        P_err_z = T_cur_in_base.transform.translation.z - T_des_in_base.transform.translation.z
+        P_err_x = T_cur_in_base.pose.position.x - T_des_in_base.pose.position.x
+        P_err_y = T_cur_in_base.pose.position.y - T_des_in_base.pose.position.y
+        P_err_z = T_cur_in_base.pose.position.z - T_des_in_base.pose.position.z
         position_error = np.array([P_err_x,P_err_y,P_err_z]) # (3,)
         
         # Orientation error (with quaternion vector)
         # based on http://www.cs.cmu.edu/~cga/dynopt/readings/Yuan88-quatfeedback.pdf eqn 27,28
-        qw_cur = T_cur_in_ee.transform.rotation.w
-        qx_cur = T_cur_in_ee.transform.rotation.x
-        qy_cur = T_cur_in_ee.transform.rotation.y
-        qz_cur = T_cur_in_ee.transform.rotation.z
-        qv_cur = np.array([qx_cur,qy_cur,qz_cur]) # (3,) 
+        qw_cur = T_cur_in_ee.pose.orientation.w # Scalar part of quaternion
+        qx_cur = T_cur_in_ee.pose.orientation.x
+        qy_cur = T_cur_in_ee.pose.orientation.y
+        qz_cur = T_cur_in_ee.pose.orientation.z
+        qv_cur = np.array([qx_cur,qy_cur,qz_cur]) # (3,) # Vector part of quaternion
 
-        qw_des = T_des_in_ee.transform.rotation.w
-        qx_des = T_des_in_ee.transform.rotation.x
-        qy_des = T_des_in_ee.transform.rotation.y
-        qz_des = T_des_in_ee.transform.rotation.z
-        qv_des = np.array([qx_des,qy_des,qz_des]) # (3,)
+        qw_des = T_des_in_ee.pose.orientation.w # Scalar part of quaternion
+        qx_des = T_des_in_ee.pose.orientation.x
+        qy_des = T_des_in_ee.pose.orientation.y
+        qz_des = T_des_in_ee.pose.orientation.z
+        qv_des = np.array([qx_des,qy_des,qz_des]) # (3,) # Vector part of quaternion
 
         orientation_error = qw_cur*qv_des - qw_des*qv_cur - np.cross(qv_cur,qv_des) # (3,)
         # orientation_error = qw_des*qv_cur - qw_cur*qv_des - np.cross(qv_des,qv_cur)
