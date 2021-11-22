@@ -107,8 +107,8 @@ class BodySingleJointFollower():
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
             rospy.logwarn('Unable to find the transformation from %s to %s, OR transformation from %s to %s' 
-                            % self.tf_end_effector_frame_name, self.tf_body_joint_frame_name, 
-                            self.tf_arm_base_frame_name, self.tf_end_effector_frame_name)
+                            % (self.tf_end_effector_frame_name, self.tf_body_joint_frame_name, 
+                            self.tf_arm_base_frame_name, self.tf_end_effector_frame_name))
             # Do not command the robot since the transformation could not found
             self.publishPoseVelCmd(0, 0, 0, 0, 0, 0)
 
