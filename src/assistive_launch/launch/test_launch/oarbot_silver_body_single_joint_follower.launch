@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <launch>   
 <group ns="oarbot_blue">
-    <machine name="oarbot-blue-P15" address="192.168.1.102" env-loader="/home/oarbot_blue/catkin_ws_assistive/scripts/env_oarbot_blue.sh" user="oarbot_blue" password="1234"  default="true"/>
+    <machine name="oarbot-silver-P15" address="192.168.1.101" env-loader="/home/oarbot_silver/catkin_ws_assistive/scripts/env_oarbot_silver.sh" user="oarbot_silver" password="1234"  default="true"/>
 
     <node name="body_single_joint_follower" pkg="assistive_controllers" type="body_single_joint_follower.py">
-        <rosparam file="$(find assistive_launch)/config/oarbot_blue_body_single_joint_follower.yaml"/>
+        <rosparam file="$(find assistive_launch)/config/oarbot_silver_body_single_joint_follower.yaml"/>
     </node>
 
 </group>
