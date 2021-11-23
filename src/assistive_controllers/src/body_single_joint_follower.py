@@ -69,6 +69,9 @@ class BodySingleJointFollower():
         self.tfBuffer = tf2_ros.Buffer()
         self.tfListener = tf2_ros.TransformListener(self.tfBuffer)
 
+        # TF2 broadcaster (for showing puposes)
+        self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
+
         self.initial_time = rospy.Time.now().to_sec()
 
         # Start control
@@ -87,8 +90,8 @@ class BodySingleJointFollower():
                 # Calculate the error btw the desired and the current pose
                 position_error, orientation_error = self.poseErrorCalculator()
 
-                # rospy.logwarn("position_error: "+ str(position_error) + ", orientation_error: " + str(orientation_error))
-                rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
+                rospy.logwarn("position_error: " + "{:.3f}".format(position_error[0]) + ", {:.3f}".format(position_error[1]) + ", {:.3f}".format(position_error[2])  )
+                # rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
 
                 # With control law specify the command
                 Vx, Vy, Vz, Wx, Wy, Wz = self.controlLaw(position_error, orientation_error)
@@ -157,13 +160,12 @@ class BodySingleJointFollower():
         qz_des = self.T_ee2joint_desired.transform.rotation.z
         q_ee2joint_desired = [qx_des,qy_des,qz_des, qw_des]
         R_ee2joint_desired = tf.transformations.quaternion_matrix(q_ee2joint_desired)
-        # q_ee2joint_desired_inv = [qx_des,qy_des,qz_des, -qw_des]
+        q_ee2joint_desired_inv = tf_conversions.transformations.quaternion_inverse(q_ee2joint_desired)
 
         # Quaternion base2ee_goal
         # q_base2ee_goal = tf.transformations.quaternion_multiply(q_base2joint, q_ee2joint_desired_inv)
         R_base2ee_goal = np.dot(R_base2joint, R_ee2joint_desired.T)
-        # q_base2ee_goal_inv = q_base2ee_goal
-        # q_base2ee_goal_inv[3] = -q_base2ee_goal[3]
+        # q_base2ee_goal_inv = tf_conversions.transformations.quaternion_inverse(R_base2ee_goal)
         
 
         # Quaternion base2ee (current)
@@ -173,7 +175,7 @@ class BodySingleJointFollower():
         qz_cur = self.T_base2ee.transform.rotation.z
         q_base2ee = [qx_cur,qy_cur,qz_cur, qw_cur]
         R_base2ee = tf.transformations.quaternion_matrix(q_base2ee)
-        # q_base2ee_inv = [qx_cur,qy_cur,qz_cur, -qw_cur]
+        # q_base2ee_inv = tf_conversions.transformations.quaternion_inverse(q_base2ee)
 
         # Quaternion orientation_error
         # q_orientation_error = tf.transformations.quaternion_multiply(q_base2ee_inv,q_base2ee_goal)
@@ -191,6 +193,14 @@ class BodySingleJointFollower():
 
         q_orientation_error = tf_conversions.transformations.quaternion_from_matrix(R_orientation_error)
         orientation_error = q_orientation_error[0:3].tolist()
+
+        # Publish a tf frame for showing the goal for the robot
+        P_ee2joint_desired_x = self.T_ee2joint_desired.transform.translation.x
+        P_ee2joint_desired_y = self.T_ee2joint_desired.transform.translation.y
+        P_ee2joint_desired_z = self.T_ee2joint_desired.transform.translation.z
+        P_ee2joint_desired = np.array([P_ee2joint_desired_x,P_ee2joint_desired_y,P_ee2joint_desired_z])
+        P_joint2goal = np.dot(-R_ee2joint_desired.T,P_ee2joint_desired)
+        self.broadcast_tf_goal(q_ee2joint_desired_inv,P_joint2goal)
 
         return position_error, orientation_error
 
@@ -213,6 +223,30 @@ class BodySingleJointFollower():
             return 0
         else:
             return x
+
+    def broadcast_tf_goal(self, q_joint2goal, p_joint2goal):
+        """
+        For showing purposes,
+        Broadcasts a frame to tf from the specified body joint.
+        This broadcasted frame is the one that is the end efffector tries to align itself
+        """
+        t = geometry_msgs.msg.TransformStamped()
+        t.header.stamp = rospy.Time.now()
+
+        t.header.frame_id = self.tf_body_joint_frame_name
+        t.child_frame_id = self.tf_body_joint_frame_name + "_goal"
+
+        t.transform.translation.x = p_joint2goal[0]
+        t.transform.translation.y = p_joint2goal[1]
+        t.transform.translation.z = p_joint2goal[2]
+        
+        t.transform.rotation.x = q_joint2goal[0]
+        t.transform.rotation.y = q_joint2goal[1]
+        t.transform.rotation.z = q_joint2goal[2]
+        t.transform.rotation.w = q_joint2goal[3]
+
+        self.tf_broadcaster.sendTransform(t)
+
 
 
 if __name__ == '__main__':

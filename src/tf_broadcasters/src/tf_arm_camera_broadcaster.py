@@ -44,14 +44,11 @@ class Arm2CameraTf():
         self.tf_root_camera_frame_id = rospy.get_param("~tf_root_camera_frame_id", "camera_base")
         self.arm2camera_pose = rospy.get_param("~arm2camera_pose") 
 
-
+        self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
         rospy.Subscriber(self.end_effector_pose_topic_name, geometry_msgs.msg.PoseStamped, self.handle_camera_pose)
 
     def handle_camera_pose(self, msg):
-        br = tf2_ros.TransformBroadcaster()
         t = geometry_msgs.msg.TransformStamped()
-        
-        
         t.header.stamp = rospy.Time.now()
 
         t.header.frame_id = self.tf_end_effector_frame_id
@@ -67,7 +64,7 @@ class Arm2CameraTf():
         t.transform.rotation.z = self.arm2camera_pose['orientation']['z']
         t.transform.rotation.w = self.arm2camera_pose['orientation']['w']
 
-        br.sendTransform(t)
+        self.tf_broadcaster.sendTransform(t)
 
 if __name__ == '__main__':
     arm2CameraTf = Arm2CameraTf()

@@ -39,15 +39,14 @@ class Kinect2BodySingleJointTf():
         self.joint_num = KINECT_JOINT_DICT[self.joint_name]
         self.parent_frame_id = rospy.get_param("~tf_camera_frame_id", "depth_camera_link")
 
+        self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
         rospy.Subscriber(self.kinect_body_tracking_data_topic_name, visualization_msgs.msg.MarkerArray, self.handle_joint_pose)
         pass
 
     def handle_joint_pose(self, msg):
-        br = tf2_ros.TransformBroadcaster()
-        t = geometry_msgs.msg.TransformStamped()
-        
         joint_marker = msg.markers[self.joint_num]
         
+        t = geometry_msgs.msg.TransformStamped()
         # t.header.stamp = rospy.Time.now()
         t.header.stamp = joint_marker.header.stamp
 
@@ -58,7 +57,7 @@ class Kinect2BodySingleJointTf():
         # q = tf_conversions.transformations.quaternion_from_euler(0, 0, msg.theta)
         t.transform.rotation = joint_marker.pose.orientation
 
-        br.sendTransform(t)
+        self.tf_broadcaster.sendTransform(t)
 
 KINECT_JOINT_DICT = {
     "JOINT_PELVIS" : 0, 
