@@ -29,8 +29,9 @@ import geometry_msgs.msg
 import kinova_msgs.msg
 
 # # Because of transformations
-# import tf_conversions
+import tf_conversions
 #  tf_conversions.transformations.euler_from_quaternion(Q_eg)
+import tf.transformations 
 
 
 
@@ -80,25 +81,15 @@ class BodySingleJointFollower():
             # returns type geometry_msgs.msg.TransformStamped
             self.T_ee2joint = self.tfBuffer.lookup_transform(self.tf_end_effector_frame_name, self.tf_body_joint_frame_name, rospy.Time()) # in ee frame 
             self.T_base2ee = self.tfBuffer.lookup_transform(self.tf_arm_base_frame_name, self.tf_end_effector_frame_name,  rospy.Time()) # in base frame 
-
-            # convert the obtained geometry_msgs.msg.TransformStamped to geometry_msgs.msg.PoseStamped
-            self.Pose_ee2joint = self.convert_TransformStamped2PoseStamped(self.T_ee2joint) # in ee frame
-            
-            # rospy.logwarn("Pose_ee2joint = " + self.str_PoseStamped(self.Pose_ee2joint))
-
-            # Pose_base2ee = self.convert_TransformStamped2PoseStamped(self.T_base2ee)
-            # rospy.logwarn("Pose_base2ee = " + self.str_PoseStamped(Pose_base2ee))
-
-            # Get the representation of Pose_ee2joint in base frame, 
-            # needed since kinova takes position cmd wrt base but orientation cmd wrt end effector
-            self.Pose_ee2joint_in_base = tf2_geometry_msgs.do_transform_pose(self.Pose_ee2joint, self.T_base2ee) # in base frame
-
-            # rospy.logwarn("Pose_ee2joint_in_base = " + self.str_PoseStamped(self.Pose_ee2joint_in_base))
+            self.T_base2joint = self.tfBuffer.lookup_transform(self.tf_arm_base_frame_name, self.tf_body_joint_frame_name,  rospy.Time()) # in base frame 
 
             if self.is_following_started:
                 # Calculate the error btw the desired and the current pose
-                position_error, orientation_error = self.poseErrorCalculator(self.Pose_ee2joint_desired, self.Pose_ee2joint_in_base_desired, self.Pose_ee2joint, self.Pose_ee2joint_in_base)
-                rospy.logwarn("position_error: "+ str(position_error) + ", orientation_error: " + str(orientation_error))
+                position_error, orientation_error = self.poseErrorCalculator()
+
+                # rospy.logwarn("position_error: "+ str(position_error) + ", orientation_error: " + str(orientation_error))
+                
+                rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
 
                 # With control law specify the command
                 Vx, Vy, Vz, Wx, Wy, Wz = self.controlLaw(position_error, orientation_error)
@@ -115,8 +106,9 @@ class BodySingleJointFollower():
                     rospy.logwarn_once("FOLLOWING SHOULD START NOW")
 
                 # Save the current Pose as the desired pose btw end effector and the joint to be followed
-                self.Pose_ee2joint_desired = self.Pose_ee2joint # in ee frame
-                self.Pose_ee2joint_in_base_desired = self.Pose_ee2joint_in_base # in base frame 
+                self.T_ee2joint_desired = self.T_ee2joint # in ee frame
+                self.T_base2ee_desired = self.T_base2ee # in base frame
+                self.T_base2joint_desired = self.T_base2joint # in base frame
         
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
@@ -126,26 +118,6 @@ class BodySingleJointFollower():
             # Do not command the robot since the transformation could not found
             self.publishPoseVelCmd(0, 0, 0, 0, 0, 0)
 
-    def str_PoseStamped(self,msg_PoseStamped):
-        str_position = "Position: "+  str([msg_PoseStamped.pose.position.x,msg_PoseStamped.pose.position.y,msg_PoseStamped.pose.position.z])
-        str_orientation = "Orientation: "+  str([msg_PoseStamped.pose.orientation.x,msg_PoseStamped.pose.orientation.y,msg_PoseStamped.pose.orientation.z,msg_PoseStamped.pose.orientation.w ])
-        return str_position + ", " + str_orientation
-
-    def convert_TransformStamped2PoseStamped(self, msg_TransformStamped):
-        msg_PoseStamped = geometry_msgs.msg.PoseStamped()
-
-        msg_PoseStamped.header = msg_TransformStamped.header
-        
-        msg_PoseStamped.pose.position.x = msg_TransformStamped.transform.translation.x
-        msg_PoseStamped.pose.position.y = msg_TransformStamped.transform.translation.y
-        msg_PoseStamped.pose.position.z = msg_TransformStamped.transform.translation.z
-
-        msg_PoseStamped.pose.orientation.x = msg_TransformStamped.transform.rotation.x # Quaternion
-        msg_PoseStamped.pose.orientation.y = msg_TransformStamped.transform.rotation.y
-        msg_PoseStamped.pose.orientation.z = msg_TransformStamped.transform.rotation.z
-        msg_PoseStamped.pose.orientation.w = msg_TransformStamped.transform.rotation.w
-
-        return msg_PoseStamped
 
     def publishPoseVelCmd(self, Vx, Vy, Vz, Wx, Wy, Wz):
         pose_vel_msg = kinova_msgs.msg.PoseVelocity()
@@ -157,33 +129,68 @@ class BodySingleJointFollower():
         pose_vel_msg.twist_angular_z = Wz
         self.pub_pose_vel_cmd.publish(pose_vel_msg)
 
-    def poseErrorCalculator(self, T_des_in_ee, T_des_in_base, T_cur_in_ee, T_cur_in_base):
+    def poseErrorCalculator(self):
         """
         des: desired
         cur: current
         """
-        # Position error
-        P_err_x = T_cur_in_base.pose.position.x - T_des_in_base.pose.position.x
-        P_err_y = T_cur_in_base.pose.position.y - T_des_in_base.pose.position.y
-        P_err_z = T_cur_in_base.pose.position.z - T_des_in_base.pose.position.z
-        position_error = np.array([P_err_x,P_err_y,P_err_z]) # (3,)
+        # Position error in base
+        P_err_x = (self.T_base2joint.transform.translation.x - self.T_base2ee.transform.translation.x) - (self.T_base2joint_desired.transform.translation.x - self.T_base2ee_desired.transform.translation.x) 
+        P_err_y = (self.T_base2joint.transform.translation.y - self.T_base2ee.transform.translation.y) - (self.T_base2joint_desired.transform.translation.y - self.T_base2ee_desired.transform.translation.y) 
+        P_err_z = (self.T_base2joint.transform.translation.z - self.T_base2ee.transform.translation.z) - (self.T_base2joint_desired.transform.translation.z - self.T_base2ee_desired.transform.translation.z) 
+        position_error = [P_err_x,P_err_y,P_err_z] # (3,)
         
         # Orientation error (with quaternion vector)
         # based on http://www.cs.cmu.edu/~cga/dynopt/readings/Yuan88-quatfeedback.pdf eqn 27,28
-        qw_cur = T_cur_in_ee.pose.orientation.w # Scalar part of quaternion
-        qx_cur = T_cur_in_ee.pose.orientation.x
-        qy_cur = T_cur_in_ee.pose.orientation.y
-        qz_cur = T_cur_in_ee.pose.orientation.z
-        qv_cur = np.array([qx_cur,qy_cur,qz_cur]) # (3,) # Vector part of quaternion
 
-        qw_des = T_des_in_ee.pose.orientation.w # Scalar part of quaternion
-        qx_des = T_des_in_ee.pose.orientation.x
-        qy_des = T_des_in_ee.pose.orientation.y
-        qz_des = T_des_in_ee.pose.orientation.z
-        qv_des = np.array([qx_des,qy_des,qz_des]) # (3,) # Vector part of quaternion
+        # Quaternion base2joint (current)
+        qw_cur = self.T_base2joint.transform.rotation.w # Scalar part of quaternion
+        qx_cur = self.T_base2joint.transform.rotation.x
+        qy_cur = self.T_base2joint.transform.rotation.y
+        qz_cur = self.T_base2joint.transform.rotation.z
+        q_base2joint = [qx_cur,qy_cur,qz_cur, qw_cur]
+        R_base2joint = tf.transformations.quaternion_matrix(q_base2joint)
 
-        # orientation_error = qw_cur*qv_des - qw_des*qv_cur - np.cross(qv_cur,qv_des) # (3,)
-        orientation_error = qw_des*qv_cur - qw_cur*qv_des - np.cross(qv_des,qv_cur)
+        # Quaternion ee2joint_desired
+        qw_des = self.T_ee2joint_desired.transform.rotation.w # Scalar part of quaternion
+        qx_des = self.T_ee2joint_desired.transform.rotation.x
+        qy_des = self.T_ee2joint_desired.transform.rotation.y
+        qz_des = self.T_ee2joint_desired.transform.rotation.z
+        q_ee2joint_desired = [qx_des,qy_des,qz_des, qw_des]
+        R_ee2joint_desired = tf.transformations.quaternion_matrix(q_ee2joint_desired)
+        q_ee2joint_desired_inv = [qx_des,qy_des,qz_des, -qw_des]
+
+        # Quaternion base2ee_goal
+        q_base2ee_goal = tf.transformations.quaternion_multiply(q_base2joint, q_ee2joint_desired_inv)
+        R_base2ee_goal = np.dot(R_base2joint, R_ee2joint_desired.T)
+        q_base2ee_goal_inv = q_base2ee_goal
+        q_base2ee_goal_inv[3] = -q_base2ee_goal[3]
+        
+
+        # Quaternion base2ee (current)
+        qw_cur = self.T_base2ee.transform.rotation.w # Scalar part of quaternion
+        qx_cur = self.T_base2ee.transform.rotation.x
+        qy_cur = self.T_base2ee.transform.rotation.y
+        qz_cur = self.T_base2ee.transform.rotation.z
+        q_base2ee = [qx_cur,qy_cur,qz_cur, qw_cur]
+        R_base2ee = tf.transformations.quaternion_matrix(q_base2ee)
+        q_base2ee_inv = [qx_cur,qy_cur,qz_cur, -qw_cur]
+
+        # Quaternion orientation_error
+        q_orientation_error = tf.transformations.quaternion_multiply(q_base2ee_inv,q_base2ee_goal)
+        # or
+        # q_orientation_error = tf.transformations.quaternion_multiply(q_base2ee,q_base2ee_goal_inv)
+
+        # orientation_error = q_orientation_error[0:3].tolist()
+
+        # Rotation orientation error
+        R_orientation_error = np.dot(R_base2ee.T, R_base2ee_goal)
+
+        # Euler XYZ
+        # orientation_error = tf_conversions.transformations.euler_from_quaternion(q_orientation_error)
+        orientation_error = tf_conversions.transformations.euler_from_matrix(R_orientation_error)
+
+
         return position_error, orientation_error
 
     def controlLaw(self,position_error, orientation_error):
@@ -194,9 +201,9 @@ class BodySingleJointFollower():
         Vy = P_err[1] * self.v_p_gain
         Vz = P_err[2] * self.v_p_gain
         
-        Wx = R_err[0] * self.w_p_gain
-        Wy = R_err[1] * self.w_p_gain
-        Wz = R_err[2] * self.w_p_gain
+        Wx = R_err[0] * self.w_p_gain *0.5
+        Wy = R_err[1] * self.w_p_gain *0.5
+        Wz = R_err[2] * self.w_p_gain *1.5 
 
         return Vx, Vy, Vz, Wx, Wy, Wz
 

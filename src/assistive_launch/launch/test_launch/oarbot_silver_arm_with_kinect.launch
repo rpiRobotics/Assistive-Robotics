@@ -46,7 +46,7 @@
         <arg name="wired_sync_mode"             value="0"/>               <!-- Wired sync mode. 0: OFF, 1: MASTER, 2: SUBORDINATE. -->
         <arg name="subordinate_delay_off_master_usec" value="0"/>         <!-- Delay subordinate camera off master camera by specified amount in usec. -->
         <arg name="body_tracking_enabled"           value="true" />  <!-- If set to true the joint positions will be published as marker arrays -->
-        <arg name="body_tracking_smoothing_factor"  value="0.0" />    <!-- Set between 0 for no smoothing and 1 for full smoothing -->
+        <arg name="body_tracking_smoothing_factor"  value="1.0" />    <!-- Set between 0 for no smoothing and 1 for full smoothing -->
 
         <!-- Processing Modules -->
         <arg name="rgb_processing"                  value="true"  />
