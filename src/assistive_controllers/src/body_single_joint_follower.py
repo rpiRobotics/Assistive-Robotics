@@ -221,9 +221,9 @@ class BodySingleJointFollower():
         Vy = P_err[1] * self.v_p_gain
         Vz = P_err[2] * self.v_p_gain
         
-        Wx = R_err[0] * self.w_p_gain *0.5
-        Wy = R_err[1] * self.w_p_gain *0.5
-        Wz = R_err[2] * self.w_p_gain *1.5 
+        Wx = R_err[0] * self.w_p_gain #*0.5
+        Wy = R_err[1] * self.w_p_gain #*0.5
+        Wz = R_err[2] * self.w_p_gain #*1.5 
 
         return Vx, Vy, Vz, Wx, Wy, Wz
 
