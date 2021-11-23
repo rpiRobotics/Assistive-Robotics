@@ -199,7 +199,7 @@ class BodySingleJointFollower():
         P_ee2joint_desired_y = self.T_ee2joint_desired.transform.translation.y
         P_ee2joint_desired_z = self.T_ee2joint_desired.transform.translation.z
         P_ee2joint_desired = np.array([P_ee2joint_desired_x,P_ee2joint_desired_y,P_ee2joint_desired_z])
-        P_joint2goal = np.dot(-R_ee2joint_desired.T,P_ee2joint_desired)
+        P_joint2goal = np.dot(-R_ee2joint_desired[:3,:3].T,P_ee2joint_desired)
         self.broadcast_tf_goal(q_ee2joint_desired_inv,P_joint2goal)
 
         return position_error, orientation_error
