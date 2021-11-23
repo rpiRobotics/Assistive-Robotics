@@ -88,7 +88,6 @@ class BodySingleJointFollower():
                 position_error, orientation_error = self.poseErrorCalculator()
 
                 # rospy.logwarn("position_error: "+ str(position_error) + ", orientation_error: " + str(orientation_error))
-                
                 rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
 
                 # With control law specify the command
@@ -158,13 +157,13 @@ class BodySingleJointFollower():
         qz_des = self.T_ee2joint_desired.transform.rotation.z
         q_ee2joint_desired = [qx_des,qy_des,qz_des, qw_des]
         R_ee2joint_desired = tf.transformations.quaternion_matrix(q_ee2joint_desired)
-        q_ee2joint_desired_inv = [qx_des,qy_des,qz_des, -qw_des]
+        # q_ee2joint_desired_inv = [qx_des,qy_des,qz_des, -qw_des]
 
         # Quaternion base2ee_goal
-        q_base2ee_goal = tf.transformations.quaternion_multiply(q_base2joint, q_ee2joint_desired_inv)
+        # q_base2ee_goal = tf.transformations.quaternion_multiply(q_base2joint, q_ee2joint_desired_inv)
         R_base2ee_goal = np.dot(R_base2joint, R_ee2joint_desired.T)
-        q_base2ee_goal_inv = q_base2ee_goal
-        q_base2ee_goal_inv[3] = -q_base2ee_goal[3]
+        # q_base2ee_goal_inv = q_base2ee_goal
+        # q_base2ee_goal_inv[3] = -q_base2ee_goal[3]
         
 
         # Quaternion base2ee (current)
@@ -174,13 +173,12 @@ class BodySingleJointFollower():
         qz_cur = self.T_base2ee.transform.rotation.z
         q_base2ee = [qx_cur,qy_cur,qz_cur, qw_cur]
         R_base2ee = tf.transformations.quaternion_matrix(q_base2ee)
-        q_base2ee_inv = [qx_cur,qy_cur,qz_cur, -qw_cur]
+        # q_base2ee_inv = [qx_cur,qy_cur,qz_cur, -qw_cur]
 
         # Quaternion orientation_error
-        q_orientation_error = tf.transformations.quaternion_multiply(q_base2ee_inv,q_base2ee_goal)
+        # q_orientation_error = tf.transformations.quaternion_multiply(q_base2ee_inv,q_base2ee_goal)
         # or
         # q_orientation_error = tf.transformations.quaternion_multiply(q_base2ee,q_base2ee_goal_inv)
-
         # orientation_error = q_orientation_error[0:3].tolist()
 
         # Rotation orientation error
@@ -188,8 +186,11 @@ class BodySingleJointFollower():
 
         # Euler XYZ
         # orientation_error = tf_conversions.transformations.euler_from_quaternion(q_orientation_error)
-        orientation_error = tf_conversions.transformations.euler_from_matrix(R_orientation_error)
+        
+        #orientation_error = tf_conversions.transformations.euler_from_matrix(R_orientation_error)
 
+        q_orientation_error = tf_conversions.transformations.quaternion_from_matrix(R_orientation_error)
+        orientation_error = q_orientation_error[0:3].tolist()
 
         return position_error, orientation_error
 
