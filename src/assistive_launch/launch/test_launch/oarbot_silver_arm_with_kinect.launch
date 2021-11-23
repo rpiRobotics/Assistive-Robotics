@@ -26,7 +26,7 @@
                     The colour and depth images are processed via 'rgbd_launch' and point clouds are generated via
                     'image_proc' using the manual camera calibration. -->
         <arg name="depth_enabled"               value="true" />           <!-- Enable or disable the depth camera -->
-        <arg name="depth_mode"                  value="NFOV_UNBINNED" />  <!-- Set the depth camera mode, which affects FOV, depth range, and camera resolution. See Azure Kinect documentation for full details. Valid options: NFOV_UNBINNED, NFOV_2X2BINNED, WFOV_UNBINNED, WFOV_2X2BINNED, and PASSIVE_IR -->
+        <arg name="depth_mode"                  value="WFOV_2X2BINNED" />  <!-- Set the depth camera mode, which affects FOV, depth range, and camera resolution. See Azure Kinect documentation for full details. Valid options: NFOV_UNBINNED, NFOV_2X2BINNED, WFOV_UNBINNED, WFOV_2X2BINNED, and PASSIVE_IR -->
         <arg name="depth_unit"                  value="16UC1" />          <!-- Depth distance units. Options are: "32FC1" (32 bit float metre) or "16UC1" (16 bit integer millimetre) -->
         <arg name="color_enabled"               value="true" />           <!-- Enable or disable the color camera -->
         <arg name="color_format"                value="bgra" />           <!-- The format of RGB camera. Valid options: bgra, jpeg -->
