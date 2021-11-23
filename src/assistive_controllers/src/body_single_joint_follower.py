@@ -91,7 +91,7 @@ class BodySingleJointFollower():
                 position_error, orientation_error = self.poseErrorCalculator()
 
                 rospy.logwarn("position_error: " + "{:.3f}".format(position_error[0]) + ", {:.3f}".format(position_error[1]) + ", {:.3f}".format(position_error[2])  )
-                # rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
+                rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
 
                 # With control law specify the command
                 Vx, Vy, Vz, Wx, Wy, Wz = self.controlLaw(position_error, orientation_error)
@@ -137,10 +137,17 @@ class BodySingleJointFollower():
         cur: current
         """
         # Position error in base
-        P_err_x = (self.T_base2joint.transform.translation.x - self.T_base2ee.transform.translation.x) - (self.T_base2joint_desired.transform.translation.x - self.T_base2ee_desired.transform.translation.x) 
-        P_err_y = (self.T_base2joint.transform.translation.y - self.T_base2ee.transform.translation.y) - (self.T_base2joint_desired.transform.translation.y - self.T_base2ee_desired.transform.translation.y) 
-        P_err_z = (self.T_base2joint.transform.translation.z - self.T_base2ee.transform.translation.z) - (self.T_base2joint_desired.transform.translation.z - self.T_base2ee_desired.transform.translation.z) 
-        position_error = [P_err_x,P_err_y,P_err_z] # (3,)
+        P_ee2joint_in_base_x = (self.T_base2joint.transform.translation.x - self.T_base2ee.transform.translation.x)
+        P_ee2joint_in_base_y = (self.T_base2joint.transform.translation.y - self.T_base2ee.transform.translation.y)
+        P_ee2joint_in_base_z = (self.T_base2joint.transform.translation.z - self.T_base2ee.transform.translation.z)
+        P_ee2joint_in_base = np.array([P_ee2joint_in_base_x,P_ee2joint_in_base_y,P_ee2joint_in_base_z])
+
+        P_ee2joint_desired_in_base_x = (self.T_base2joint_desired.transform.translation.x - self.T_base2ee_desired.transform.translation.x) 
+        P_ee2joint_desired_in_base_y = (self.T_base2joint_desired.transform.translation.y - self.T_base2ee_desired.transform.translation.y) 
+        P_ee2joint_desired_in_base_z = (self.T_base2joint_desired.transform.translation.z - self.T_base2ee_desired.transform.translation.z) 
+        P_ee2joint_desired_in_base = np.array([P_ee2joint_desired_in_base_x,P_ee2joint_desired_in_base_y,P_ee2joint_desired_in_base_z])
+
+        position_error = (P_ee2joint_in_base - P_ee2joint_desired_in_base).tolist() # (3,)
         
         # Orientation error (with quaternion vector)
         # based on http://www.cs.cmu.edu/~cga/dynopt/readings/Yuan88-quatfeedback.pdf eqn 27,28
@@ -195,11 +202,13 @@ class BodySingleJointFollower():
         orientation_error = q_orientation_error[0:3].tolist()
 
         # Publish a tf frame for showing the goal for the robot
-        P_ee2joint_desired_x = self.T_ee2joint_desired.transform.translation.x
-        P_ee2joint_desired_y = self.T_ee2joint_desired.transform.translation.y
-        P_ee2joint_desired_z = self.T_ee2joint_desired.transform.translation.z
-        P_ee2joint_desired = np.array([P_ee2joint_desired_x,P_ee2joint_desired_y,P_ee2joint_desired_z])
-        P_joint2goal = np.dot(-R_ee2joint_desired[:3,:3].T,P_ee2joint_desired)
+        # P_ee2joint_desired_x = self.T_ee2joint_desired.transform.translation.x
+        # P_ee2joint_desired_y = self.T_ee2joint_desired.transform.translation.y
+        # P_ee2joint_desired_z = self.T_ee2joint_desired.transform.translation.z
+        # P_ee2joint_desired = np.array([P_ee2joint_desired_x,P_ee2joint_desired_y,P_ee2joint_desired_z])
+        # P_joint2goal = np.dot(-R_ee2joint_desired[:3,:3].T,P_ee2joint_desired)
+
+        P_joint2goal = np.dot(R_base2joint[:3,:3].T,-P_ee2joint_desired_in_base)
         self.broadcast_tf_goal(q_ee2joint_desired_inv,P_joint2goal)
 
         return position_error, orientation_error
