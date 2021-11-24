@@ -68,8 +68,12 @@
         <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_arm_camera.yaml"/>
     </node>
 
-    <node name="tf_camera_body_single_joint_broadcaster" pkg="tf_broadcasters" type="tf_camera_body_single_joint_broadcaster.py">
+    <!-- <node name="tf_camera_body_single_joint_broadcaster" pkg="tf_broadcasters" type="tf_camera_body_single_joint_broadcaster.py">
         <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_camera_body_single_joint.yaml"/>
+    </node> -->
+
+    <node name="tf_camera_body_all_joints_broadcaster" pkg="tf_broadcasters" type="tf_camera_body_all_joints_broadcaster.py">
+        <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_camera_body_all_joints.yaml"/>
     </node>
 
 </group>

@@ -1,0 +1,2 @@
+kinect_body_tracking_data_topic_name: 'body_tracking_data'
+tf_camera_frame_id: 'depth_camera_link'
