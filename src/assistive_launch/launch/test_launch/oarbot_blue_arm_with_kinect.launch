@@ -7,8 +7,8 @@
     <include file="$(find kinova_bringup)/launch/kinova_robot.launch">
         <arg name="use_urdf" value="true"/>
         <arg name="kinova_robotType" value="j2n6s300" />
-        <!-- <arg name="kinova_robotName" value="$(arg kinova_robotType)"/> -->
-        <arg name="kinova_robotSerial" value="not_set" />
+        <arg name="kinova_robotName" value="right"/> <!-- value="$(arg kinova_robotType)" -->
+        <arg name="kinova_robotSerial" value="PJ00900006151260001" /> <!-- value="not_set" -->
         <arg name="use_jaco_v1_fingers" value="false" />
         <arg name="feedback_publish_rate" value="0.01" />
     </include>
