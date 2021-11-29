@@ -52,7 +52,9 @@ class Arm2CameraTf():
         t.header.stamp = rospy.Time.now()
 
         t.header.frame_id = self.tf_end_effector_frame_id
+        rospy.logwarn("header: "+ str(t.header.frame_id))
         t.child_frame_id = self.tf_root_camera_frame_id
+        rospy.logwarn("child: "+ str(t.child_frame_id))
 
         # print(self.arm2camera_pose)
         t.transform.translation.x = self.arm2camera_pose['position']['x']
