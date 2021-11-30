@@ -3,12 +3,16 @@
 <group ns="oarbot_silver">
 	<machine name="oarbot-silver-P15" address="192.168.1.101" env-loader="/home/oarbot_silver/catkin_ws_assistive/scripts/env_oarbot_silver.sh" user="oarbot_silver" password="1234" default="true"/>
 
+    <arg name="prefix_for_tf" default="j2n6s300_left" />  <!-- Applies to both kinova arm and the kinect -->
+        
 <!-- Launch Kinova Arm -->
-    <include file="$(find kinova_bringup)/launch/kinova_robot.launch">
+    <include file="$(find assistive_launch)/launch/test_launch/oarbot_silver_kinova_robot.launch">
         <arg name="use_urdf" value="true"/>
         <arg name="kinova_robotType" value="j2n6s300" />
         <!-- <arg name="kinova_robotName" value="$(arg kinova_robotType)"/> -->
         <arg name="kinova_robotSerial" value="not_set" />
+        <arg name="kinova_root_name" value="root_left_arm" />
+        <arg name="kinova_prefix" value="$(arg prefix_for_tf)" />
         <arg name="use_jaco_v1_fingers" value="false" />
         <arg name="feedback_publish_rate" value="0.01" />
     </include>
@@ -17,7 +21,7 @@
     <include file="$(find azure_kinect_ros_driver)/launch/kinect_rgbd.launch">
         <arg name="camera" value="k4a" />
         <!-- publish Azure Kinect coordiante frames -->
-        <arg name="tf_prefix"         value="" />                       <!-- Prefix added to tf frame IDs. It typically contains a trailing '_' unless empty. -->
+        <arg name="tf_prefix"         value="$(arg kinova_prefix)_" />   <!-- Prefix added to tf frame IDs. It typically contains a trailing '_' unless empty. -->
         <arg name="overwrite_robot_description" value="false" />         <!-- Flag to publish a standalone azure_description instead of the default robot_descrition parameter-->
         <arg name="depth_registration" value="true" doc="Hardware depth registration" />
         <arg name="num_worker_threads" value="4" doc="Worker threads for the nodelet manager" />
