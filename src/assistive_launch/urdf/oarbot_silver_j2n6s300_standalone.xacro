@@ -33,7 +33,8 @@
   </joint> 
 
   <xacro:property name="robot_root" value="$(arg robot_root_name)" />
+  <xacro:property name="prefix" value="$(arg robot_prefix)" />
 
-  <xacro:j2n6s300  base_parent="${robot_root}" prefix="${robot_prefix}"/>
+  <xacro:j2n6s300  base_parent="${robot_root}" prefix="${prefix}"/>
 
 </robot>
