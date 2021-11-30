@@ -12,6 +12,7 @@ Description:
 Parameters:
     - kinect_body_tracking_data_topic_name: topic that is the body tracking data is published by a kinect camera eg."/body_tracking_data"
     - tf_camera_frame_id: frame name that is the joints are related to by Kinect ROS drivers, eg, "depth_camera_link"
+    - body_joints_tf_prefix: tf prefix for the body joints that will allow to distinguish the source of published body joint tf frames, if specified usually ends with an underscore "_" char
 Subscribes to:
     - /body_tracking_data (visualization_msgs::MarkerArray)
 Publishes to:
@@ -36,6 +37,7 @@ class Kinect2BodyAllJointsTf():
 
         self.kinect_body_tracking_data_topic_name = rospy.get_param('~kinect_body_tracking_data_topic_name', "/body_tracking_data")
         self.parent_frame_id = rospy.get_param("~tf_camera_frame_id", "depth_camera_link")
+        self.body_joints_tf_prefix = rospy.get_param("~body_joints_tf_prefix", "")
 
         self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
         rospy.Subscriber(self.kinect_body_tracking_data_topic_name, visualization_msgs.msg.MarkerArray, self.handle_joint_pose)
@@ -50,7 +52,7 @@ class Kinect2BodyAllJointsTf():
             t.header.stamp = joint_marker.header.stamp
 
             t.header.frame_id = self.parent_frame_id
-            t.child_frame_id = joint_name.lower()
+            t.child_frame_id = self.body_joints_tf_prefix + joint_name.lower()
 
             t.transform.translation = joint_marker.pose.position
             t.transform.rotation = joint_marker.pose.orientation

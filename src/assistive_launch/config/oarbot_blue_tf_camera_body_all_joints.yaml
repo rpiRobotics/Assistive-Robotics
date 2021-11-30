@@ -1,2 +1,3 @@
 kinect_body_tracking_data_topic_name: 'body_tracking_data'
 tf_camera_frame_id: 'j2n6s300_right_depth_camera_link'
+body_joints_tf_prefix: 'j2n6s300_right_body_'
