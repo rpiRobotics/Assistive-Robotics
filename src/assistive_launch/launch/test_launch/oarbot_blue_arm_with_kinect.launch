@@ -21,7 +21,7 @@
     <include file="$(find azure_kinect_ros_driver)/launch/kinect_rgbd.launch">
         <arg name="camera" value="k4a" />
         <!-- publish Azure Kinect coordiante frames -->
-        <arg name="tf_prefix"         value="$(arg kinova_prefix)_" />   <!-- Prefix added to tf frame IDs. It typically contains a trailing '_' unless empty. -->
+        <arg name="tf_prefix"         value="$(arg prefix_for_tf)_" />   <!-- Prefix added to tf frame IDs. It typically contains a trailing '_' unless empty. -->
         <arg name="overwrite_robot_description" value="false" />         <!-- Flag to publish a standalone azure_description instead of the default robot_descrition parameter-->
         <arg name="depth_registration" value="true" doc="Hardware depth registration" />
         <arg name="num_worker_threads" value="4" doc="Worker threads for the nodelet manager" />
