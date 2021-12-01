@@ -29,7 +29,7 @@
   <joint name="connect_root_and_world" type="fixed">
     <child link="$(arg robot_root_name)" />
     <parent link="world" />
-    <origin xyz="0 0 0" rpy="0 0 0" />    
+    <origin xyz="0 -0.5 0" rpy="0 0 0" />    
   </joint> 
 
   <xacro:property name="robot_root" value="$(arg robot_root_name)" />
