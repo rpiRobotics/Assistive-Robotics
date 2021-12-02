@@ -5,8 +5,8 @@ tf_end_effector_frame_name: 'j2n6s300_right_end_effector'
 tf_arm_base_frame_name: 'j2n6s300_right_link_base'
 
 v_p_gain: 3.0 # 3.0
-v_d_gain: 0.0
+v_d_gain: 0.0 # Not implemented
 w_p_gain: 5.0  # 1.5
-w_d_gain: 0.0
+w_d_gain: 0.0 # Not implemented
 
-pub_rate: 110.0 # It is a must to be 100 Hz for Kinova arm
+pub_rate: 110.0 # It is a must to be 100 Hz for Kinova arm (If higher kinova can continue to move after the the command sendings stops bcs of the queue size)

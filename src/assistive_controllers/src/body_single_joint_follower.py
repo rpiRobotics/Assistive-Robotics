@@ -69,7 +69,7 @@ class BodySingleJointFollower():
         self.tfBuffer = tf2_ros.Buffer()
         self.tfListener = tf2_ros.TransformListener(self.tfBuffer)
 
-        # TF2 broadcaster (for showing puposes)
+        # TF2 broadcaster (for showing purposes)
         self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
 
         self.initial_time = rospy.Time.now().to_sec()
@@ -90,8 +90,8 @@ class BodySingleJointFollower():
                 # Calculate the error btw the desired and the current pose
                 position_error, orientation_error = self.poseErrorCalculator()
 
-                rospy.logwarn("position_error: " + "{:.3f}".format(position_error[0]) + ", {:.3f}".format(position_error[1]) + ", {:.3f}".format(position_error[2])  )
-                rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
+                # rospy.logwarn("position_error: " + "{:.3f}".format(position_error[0]) + ", {:.3f}".format(position_error[1]) + ", {:.3f}".format(position_error[2])  )
+                # rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
 
                 # With control law specify the command
                 Vx, Vy, Vz, Wx, Wy, Wz = self.controlLaw(position_error, orientation_error)
