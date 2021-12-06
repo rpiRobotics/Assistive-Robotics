@@ -17,7 +17,7 @@ SCRIPTS=(
     echo 1234 | sudo -S apt install -y spacenavd;
     echo 1234 | sudo -S apt install -y ros-noetic-spacenav-node;
     echo 1234 | sudo -S apt install -y ros-noetic-twist-mux;
-    echo 1234 | sudo -S usermod -a -G dialout tablet
+    echo 1234 | sudo -S usermod -a -G dialout tablet;
     pip3 install pyserial
     "
 
@@ -59,6 +59,7 @@ SCRIPTS=(
     echo 1234 | sudo -S apt install -y python3-pip;
     echo 1234 | sudo -S apt install -y python-pip;
     pip3 install pyserial;
+    pip install general-robotics-toolbox;
     if ! grep -q '^deb .*https://packages.microsoft.com/ubuntu/18.04/prod' /etc/apt/sources.list /etc/apt/sources.list.d/*; then
         echo 1234 | curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -;
         echo 1234 | sudo apt-add-repository https://packages.microsoft.com/ubuntu/18.04/prod;
@@ -111,6 +112,7 @@ SCRIPTS=(
     echo 1234 | sudo -S apt install -y python3-pip;
     echo 1234 | sudo -S apt install -y python-pip;
     pip3 install pyserial;
+    pip install general-robotics-toolbox;
     if ! grep -q '^deb .*https://packages.microsoft.com/ubuntu/18.04/prod' /etc/apt/sources.list /etc/apt/sources.list.d/*; then
         echo 1234 | curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -;
         echo 1234 | sudo apt-add-repository https://packages.microsoft.com/ubuntu/18.04/prod;
