@@ -90,7 +90,7 @@ SCRIPTS=(
     cd ..;
     ##############
     source /opt/ros/melodic/setup.bash;
-    catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;assistive_launch;arduino_talker';
+    catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;arduino_talker';
     grep -qxF 'source ~/catkin_ws_assistive/devel/setup.bash' ~/.bashrc || echo 'source ~/catkin_ws_assistive/devel/setup.bash' >> ~/.bashrc;
     source ~/.bashrc;
     source ~/catkin_ws_assistive/devel/setup.bash;    
@@ -143,7 +143,7 @@ SCRIPTS=(
     cd ..;
     ##############
     source /opt/ros/melodic/setup.bash;
-    catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;assistive_launch;arduino_talker';
+    catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;arduino_talker';
     grep -qxF 'source ~/catkin_ws_assistive/devel/setup.bash' ~/.bashrc || echo 'source ~/catkin_ws_assistive/devel/setup.bash' >> ~/.bashrc;
     source ~/.bashrc;
     source ~/catkin_ws_assistive/devel/setup.bash;    
