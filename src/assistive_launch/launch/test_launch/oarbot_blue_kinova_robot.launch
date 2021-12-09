@@ -7,7 +7,7 @@
 	<arg name="kinova_root_name" default="root_right_arm" />
   <arg name="kinova_prefix" default="j2n6s300_right" />
   <arg name="use_jaco_v1_fingers" default="false" />
-	<arg name="feedback_publish_rate" default="0.01" />
+	<arg name="feedback_publish_rate" default="0.02" /> <!-- (0.02 s = 50 Hz) Higher rate is practically not possible -->
   
 
   <node name="$(arg kinova_robotName)_driver" pkg="kinova_driver" type="kinova_arm_driver" output="screen" cwd="node" args="$(arg kinova_robotType)">
@@ -33,6 +33,7 @@
     <node name="$(arg kinova_robotName)_state_publisher"
            pkg="robot_state_publisher"
           type="robot_state_publisher">
+      <param name="publish_frequency" value="50" /> <!-- (0.02 s = 50 Hz) Higher rate is practically not possible -->
       <remap from="joint_states" to="$(arg kinova_robotName)_driver/out/joint_state"/>
     </node>
   </group>
