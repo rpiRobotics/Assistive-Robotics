@@ -108,9 +108,45 @@ You can find the installation files of Development Center, a GUI available with 
 ### Control the arm via ROS package
 Please direct [here](https://github.com/eric565648/kinova-ros/tree/noetic-devel) for how to launch the arm, perform joint angle and cartetian space control.
 
-#### Note
-1. The admittance control does not work.
-2. We have not do the torque calibration yet.
+### Put the arm to service mode
+- Plug in USB your robot 
+- Open the `C:\Program Files (x86)\JACO-SDK\RobotConfiguration` or the equivalent path on you system.
+- Put the last firmware you upload in your robot in the firmware folder.
+- Run `ActivateServiceConfiguration.exe` (it is a console app, see the outputs by running it from a terminal/command line)
+If that works well at  General setting > update at the arm type field you will see JAco v2 6dof Service.
+
+### To use admittance control 
+1. Open Development Center GUI, general setting > update 
+2. Verify that main firmware is updated. 
+3. Arm type is in service mode (see above).
+4. Actuator firmware is updated.
+5. Verify that all the torque sensors are functional. (see details below)
+6. Do the torque calibration. (see details below)
+7. Verify that the gravity vector and the payload correctly defined. (see details below)
+
+#### Steps 1-4 are already done in the above.
+
+#### 5. Verifying all torque sensors are functional
+Open the Development Center and go to Monitoring >angular >torque  column
+- Push against each joint to apply an external torque to each joint and observe if the value on screen reacts
+  accordingly to your action. Push in both direction and the torque should be positive in one direction and
+            negative in the opposite one.
+- If it does not react as expected, You have a problem with one or more of your torque sensor.
+- If it reacts as expected, try step 6.
+
+#### 6. Doing the torque calibration
+Calibrate arm torque by reset sensors to zero value.
+Get the user Guide. Go at the page 58 and place the robot at the picture position (candle like position)
+- Once the arm is in the right position, you have to open the Development Center and go to Advanced settings and press 4 times to the Apply to all button in torque zero menu.
+-  Try to put the arm in torque mode with torque console, but close the Development Center before opening Torque console.
+-  If the arm does not switch to torque control try step 7.  
+
+#### 7. Verify that the gravity vector and the payload correctly defined.
+- Open the Torque Console Interface and set the Gravity vector. 
+- Then set the payload if you have one.
+- When it is done, try to switch to torque mode with the Torque Console Interface
+ 
+If after all of those step it continue to not work, it may be a hardware issue. That need further investigation 
 
 # Installing Ubuntu 18.04 to Lenovo Thinkpad P15 Gen2 Laptops
  See the hardware specs of this computer model in https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_P15_Gen_2/ThinkPad_P15_Gen_2_Spec.pdf
