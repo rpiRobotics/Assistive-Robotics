@@ -33,7 +33,7 @@
     <node name="$(arg kinova_robotName)_state_publisher"
            pkg="robot_state_publisher"
           type="robot_state_publisher">
-      <param name="publish_frequency" value="50" /> <!-- (0.02 s = 50 Hz) Higher rate is practically not possible -->
+      <param name="publish_frequency" value="100" /> <!-- (0.02 s = 50 Hz) Higher rate is practically not possible -->
       <remap from="joint_states" to="$(arg kinova_robotName)_driver/out/joint_state"/>
     </node>
   </group>
