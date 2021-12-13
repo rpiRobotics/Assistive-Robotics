@@ -38,4 +38,8 @@
     </node>
   </group>
 
+  <node name="$(arg kinova_robotName)_helper_publisher" pkg="kinova_helper" type="helper_publisher.py" output="screen" cwd="node">
+    <param name="robot_name" value="$(arg kinova_robotName)" />
+  </node>
+
 </launch>
