@@ -14,7 +14,7 @@
         <arg name="kinova_root_name" value="root_right_arm" />
         <arg name="kinova_prefix" value="$(arg prefix_for_tf)" />
         <arg name="use_jaco_v1_fingers" value="false" />
-        <arg name="feedback_publish_rate" value="0.02" /> <!-- (0.02 s = 50 Hz) Higher rate is practically not possible -->
+        <arg name="feedback_publish_rate" value="0.01" /> <!-- (0.01 s = 100 Hz) Higher rate is practically not possible -->
     </include>
 
     <!-- Launch Azure Kinect -->
