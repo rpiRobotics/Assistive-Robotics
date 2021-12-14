@@ -44,20 +44,24 @@ class Kinect2BodySingleJointTf():
         pass
 
     def handle_joint_pose(self, msg):
-        joint_marker = msg.markers[self.joint_num]
+        if len(msg.markers) > 0: # If at least one body is detected 
+            joint_marker = msg.markers[self.joint_num]
+            
+            t = geometry_msgs.msg.TransformStamped()
+            # t.header.stamp = rospy.Time.now()
+            t.header.stamp = joint_marker.header.stamp
+
+            t.header.frame_id = self.parent_frame_id
+            t.child_frame_id = self.joint_name.lower()
+
+            t.transform.translation = joint_marker.pose.position
+            # q = tf_conversions.transformations.quaternion_from_euler(0, 0, msg.theta)
+            t.transform.rotation = joint_marker.pose.orientation
+
+            self.tf_broadcaster.sendTransform(t)
+        else:
+            rospy.logwarn("No body could be detected, waiting to detect..")
         
-        t = geometry_msgs.msg.TransformStamped()
-        # t.header.stamp = rospy.Time.now()
-        t.header.stamp = joint_marker.header.stamp
-
-        t.header.frame_id = self.parent_frame_id
-        t.child_frame_id = self.joint_name.lower()
-
-        t.transform.translation = joint_marker.pose.position
-        # q = tf_conversions.transformations.quaternion_from_euler(0, 0, msg.theta)
-        t.transform.rotation = joint_marker.pose.orientation
-
-        self.tf_broadcaster.sendTransform(t)
 
 KINECT_JOINT_DICT = {
     "JOINT_PELVIS" : 0, 
