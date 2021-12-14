@@ -23,7 +23,7 @@
         <!-- publish Azure Kinect coordiante frames -->
         <arg name="tf_prefix"         value="$(arg prefix_for_tf)_" />   <!-- Prefix added to tf frame IDs. It typically contains a trailing '_' unless empty. -->
         <arg name="overwrite_robot_description" value="false" />         <!-- Flag to publish a standalone azure_description instead of the default robot_descrition parameter-->
-        <arg name="depth_registration" value="true" doc="Hardware depth registration" />
+        <arg name="depth_registration" value="false" doc="Hardware depth registration" />
         <arg name="num_worker_threads" value="4" doc="Worker threads for the nodelet manager" />
         <!-- Driver settings -->
         <!-- Note: Point cloud processing in the driver will use the factory calibration and is therefore disabled.
@@ -55,7 +55,7 @@
         <!-- Processing Modules -->
         <arg name="rgb_processing"                  value="true"  />
         <arg name="debayer_processing"              value="false" />
-        <arg name="ir_processing"                   value="true" />
+        <arg name="ir_processing"                   value="false" />
         <arg name="depth_processing"                value="true" />
         <arg name="depth_registered_processing"     value="true" />
         <arg name="disparity_processing"            value="false" />
