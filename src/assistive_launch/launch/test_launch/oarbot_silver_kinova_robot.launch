@@ -33,13 +33,15 @@
     <node name="$(arg kinova_robotName)_state_publisher"
            pkg="robot_state_publisher"
           type="robot_state_publisher">
-      <param name="publish_frequency" value="100" /> <!-- (0.01 s = 100 Hz) Higher rate is practically not possible -->
+      <param name="publish_frequency" value="200" /> <!-- (0.01 s = 100 Hz) Higher rate is practically not possible -->
       <remap from="joint_states" to="$(arg kinova_robotName)_driver/out/joint_state"/>
     </node>
   </group>
 
   <node name="$(arg kinova_robotName)_helper_publisher" pkg="kinova_helper" type="helper_publisher.py" output="screen" cwd="node">
     <param name="robot_name" value="$(arg kinova_robotName)" />
+    <remap from="out_custom/tool_wrench" to="$(arg kinova_robotName)_driver/out/tool_wrench"/>
+    <remap from="out_custom/tool_pose" to="$(arg kinova_robotName)_driver/out/tool_pose"/>
   </node>
 
 </launch>
