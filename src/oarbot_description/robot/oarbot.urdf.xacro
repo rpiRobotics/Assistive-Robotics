@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+
+<robot name="summit_xl" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<!-- Import summit XL wheels -->
+	<xacro:include filename="$(find oarbot_description)/urdf/wheels/omni_wheel.urdf.xacro" />
+	<xacro:include filename="$(find oarbot_description)/urdf/base/oarbot_base.urdf.xacro" />
+	<xacro:include filename="$(find kinova_description)/urdf/j2n6s300.xacro" />
+
+
+	<!-- Wheel parameters -->
+	<xacro:property name="wheel_offset_x" value="0.2225" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="wheel_offset_y" value="0.2045" />
+	<xacro:property name="wheel_offset_z" value="0.0" />
+
+	<xacro:macro name="robot">
+		<link name="world"/>
+  
+		<joint name="connect_base_and_world_x" type="prismatic">
+			<child link="world_x" />
+			<parent link="world" />
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<axis xyz="1 0 0"/>
+			<limit effort="1000.0" lower="-100" upper="100" velocity="1000"/>
+		</joint> 
+
+		<link name="world_x"/>
+
+		<joint name="connect_base_and_world_y" type="prismatic">
+			<child link="world_y" />
+			<parent link="world_x" />
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<axis xyz="0 1 0"/>
+			<limit effort="1000.0" lower="-100" upper="100" velocity="1000"/>
+		</joint> 
+
+		<link name="world_y"/>
+
+		<joint name="connect_base_and_world_z" type="continuous">
+			<child link="summit_base_footprint"/>
+			<parent link="world_y"/>
+			<axis xyz="0 0 1" rpy="0 0 0" />
+			<limit effort="1000" velocity="1000"/>
+			<joint_properties damping="0.0" friction="0.0"/>
+		</joint>
+
+		<xacro:summit_base/>
+
+		<xacro:omni_wheel prefix="summit_front_right" parent="summit_base_link" reflect="false">
+			<origin xyz="${wheel_offset_x} -${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+		</xacro:omni_wheel>
+
+		<xacro:omni_wheel prefix="summit_front_left" parent="summit_base_link" reflect="true">
+			<origin xyz="${wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+		</xacro:omni_wheel>
+
+		<xacro:omni_wheel prefix="summit_back_left" parent="summit_base_link" reflect="true">
+			<origin xyz="-${wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+		</xacro:omni_wheel>
+
+		<xacro:omni_wheel prefix="summit_back_right" parent="summit_base_link" reflect="false">
+			<origin xyz="-${wheel_offset_x} -${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+		</xacro:omni_wheel>
+
+		<xacro:j2n6s300 prefix="j2n6s300" base_parent="support">
+		</xacro:j2n6s300>   
+
+		<xacro:omni_steering />
+
+   </xacro:macro>
+
+   <xacro:robot/>
+
+</robot>
+

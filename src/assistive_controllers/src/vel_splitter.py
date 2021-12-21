@@ -24,6 +24,7 @@ Broadcasts to:
     - 
 """
 
+from numpy.core.defchararray import _join_dispatcher
 import rospy
 
 import numpy as np
@@ -54,6 +55,10 @@ class BodySingleJointFollower():
         self.base_cartesian_cmd_vel_topic_name = rospy.get_param("~base_cartesian_cmd_vel_topic_name", "cmd_vel")
         self.sup_cartesian_cmd_vel_topic_name = rospy.get_param("~sup_cartesian_cmd_vel_topic_name", "sup_vel")
 
+        # Variables
+        self.joint_state = None # joint state
+        self.joint_state_start = None
+
         # Publish rate
         self.pub_rate = rospy.get_param("~pub_rate", 100.0) # 100Hz needed for kinova arm
         self.rate = rospy.Rate(self.pub_rate)
@@ -62,12 +67,6 @@ class BodySingleJointFollower():
         self.pub_robot_vel_cmd = rospy.Publisher(self.robot_cartesian_cmd_vel_topic_name, kinova_msgs.msg.PoseVelocity, queue_size=1)
         self.pub_base_vel_cmd = rospy.Publisher(self.base_cartesian_cmd_vel_topic_name, geometry_msgs.msg.Twist,queue_size=1)
         self.pub_sup_vel_cmd = rospy.Publisher(self.sup_cartesian_cmd_vel_topic_name, geometry_msgs.msg.Twist,queue_size=1)
-
-        # Control Law Gains
-        self.v_p_gain = rospy.get_param("~v_p_gain", 2*1.5)
-        self.v_d_gain = rospy.get_param("~v_d_gain", 0.0)
-        self.w_p_gain = rospy.get_param("~w_p_gain", 1.362366*1.2)
-        self.w_d_gain = rospy.get_param("~w_d_gain", 0.0)
 
         # Specified body joint tf frame name to follow
         self.tf_body_joint_frame_name = rospy.get_param("~tf_followed_body_joint_frame_name", "JOINT_WRIST_LEFT").lower() 
@@ -91,12 +90,25 @@ class BodySingleJointFollower():
         # rospy.Timer(rospy.Duration(1.00/self.pub_rate), self.followJoint)
         self.sub_desired_vel = rospy.Subscriber(self.desired_cartesian_cmd_vel_topic_name, geometry_msgs.msg.Twist, self.splitVel_cb, queue_size=1)
 
+    def joint_state_cb(self, msg):
+
+        if self.joint_state_start is None:
+            for i in len(msg.name):
+                if msg.name(i) == 'j2n6s300_joint_1':
+                    self.joint_state_start = i
+        
+        self.joint_state = msg
+                    
 
     def splitVel_cb(self, cmd_msg):
 
+        if self.joint_state is None:
+            return
+
         des_cmd = np.array([cmd_msg.linear.x,cmd_msg.linear.y,cmd_msg.linear.z,cmd_msg.angular.x,cmd_msg.angular.y,cmd_msg.angular.z])
         
-        arm_cmd, sup_cmd, base_cmd = self.splitLaw(des_cmd)
+        joint_state = self.joint_state
+        arm_cmd, sup_cmd, base_cmd = self.splitLaw(des_cmd,joint_state)
 
 
     def splitLaw(self, des_vel):
@@ -111,6 +123,17 @@ class BodySingleJointFollower():
             base_cmd: Mobile base velocity (in the base frame)
             [linear_x,linear_y,angular_z] (np.array)
         """
+
+        base_move = True
+        arm_move = False
+
+        if base_move:
+            pass
+        elif arm_move:
+            pass
+        else:
+            pass
+
         pass
 
     def broadcast_tf_goal(self, q_joint2goal, p_joint2goal):
