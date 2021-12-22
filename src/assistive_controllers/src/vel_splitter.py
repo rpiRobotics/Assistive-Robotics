@@ -93,7 +93,7 @@ class BodySingleJointFollower():
     def joint_state_cb(self, msg):
 
         if self.joint_state_start is None:
-            for i in len(msg.name):
+            for i in range(len(msg.name)):
                 if msg.name(i) == 'j2n6s300_joint_1':
                     self.joint_state_start = i
         
