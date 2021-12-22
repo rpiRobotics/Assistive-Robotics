@@ -17,7 +17,7 @@ class baseState(object):
         super().__init__()
 
         # Parameters
-        self.home_q = np.array([0,0,0,0,0,0,0,pi/6,pi/6,pi/6,0])
+        self.home_q = np.array([0,0,0,0,0,pi/8,-pi/8,pi/6,pi/6,pi/6,0])
 
         # Variables
         self.joint_base_start = None
@@ -46,8 +46,8 @@ class baseState(object):
         # Go home
         self.go_home()
 
-        self.base_vel_sub = rospy.Subscriber("oarbot_base_vel",Twist,self.base_vel_cb,queue_size=1)
-        self.sup_vel_sub = rospy.Subscriber("support_vel",Float64,self.sup_vel_cb,queue_size=1)
+        self.base_vel_sub = rospy.Subscriber("cmd_vel",Twist,self.base_vel_cb,queue_size=1)
+        self.sup_vel_sub = rospy.Subscriber("sup_vel",Float64,self.sup_vel_cb,queue_size=1)
         self.joint_vel_sub = rospy.Subscriber("joint_vel",JointVelocity,self.joint_vel_cb,queue_size=1)
         # self.ee_vel_sub = rospy.Subscriber("arm_cartesian_vel",PoseVelocity,self.ee_vel_cb,queue_size=1)
         self.ee_vel_sub = rospy.Subscriber("arm_cartesian_vel",Twist,self.ee_vel_cb,queue_size=1)

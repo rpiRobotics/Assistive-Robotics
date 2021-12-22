@@ -11,8 +11,8 @@ from scipy.linalg import norm
 from cvxopt import matrix, solvers
 from trac_ik_python.trac_ik import IK
 
-solvers.options['show_progress'] = False
-ik_solver = IK("j2n6s300_link_base","j2n6s300_link_6")
+# solvers.options['show_progress'] = False
+# ik_solver = IK("j2n6s300_link_base","j2n6s300_link_6")
 
 ex = np.array([1,0,0])
 ey = np.array([0,1,0])
@@ -29,7 +29,7 @@ class Oarbot(object):
         aa = pi/6
         p89x = d4*(sin(aa)/sin(2*aa)) + 2*d4*(sin(aa)/sin(2*aa))*cos(2*aa)
         p89y = 2*d4*sin(aa)
-        H = np.array([ex,ey,ez,ez,ez,ey,-ey,-ex,-sin(pi/6)*ex+cos(pi/6)*ey,-ex]).T
+        H = np.array([ex,ey,ez,ez,-ez,ey,-ey,-ex,-sin(pi/6)*ex+cos(pi/6)*ey,-ex]).T
         P = np.array([0*ex,0*ex,0*ex,l1*ex+l2*ez,0*ex,0*ex,d2*ez,d3*ex+e2*ey,p89x*ex-p89y*ey,0*ex,(d6+d4*sin(aa)/sin(2*aa))*ex]).T
         joint_type = np.array([1,1,0,1,0,0,0,0,0,0])
         joint_upper_limit = np.append([10000,10000,10000,0.5],np.radians([10000,130,180,10000,10000,10000]))
@@ -60,6 +60,11 @@ class Oarbot(object):
         
         # foward kinematics for oarbot
         return rox.fwdkin(self.bot,q)
+    
+    def fwdkin_arm(self,q):
+
+        # foward kinematics for arm
+        return rox.fwdkin(self.arm_bot,q)
     
     def jacobian(self,q):
 
