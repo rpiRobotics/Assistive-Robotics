@@ -5,7 +5,7 @@ This is a repository for Assitive Robotics Project that utilizes RPI manifacture
 | Description             | Username      | Hostname (Computer Name) | IP            | Password  | OS           | ROS     |
 | ---                     | ---           | ---                      | ---           | ---       | ---          | ---     |
 | Pendant Tablet          | tablet        | tablet20                 | 192.168.1.99  | 1234      | Ubuntu 20.04 | Noetic  |
-| Main Computer           | rockie        | rockie-20                | 192.168.1.100 | rockie    | Ubuntu 20.04 | Noetic |
+| Main Computer           | razer         | razer-18                 | 192.168.1.100 | 1234      | Ubuntu 18.04 | Melodic |
 | Oarbot (Silver)         | oarbot_silver | oarbot-silver-P15        | 192.168.1.101 | 1234      | Ubuntu 18.04 | Melodic |
 | Oarbot (Blue)           | oarbot_blue   | oarbot-blue-P15          | 192.168.1.102 | 1234      | Ubuntu 18.04 | Melodic |
 
