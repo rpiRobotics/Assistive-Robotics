@@ -24,6 +24,7 @@ Broadcasts to:
     - 
 """
 
+from scipy.linalg.basic import solve
 import rospy
 
 import numpy as np
@@ -37,8 +38,10 @@ from kinova_msgs.msg import PoseVelocity,JointVelocity
 from oarbot_moveit.oarbot_moveit import Oarbot
 from copy import deepcopy as dp
 import general_robotics_toolbox as rox
+from qpsolvers import solve_qp
+from math import sin,cos
 
-class BodySingleJointFollower():
+class VelSplit():
     def __init__(self):
         rospy.init_node('vel_splitter', anonymous=True)
         self.is_following_started = False
@@ -154,7 +157,7 @@ class BodySingleJointFollower():
     def splitLaw(self, des_cmd, joint_array):
         """
         Input: 
-            des_cmd: [angular_x,angular_y,angular_z,linear_x,linear_y,linear_z]
+            des_cmd: [angular_x,angular_y,angular_z,linear_x,linear_y,linear_z] (vd)
         Output:
             arm_cmd: Robot arm cartesian cmd (in the arm base frame)
             [linear_x,linear_y,linear_z,angular_x,angular_y,angular_z] (np.array)
@@ -162,6 +165,53 @@ class BodySingleJointFollower():
             linear_z (float)
             base_cmd: Mobile base velocity (in the base frame)
             [linear_x,linear_y,angular_z] (np.array)
+        """
+
+        # ||JA qadot + JB qbdot - vd||^2 + qadot^T W_a qadot + qbdot^T W_b qbdot
+
+        q = np.append(joint_array[self.joint_base_start:self.joint_base_start+3],joint_array[self.joint_sup_start])
+        q = np.append(q,joint_array[self.joint_arm_start:self.joint_arm_start+6])
+
+        J = self.bot.jacobian(q)
+
+        Kq=.01*np.eye(len(q))    #small value to make sure positive definite
+
+        Wa = np.ones(6)*0.1 # weighting for arm axis velocity
+        Wb = np.ones(len(q)-6)*1 # weighting for base axis velocity
+        Wba = np.diag(np.append(Wb,Wa))
+
+        H = np.dot(np.transpose(J),J)+Kq+Wba
+        H = (H+np.transpose(H))/2
+
+        f = -np.dot(np.transpose(J),des_cmd).reshape((len(q),))
+        # print("f",f)
+        # print("H",H)
+
+        qdot = solve_qp(H,f)
+        # print("qdot",qdot)
+
+        J_arm = self.bot.arm_jacobian(q[4:])
+        arm_cmd = np.dot(J_arm,qdot[4:])
+
+        sup_cmd = qdot[3]
+
+        Rbo = np.array([[cos(q[2]),sin(q[2])],[-sin(q[2]),cos(q[2])]])
+        qdotbase_xy = np.dot(Rbo,qdot[:2])
+        base_cmd = np.array([0,0,qdot[2],qdotbase_xy[0],qdotbase_xy[1],0])
+
+        return arm_cmd,sup_cmd,base_cmd
+
+    def splitLaw_dis(self, des_cmd, joint_array):
+        """
+        Input: 
+            des_cmd: [angular_x,angular_y,angular_z,linear_x,linear_y,linear_z]
+        Output:
+            arm_cmd: Robot arm cartesian cmd (in the arm base frame)
+            [angular_x,angular_y,angular_z,linear_x,linear_y,linear_z] (np.array)
+            sup_cmd: Support height velocity (in the base frame. Note: it's 1DOF)
+            linear_z (float)
+            base_cmd: Mobile base velocity (in the base frame)
+            [angular_x,angular_y,angular_z,linear_x,linear_y,linear_z] (np.array)
         """
 
         ee_arm = self.bot.fwdkin_arm(joint_array[self.joint_arm_start:self.joint_arm_start+6])
@@ -227,5 +277,5 @@ class BodySingleJointFollower():
 
 
 if __name__ == '__main__':
-    bodySingleJointFollower = BodySingleJointFollower()
+    velsplit = VelSplit()
     rospy.spin()

@@ -24,7 +24,7 @@ class Oarbot(object):
 
         # robot parameters
         wheel_r,d1 = 0.127, 0.2755
-        l1,l2 = 0.3, wheel_r+0.3+d1
+        l1,l2 = 0.3, wheel_r+0.4+d1
         d2, d3, e2, d4, d5, d6= 0.41, 0.2073, 0.0098, 0.0741, 0.0741, 0.16
         aa = pi/6
         p89x = d4*(sin(aa)/sin(2*aa)) + 2*d4*(sin(aa)/sin(2*aa))*cos(2*aa)
