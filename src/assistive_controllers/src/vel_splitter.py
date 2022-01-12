@@ -28,6 +28,7 @@ from scipy.linalg.basic import solve
 import rospy
 
 import numpy as np
+import general_robotics_toolbox as rox
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64
@@ -172,18 +173,27 @@ class VelSplit():
         q = np.append(joint_array[self.joint_base_start:self.joint_base_start+3],joint_array[self.joint_sup_start])
         q = np.append(q,joint_array[self.joint_arm_start:self.joint_arm_start+6])
 
+        print(q)
         J = self.bot.jacobian(q)
+        R_sup2base = np.transpose(rox.rot([0,0,1],q[2]))
+        Jee_sup = np.dot(R_sup2base,J[:3,:])
+        Jee_sup = np.vstack((Jee_sup,np.dot(R_sup2base,J[3:,:])))
+
+        T_arm2ee = self.bot.fwdkin_arm(q[4:])
+
+        nu_omega = np.dot(T_arm2ee.R,des_cmd[:3])
+        nu = np.append(nu_omega,des_cmd[3:])
 
         Kq=.01*np.eye(len(q))    #small value to make sure positive definite
-
-        Wa = np.ones(6)*0.1 # weighting for arm axis velocity
+        # the more the weight, the less it's used
+        Wa = np.ones(6)*0.01 # weighting for arm axis velocity
         Wb = np.ones(len(q)-6)*1 # weighting for base axis velocity
         Wba = np.diag(np.append(Wb,Wa))
 
-        H = np.dot(np.transpose(J),J)+Kq+Wba
+        H = np.dot(np.transpose(Jee_sup),Jee_sup)+Kq+Wba
         H = (H+np.transpose(H))/2
 
-        f = -np.dot(np.transpose(J),des_cmd).reshape((len(q),))
+        f = -np.dot(np.transpose(Jee_sup),nu).reshape((len(q),))
         # print("f",f)
         # print("H",H)
 
@@ -192,6 +202,7 @@ class VelSplit():
 
         J_arm = self.bot.arm_jacobian(q[4:])
         arm_cmd = np.dot(J_arm,qdot[4:])
+        arm_cmd[:3] = np.dot(np.transpose(T_arm2ee.R),arm_cmd[:3])
 
         sup_cmd = qdot[3]
 
