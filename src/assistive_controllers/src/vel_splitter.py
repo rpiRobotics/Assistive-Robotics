@@ -40,7 +40,9 @@ from oarbot_moveit.oarbot_moveit import Oarbot
 from copy import deepcopy as dp
 import general_robotics_toolbox as rox
 from qpsolvers import solve_qp
-from math import sin,cos
+from math import sin,cos,pi,pow
+
+import time
 
 class VelSplit():
     def __init__(self):
@@ -75,6 +77,10 @@ class VelSplit():
         self.pub_constraint_markers = rospy.Publisher("constraint_marker",Marker,queue_size=1)
 
         # control law param
+        self.control_center = np.array([0.5,0,0.3])
+        self.control_r = 0.33
+
+        # control law param
         self.control_x_upper = 0.6
         self.control_x_lower = 0.25
         self.control_y_upper = 0.3
@@ -105,17 +111,32 @@ class VelSplit():
         
         self.joint_state = msg
 
+        # m = Marker()
+        # m.header.frame_id = 'j2n6s300_link_base'
+        # m.header.stamp = rospy.Time.now()
+        # m.type = Marker.CUBE
+        # m.pose.position.x = (self.control_x_upper+self.control_x_lower)/2
+        # m.pose.position.y = (self.control_y_upper+self.control_y_lower)/2
+        # m.pose.position.z = (self.control_z_upper+self.control_z_lower)/2
+        # m.pose.orientation.w = 1
+        # m.scale.x = self.control_x_upper-self.control_x_lower
+        # m.scale.y = self.control_y_upper-self.control_y_lower
+        # m.scale.z = self.control_z_upper-self.control_z_lower
+        # m.color.a = 0.2
+        # m.color.r = 1
+        # m.color.g = 1
+
         m = Marker()
         m.header.frame_id = 'j2n6s300_link_base'
         m.header.stamp = rospy.Time.now()
-        m.type = Marker.CUBE
-        m.pose.position.x = (self.control_x_upper+self.control_x_lower)/2
-        m.pose.position.y = (self.control_y_upper+self.control_y_lower)/2
-        m.pose.position.z = (self.control_z_upper+self.control_z_lower)/2
+        m.type = Marker.SPHERE
+        m.pose.position.x = self.control_center[0]
+        m.pose.position.y = self.control_center[1]
+        m.pose.position.z = self.control_center[2]
         m.pose.orientation.w = 1
-        m.scale.x = self.control_x_upper-self.control_x_lower
-        m.scale.y = self.control_y_upper-self.control_y_lower
-        m.scale.z = self.control_z_upper-self.control_z_lower
+        m.scale.x = self.control_r*2
+        m.scale.y = self.control_r*2
+        m.scale.z = self.control_r*2
         m.color.a = 0.2
         m.color.r = 1
         m.color.g = 1
@@ -167,14 +188,19 @@ class VelSplit():
             base_cmd: Mobile base velocity (in the base frame)
             [linear_x,linear_y,angular_z] (np.array)
         """
+        st = time.perf_counter_ns()
 
         # ||JA qadot + JB qbdot - vd||^2 + qadot^T W_a qadot + qbdot^T W_b qbdot
 
         q = np.append(joint_array[self.joint_base_start:self.joint_base_start+3],joint_array[self.joint_sup_start])
         q = np.append(q,joint_array[self.joint_arm_start:self.joint_arm_start+6])
 
-        print(q)
         J = self.bot.jacobian(q)
+        J_arm = self.bot.arm_jacobian(q[4:])
+
+        # u,s,v = np.linalg.svd(J_arm)
+        # print(s)
+
         R_sup2base = np.transpose(rox.rot([0,0,1],q[2]))
         Jee_sup = np.dot(R_sup2base,J[:3,:])
         Jee_sup = np.vstack((Jee_sup,np.dot(R_sup2base,J[3:,:])))
@@ -184,13 +210,17 @@ class VelSplit():
         nu_omega = np.dot(T_arm2ee.R,des_cmd[:3])
         nu = np.append(nu_omega,des_cmd[3:])
 
-        Kq=.01*np.eye(len(q))    #small value to make sure positive definite
+        # Kq=.001*np.eye(len(q))    #small value to make sure positive definite
+
+        arm_w, base_w = self.weighting(np.linalg.norm(T_arm2ee.p-self.control_center))
+        print("arm_w,base_w:",arm_w,base_w)
+
         # the more the weight, the less it's used
-        Wa = np.ones(6)*0.01 # weighting for arm axis velocity
-        Wb = np.ones(len(q)-6)*1 # weighting for base axis velocity
+        Wa = np.ones(6)*arm_w # weighting for arm axis velocity
+        Wb = np.ones(len(q)-6)*base_w # weighting for base axis velocity
         Wba = np.diag(np.append(Wb,Wa))
 
-        H = np.dot(np.transpose(Jee_sup),Jee_sup)+Kq+Wba
+        H = np.dot(np.transpose(Jee_sup),Jee_sup)+Wba
         H = (H+np.transpose(H))/2
 
         f = -np.dot(np.transpose(Jee_sup),nu).reshape((len(q),))
@@ -199,8 +229,7 @@ class VelSplit():
 
         qdot = solve_qp(H,f)
         # print("qdot",qdot)
-
-        J_arm = self.bot.arm_jacobian(q[4:])
+        
         arm_cmd = np.dot(J_arm,qdot[4:])
         arm_cmd[:3] = np.dot(np.transpose(T_arm2ee.R),arm_cmd[:3])
 
@@ -210,7 +239,25 @@ class VelSplit():
         qdotbase_xy = np.dot(Rbo,qdot[:2])
         base_cmd = np.array([0,0,qdot[2],qdotbase_xy[0],qdotbase_xy[1],0])
 
+        et = time.perf_counter_ns()
+        # print("duration:",(et-st)*1e-9)
+
         return arm_cmd,sup_cmd,base_cmd
+    
+    def weighting(self, r):
+
+        if r > self.control_r:
+            r = self.control_r
+
+        wr = 3*cos((r/self.control_r)*pi)
+        if wr >= 0:
+            wa = 0.01
+            wb = wa*(10**wr)
+        else:
+            wb = 0.01
+            wa = wb/(10**wr)
+
+        return wa,wb
 
     def splitLaw_dis(self, des_cmd, joint_array):
         """
