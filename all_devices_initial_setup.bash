@@ -194,6 +194,7 @@ SCRIPTS=(
     echo 1234 | sudo -S apt install -y python-pip;
     pip3 install pyserial;
     pip install general-robotics-toolbox;
+    pip install pandas;
     if ! grep -q '^deb .*https://packages.microsoft.com/ubuntu/18.04/prod' /etc/apt/sources.list /etc/apt/sources.list.d/*; then
         echo 1234 | curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -;
         echo 1234 | sudo apt-add-repository https://packages.microsoft.com/ubuntu/18.04/prod;
