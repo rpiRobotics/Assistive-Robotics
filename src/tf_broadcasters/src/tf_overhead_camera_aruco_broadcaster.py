@@ -71,6 +71,7 @@ ARUCO_DICT = {
 class ArucoRobots2Floor():
     def __init__(self):
         rospy.init_node('tf_overhead_camera_aruco_broadcaster', anonymous=True)
+        self.debug_image_view = True
 
         self.image_topic_name = rospy.get_param('~image_topic_name', "/rgb/image_raw")
 
@@ -161,9 +162,161 @@ class ArucoRobots2Floor():
         except CvBridgeError as e:
             print(e)
 
+        # cv2.imshow("Image window", frame)
+        # cv2.waitKey(1)
 
-        cv2.imshow("Image window", frame)
-        cv2.waitKey(1)
+        time_stamp = rospy.Time.now()
+            
+        # try undistorted image
+        # h,  w = frame.shape[:2]
+        # newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
+        # undistort
+        # # frame = cv2.undistort(frame, mtx, dist, None, newcameramtx)
+        frame = cv2.undistort(frame, self.mtx, self.dist, None, self.mtx)
+        # # # crop the image
+        # # x, y, w, h = roi
+        # # frame = frame[y:y+h, x:x+w]
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        places_all = []
+        types_all = []
+        corners_all = []
+        ids_all = []
+        sizes_all = []
+        xs_all = []
+        ys_all = []
+        zs_all = []
+
+        for aruco_type in self.aruco_types:
+            arucoType = ARUCO_DICT[aruco_type]
+
+            # verify that the supplied ArUCo tag exists and is supported by OpenCV
+            if ARUCO_DICT.get(aruco_type, None) is None:
+                print("[ERROR] ArUCo tag of '{}' is not supported".format(aruco_type))
+                sys.exit(0)
+
+            # load the ArUCo dictionary, grab the ArUCo parameters, and detect the markers
+            print("[INFO] detecting '{}' tags...".format(aruco_type))
+            arucoDict = cv2.aruco.Dictionary_get(ARUCO_DICT[aruco_type])
+            arucoParams = cv2.aruco.DetectorParameters_create()
+            (corners, ids, rejected) = cv2.aruco.detectMarkers(gray, arucoDict, parameters=arucoParams)
+            
+            # only keep the detections that are NOT on the floor by looking at the IDs
+            ids_on_robots_with_current_aruco_type = list(self.df[(self.df["aruco_type"]==aruco_type)]["id"])
+            if len(corners) > 0: # verify *at least* one ArUco marker was detected            
+                for i, markerID in enumerate(list(ids.flatten())): # loop over the detected ArUCo corners
+                    if markerID in ids_on_robots_with_current_aruco_type:
+                        robot_row = self.df[(self.df["aruco_type"]==aruco_type) & (self.df["id"]==markerID)]
+                        place = robot_row["place"].item()
+                        places_all.append(place)
+
+                        types_all.append(aruco_type)
+
+                        corners_all.append(corners[i])
+                        
+                        ids_all.append(markerID)
+                        
+                        markerSize = float(robot_row["size_mm"])
+                        sizes_all.append(markerSize)
+
+                        x = float(robot_row["x"])
+                        xs_all.append(x)
+
+                        y = float(robot_row["y"])
+                        ys_all.append(y)
+
+                        z = float(robot_row["z"])
+                        zs_all.append(z)
+
+            # print(places_all)
+            # print(types_all)
+            # print(corners_all)
+            # print(ids_all)
+            # print(sizes_all)
+            # print(xs_all)
+            # print(ys_all)
+            # print(zs_all)
+
+        rospy.loginfo("Num of detected Tags: ",len(corners_all))
+        
+        corners_all = np.array(corners_all)
+        ids_all = np.array(ids_all)
+        sizes_all = np.array(sizes_all)
+        xs_all = np.array(xs_all)
+        ys_all = np.array(ys_all)
+        zs_all = np.array(zs_all)
+
+        # verify *at least* one ArUco marker was remained on robots
+        if len(corners_all) > 0:
+            rvecs_all = []
+            tvecs_all = []
+            # loop over the detected ArUCo corners and draw ids and bounding boxes around the detected markers with the robot information
+            for (place, aruco_type, markerCorner, markerID, markerSize, x,y,z) in zip(places_all, types_all, corners_all, ids_all, sizes_all, xs_all,ys_all,zs_all):
+                if self.debug_image_view:
+                    # extract the marker corners (which are always returned in
+                    # top-left, top-right, bottom-right, and bottom-left order)
+                    corners = markerCorner.reshape((4, 2))
+
+                    (topLeft, topRight, bottomRight, bottomLeft) = corners
+                    # convert each of the (x, y)-coordinate pairs to integers
+                    topRight = (int(topRight[0]), int(topRight[1]))
+                    bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
+                    bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
+                    topLeft = (int(topLeft[0]), int(topLeft[1]))
+
+                    # draw the bounding box of the ArUCo detection
+                    cv2.line(frame, topLeft, topRight, (0, 255, 0), 1)
+                    cv2.line(frame, topRight, bottomRight, (0, 255, 0), 1)
+                    cv2.line(frame, bottomRight, bottomLeft, (0, 255, 0), 1)
+                    cv2.line(frame, bottomLeft, topLeft, (0, 255, 0), 1)
+                    # compute and draw the center (x, y)-coordinates of the ArUco
+                    # marker
+                    cX = int((topLeft[0] + bottomRight[0]) / 2.0)
+                    cY = int((topLeft[1] + bottomRight[1]) / 2.0)
+                    cv2.circle(frame, (cX, cY), 4, (0, 0, 255), -1)
+                    # draw the ArUco marker ID on the image
+                    place_info = str(place) + ", "+ str(aruco_type) + ", id:" +str(markerID) + ", " + str(markerSize) + " mm"
+                    cv2.putText(frame, place_info,
+                        (topLeft[0], topLeft[1] - 15), cv2.FONT_HERSHEY_SIMPLEX,
+                        0.5, (0, 255, 0), 2)
+
+                # Estimate the pose of the detected marker in camera frame
+                rvec, tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(markerCorner, markerSize, self.mtx_new, self.dist_new)
+                
+                if self.debug_image_view:
+                    cv2.aruco.drawAxis(frame, self.mtx_new, self.dist_new, rvec, tvec, markerSize*0.75)  # Draw Axis
+
+                # Add the Transform from robot frame to marker frame
+                R_cm = cv2.Rodrigues(rvec.flatten())[0] # 3x3
+                T_cm = tvec[0].T # 3x1
+
+                R_rm = np.eye(3)# Marker and the Robot has the same orientation assumption, otherwise we had to parse it from csv file adding orientation paramaters
+                T_rm = np.array([x,y,z]).reshape(3,1) # 3x1
+
+                R_cr = R_cm.dot(R_rm.T)
+                T_cr = T_cm - R_cr.dot(T_rm)
+
+                # print("[INFO] ArUco marker ID: {}".format(markerID))
+                # print(tvec[0].flatten()) # in camera's frame)
+                # print(rvec[0].flatten()) # in camera's frame)
+                rvecs_all.append(R_cr)
+                tvecs_all.append(T_cr)
+
+            rvecs_all = np.array(rvecs_all) # (N,3,3)
+            # print("rvecs_all.shape:", rvecs_all.shape)
+            tvecs_all = np.array(tvecs_all) # (N,3,1)
+            # print("tvecs_all.shape:",tvecs_all.shape)
+            tvecs_all = np.squeeze(tvecs_all, axis=2).T # (3,N)
+
+            if self.debug_image_view:
+                # show the output image
+                cv2.imshow("Image", frame)
+                cv2.waitKey(1)
+                # k = cv2.waitKey(1)
+
+                # TODO: Publish this image to ROS
+                
 
         # t = geometry_msgs.msg.TransformStamped()
         # t.header.stamp = rospy.Time.now()
