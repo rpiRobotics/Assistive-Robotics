@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<launch>   
+<group ns="nuc">
+    <machine name="nuc-18" address="192.168.1.90" env-loader="/home/nuc/catkin_ws_assistive/scripts/env_nuc.sh" user="nuc" password="1234"  default="true"/>
+
+    <arg name="prefix_for_tf" default="cage" />  <!-- Applies to both kinova arm and the kinect -->
+    
+    <!-- Launch Azure Kinect -->
+    <include file="$(find azure_kinect_ros_driver)/launch/kinect_rgbd.launch">
+        <arg name="camera" value="k4a" />
+        <!-- publish Azure Kinect coordiante frames -->
+        <arg name="tf_prefix"         value="$(arg prefix_for_tf)_" />   <!-- Prefix added to tf frame IDs. It typically contains a trailing '_' unless empty. -->
+        <arg name="overwrite_robot_description" value="false" />         <!-- Flag to publish a standalone azure_description instead of the default robot_descrition parameter-->
+        <arg name="depth_registration" value="false" doc="Hardware depth registration" />
+        <arg name="num_worker_threads" value="4" doc="Worker threads for the nodelet manager" />
+        <!-- Driver settings -->
+        <!-- Note: Point cloud processing in the driver will use the factory calibration and is therefore disabled.
+                    The colour and depth images are processed via 'rgbd_launch' and point clouds are generated via
+                    'image_proc' using the manual camera calibration. -->
+        <arg name="depth_enabled"               value="false" />           <!-- Enable or disable the depth camera -->
+        <arg name="depth_mode"                  value="WFOV_2X2BINNED" />  <!-- Set the depth camera mode, which affects FOV, depth range, and camera resolution. See Azure Kinect documentation for full details. Valid options: NFOV_UNBINNED, NFOV_2X2BINNED, WFOV_UNBINNED, WFOV_2X2BINNED, and PASSIVE_IR -->
+        <arg name="depth_unit"                  value="16UC1" />          <!-- Depth distance units. Options are: "32FC1" (32 bit float metre) or "16UC1" (16 bit integer millimetre) -->
+        <arg name="color_enabled"               value="true" />           <!-- Enable or disable the color camera -->
+        <arg name="color_format"                value="bgra" />           <!-- The format of RGB camera. Valid options: bgra, jpeg -->
+        <arg name="color_resolution"            value="3072P" />          <!-- Resolution at which to run the color camera. Valid options: 720P, 1080P, 1440P, 1536P, 2160P, 3072P -->
+        <arg name="fps"                         value="30" />              <!-- FPS to run both cameras at. Valid options are 5, 15, and 30 -->
+        <arg name="point_cloud"                 value="true" />          <!-- Generate a point cloud from depth data. Requires depth_enabled -->
+        <arg name="rgb_point_cloud"             value="false" />          <!-- Colorize the point cloud using the RBG camera. Requires color_enabled and depth_enabled -->
+        <arg name="point_cloud_in_depth_frame"  value="true" />          <!-- Whether the RGB pointcloud is rendered in the depth frame (true) or RGB frame (false). Will either match the resolution of the depth camera (true) or the RGB camera (false). -->
+        <arg name="required"                    value="false" />          <!-- Argument which specified if the entire launch file should terminate if the node dies -->
+        <arg name="sensor_sn"                   value="" />               <!-- Sensor serial number. If none provided, the first sensor will be selected -->
+        <arg name="recording_file"              value="" />               <!-- Absolute path to a mkv recording file which will be used with the playback api instead of opening a device -->
+        <arg name="recording_loop_enabled"      value="false" />          <!-- If set to true the recording file will rewind the beginning once end of file is reached -->
+        <arg name="calibration_url"             value="" />               <!-- Load intrinsic calibration from specific URL (default: "file://$HOME/.ros/camera_info/"") -->
+        <arg name="rescale_ir_to_mono8"         value="true" />           <!-- Whether to rescale the IR image to an 8-bit monochrome image for visualization and further processing. A scaling factor (ir_mono8_scaling_factor) is applied. -->
+        <arg name="ir_mono8_scaling_factor"     value="1.0" />            <!-- Scaling factor to apply when converting IR to mono8 (see rescale_ir_to_mono8). If using illumination, use the value 0.5-1. If using passive IR, use 10. -->
+        <arg name="imu_rate_target"             value="0"/>               <!-- Desired output rate of IMU messages. Set to 0 (default) for full rate (1.6 kHz). -->
+        <arg name="wired_sync_mode"             value="0"/>               <!-- Wired sync mode. 0: OFF, 1: MASTER, 2: SUBORDINATE. -->
+        <arg name="subordinate_delay_off_master_usec" value="0"/>         <!-- Delay subordinate camera off master camera by specified amount in usec. -->
+        <arg name="body_tracking_enabled"           value="false" />  <!-- If set to true the joint positions will be published as marker arrays -->
+        <arg name="body_tracking_smoothing_factor"  value="1.0" />    <!-- Set between 0 for no smoothing and 1 for full smoothing -->
+
+        <!-- Processing Modules -->
+        <arg name="rgb_processing"                  value="true"  />
+        <arg name="debayer_processing"              value="false" />
+        <arg name="ir_processing"                   value="false" />
+        <arg name="depth_processing"                value="false" />
+        <arg name="depth_registered_processing"     value="false" />
+        <arg name="disparity_processing"            value="false" />
+        <arg name="disparity_registered_processing" value="false" />
+        <!-- <arg name="hw_registered_processing"        value="true" if="$(arg depth_registration)" />
+        <arg name="sw_registered_processing"        value="false" if="$(arg depth_registration)" />
+        <arg name="hw_registered_processing"        value="false" unless="$(arg depth_registration)" />
+        <arg name="sw_registered_processing"        value="true" unless="$(arg depth_registration)" /> -->
+
+    </include>
+
+    <!-- Launch Aruco Detection and TF broadcasters -->
+
+</group>
+</launch>

@@ -1,9 +1,10 @@
 #!/bin/bash
-HOSTS=("192.168.1.99" "192.168.1.100" "192.168.1.101" "192.168.1.102")
-USERNAMES=("tablet" "razer" "oarbot_silver" "oarbot_blue" )
-PASSWORDS=("1234" "1234" "1234" "1234" )
+HOSTS=("192.168.1.99" "192.168.1.100" "192.168.1.101" "192.168.1.102" "192.168.1.90")
+USERNAMES=("tablet" "razer" "oarbot_silver" "oarbot_blue" "nuc" )
+PASSWORDS=("1234" "1234" "1234" "1234" "1234")
 
 SCRIPTS=(
+    "echo 1234 | sudo -S shutdown -h now;"
     "echo 1234 | sudo -S shutdown -h now;"
     "echo 1234 | sudo -S shutdown -h now;"
     "echo 1234 | sudo -S shutdown -h now;"

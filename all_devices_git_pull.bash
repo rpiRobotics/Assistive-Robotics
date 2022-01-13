@@ -1,7 +1,7 @@
 #!/bin/bash
-HOSTS=("192.168.1.99" "192.168.1.100" "192.168.1.101" "192.168.1.102")
-USERNAMES=("tablet" "razer" "oarbot_silver" "oarbot_blue" )
-PASSWORDS=("1234" "1234" "1234" "1234" )
+HOSTS=("192.168.1.99" "192.168.1.100" "192.168.1.101" "192.168.1.102" "192.168.1.90")
+USERNAMES=("tablet" "razer" "oarbot_silver" "oarbot_blue" "nuc" )
+PASSWORDS=("1234" "1234" "1234" "1234" "1234")
 
 SCRIPTS=("cd ~/catkin_ws_assistive; 
           git reset --hard; git pull;
@@ -17,6 +17,13 @@ SCRIPTS=("cd ~/catkin_ws_assistive;
           cd ~/catkin_ws_assistive/src/Azure_Kinect_ROS_Driver;
           git reset --hard; git pull;"
 
+          "cd ~/catkin_ws_assistive; 
+          git reset --hard; git pull;
+          cd ~/catkin_ws_assistive/src/kinova-ros;
+          git reset --hard; git pull;
+          cd ~/catkin_ws_assistive/src/Azure_Kinect_ROS_Driver;
+          git reset --hard; git pull;"
+          
           "cd ~/catkin_ws_assistive; 
           git reset --hard; git pull;
           cd ~/catkin_ws_assistive/src/kinova-ros;
