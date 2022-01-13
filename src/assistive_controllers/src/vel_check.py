@@ -68,13 +68,13 @@ class VelCheck():
         self.pub_rate = 100
         rospy.Timer(rospy.Duration(1.00/self.pub_rate), self.tf_cb)
 
-    def tf_cb(self, msg):
+    def tf_cb(self, event=None):
 
-        this_stamp =  rospy.Time()
+        this_stamp =  rospy.Time.now()
         try:
             # returns type geometry_msgs.msg.TransformStamped
-            T_ee2world = self.tfBuffer.lookup_transform(self.tf_end_effector_frame_name, self.tf_body_joint_frame_name, this_stamp) # in ee frame 
-            T_sup2world = self.tfBuffer.lookup_transform(self.tf_arm_base_frame_name, self.tf_end_effector_frame_name,  this_stamp) # in base frame
+            T_ee2world = self.tfBuffer.lookup_transform(self.tf_world_frame, self.tf_ee_frame, rospy.Time())
+            T_sup2world = self.tfBuffer.lookup_transform(self.tf_world_frame,  self.tf_sup_frame, rospy.Time())
 
             eeworld_q,eeworld_p = self.tf2trans(T_ee2world)
             this_T_ee2world = rox.Transform(rox.q2R(eeworld_q),eeworld_p)
@@ -87,16 +87,16 @@ class VelCheck():
                 self.last_stamp = this_stamp
                 return
             
-            d_ee2world = this_T_ee2world*self.last_ee_world
+            d_ee = self.last_ee_world.inv()*this_T_ee2world
             # d_ee2world_sup = self.last_sup_world.inv()*d_ee2world
             # d_ee2world_ee = self.last_ee_world.inv()*d_ee2world
+            # d_ee2world = self.last_ee_world*d_ee
 
-            k,dtheta = rox.R2rot(d_ee2world.R)
-            omega_world = k*dtheta/(this_stamp.to_sec()-self.last_stamp.to_sec()) # omega = k*dot_theta
-            omega_ee = self.last_ee_world.inv()*omega_world
+            k,dtheta = rox.R2rot(d_ee.R)
+            omega_ee = np.array(k)*dtheta/(this_stamp.to_sec()-self.last_stamp.to_sec()) # omega = k*dot_theta
 
-            v_world = d_ee2world.p/(this_stamp.to_sec()-self.last_stamp.to_sec()) # v = dot_p
-            v_sup = self.last_sup_world.inv()*v_world
+            v_world = np.dot(self.last_ee_world.R,d_ee.p)/(this_stamp.to_sec()-self.last_stamp.to_sec()) # v = dot_p
+            v_sup = np.dot(self.last_sup_world.inv().R,v_world)
 
             obs_vel_msg = Twist()
             obs_vel_msg.angular.x = omega_ee[0]
@@ -120,8 +120,8 @@ class VelCheck():
     
     def tf2trans(self,trans):
         
-        q = [trans.transform.rotation.w,trans.transform.rotation.x,trans.transform.rotation.y,trans.transform.rotation.z]
-        p = [trans.transform.translation.x,trans.transform.translation.y,trans.transform.translation.z]
+        q = np.array([trans.transform.rotation.w,trans.transform.rotation.x,trans.transform.rotation.y,trans.transform.rotation.z]).reshape((4,))
+        p = np.array([trans.transform.translation.x,trans.transform.translation.y,trans.transform.translation.z]).reshape((3,))
         return q,p
 
 if __name__ == '__main__':

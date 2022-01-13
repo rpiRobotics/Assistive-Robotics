@@ -40,7 +40,7 @@ from oarbot_moveit.oarbot_moveit import Oarbot
 from copy import deepcopy as dp
 import general_robotics_toolbox as rox
 from qpsolvers import solve_qp
-from math import sin,cos,pi
+from math import log, sin,cos,pi
 
 import time
 
@@ -209,11 +209,11 @@ class VelSplit():
 
         nu_omega = np.dot(T_arm2ee.R,des_cmd[:3])
         nu = np.append(nu_omega,des_cmd[3:])
+        # print(nu)
 
         # Kq=.001*np.eye(len(q))    #small value to make sure positive definite
 
-        arm_w, base_w = self.weighting(np.linalg.norm(T_arm2ee.p-self.control_center))
-        print("arm_w,base_w:",arm_w,base_w)
+        arm_w, base_w = self.weighting(T_arm2ee.p,nu,np.linalg.norm(T_arm2ee.p-self.control_center))
 
         # testing
         # arm_w = 10
@@ -233,7 +233,9 @@ class VelSplit():
 
         qdot = solve_qp(H,f)
         # print("qdot",qdot)
-        
+        # print("nu res",np.dot(Jee_sup,qdot))
+        # print("=================")
+
         arm_cmd = np.dot(J_arm,qdot[4:])
         arm_cmd[:3] = np.dot(np.transpose(T_arm2ee.R),arm_cmd[:3])
 
@@ -249,12 +251,18 @@ class VelSplit():
 
         return arm_cmd,sup_cmd,base_cmd
     
-    def weighting(self, r):
+    def weighting(self, p, nu, r):
 
         if r > self.control_r:
             r = self.control_r
+        
+        next_r = np.linalg.norm(p+0.01*nu[3:]-self.control_center)
+        if next_r < r:
+            wr = 3
+        else:
+            a = 3-log(self.control_r,2)
+            wr = log(-1*r+self.control_r,2)+a
 
-        wr = 3*cos((r/self.control_r)*pi)
         if wr >= 0:
             wa = 0.01
             wb = wa*(10**wr)
