@@ -238,7 +238,7 @@ class ArucoRobots2Floor():
             # print(ys_all)
             # print(zs_all)
 
-        rospy.loginfo("Num of detected Tags: ",len(corners_all))
+        rospy.loginfo("Num of detected Tags: " + str(len(corners_all)))
         
         corners_all = np.array(corners_all)
         ids_all = np.array(ids_all)
@@ -316,7 +316,7 @@ class ArucoRobots2Floor():
                 # k = cv2.waitKey(1)
 
                 # TODO: Publish this image to ROS
-                
+
 
         # t = geometry_msgs.msg.TransformStamped()
         # t.header.stamp = rospy.Time.now()
