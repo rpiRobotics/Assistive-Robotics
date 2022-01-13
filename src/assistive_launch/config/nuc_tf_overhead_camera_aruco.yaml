@@ -1,0 +1,9 @@
+image_topic_name: 'rgb/image_raw'
+
+path_to_camera_parameters: '~/catkin_ws_assistive/assistive_launch/vision_parameters/camera.yml'
+path_to_undistorted_camera_parameters: '~/catkin_ws_assistive/assistive_launch/vision_parameters/camera_undistorted.yml'
+path_to_extrinsic_parameters: '~/catkin_ws_assistive/assistive_launch/vision_parameters/camera_aruco.yml'
+path_to_aruco_tags_info: '~/catkin_ws_assistive/assistive_launch/vision_parameters/aruco_tags_info3.csv'
+
+tf_end_effector_frame_id: 'j2n6s300_right_end_effector' # it should be same as "$(arg kinova_prefix)_end_effector"
+tf_root_camera_frame_id: 'j2n6s300_right_camera_base'
