@@ -40,7 +40,7 @@ from oarbot_moveit.oarbot_moveit import Oarbot
 from copy import deepcopy as dp
 import general_robotics_toolbox as rox
 from qpsolvers import solve_qp
-from math import sin,cos,pi,pow
+from math import sin,cos,pi
 
 import time
 
@@ -215,6 +215,10 @@ class VelSplit():
         arm_w, base_w = self.weighting(np.linalg.norm(T_arm2ee.p-self.control_center))
         print("arm_w,base_w:",arm_w,base_w)
 
+        # testing
+        # arm_w = 10
+        # base_w = 0.1
+
         # the more the weight, the less it's used
         Wa = np.ones(6)*arm_w # weighting for arm axis velocity
         Wb = np.ones(len(q)-6)*base_w # weighting for base axis velocity
@@ -238,6 +242,7 @@ class VelSplit():
         Rbo = np.array([[cos(q[2]),sin(q[2])],[-sin(q[2]),cos(q[2])]])
         qdotbase_xy = np.dot(Rbo,qdot[:2])
         base_cmd = np.array([0,0,qdot[2],qdotbase_xy[0],qdotbase_xy[1],0])
+        # base_cmd = np.array([0,0,qdot[2],qdot[0],qdot[1],0])
 
         et = time.perf_counter_ns()
         # print("duration:",(et-st)*1e-9)

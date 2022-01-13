@@ -9,7 +9,7 @@ from kinova_msgs.msg import JointVelocity, PoseVelocity
 from oarbot_moveit.oarbot_moveit import Oarbot
 from std_srvs.srv import Trigger, TriggerResponse
 import numpy as np
-from math import pi
+from math import pi, cos, sin
 from copy import deepcopy as dp
 
 class baseState(object):
@@ -17,7 +17,7 @@ class baseState(object):
         super().__init__()
 
         # Parameters
-        self.home_q = np.array([0,0,0,0.15,0,pi/8,-pi/8,pi/6,pi/6,pi/6,0])
+        self.home_q = np.array([0,0,pi/2,0.15,0,pi/8,-pi/8,pi/6,pi/6,pi/6,0])
 
         # Variables
         self.joint_base_start = None
@@ -65,10 +65,13 @@ class baseState(object):
             return
         
         if self.base_vel is not None:
-            dx = self.base_vel.linear.x*self.c_rate
-            dy = self.base_vel.linear.y*self.c_rate
-            dth = self.base_vel.angular.z*self.c_rate
             joint_array = np.asarray(self.joint_state.position)
+            th = joint_array[self.joint_base_start+2]
+            Rob = np.array([[cos(th),-sin(th)],[sin(th),cos(th)]])
+            car_cmd = np.dot(Rob,[self.base_vel.linear.x,self.base_vel.linear.y])
+            dx = car_cmd[0]*self.c_rate
+            dy = car_cmd[1]*self.c_rate
+            dth = self.base_vel.angular.z*self.c_rate
             joint_array[self.joint_base_start] += dx
             joint_array[self.joint_base_start+1] += dy
             joint_array[self.joint_base_start+2] += dth
