@@ -109,12 +109,13 @@ class ArucoRobots2Floor():
         print(self.aruco_types)
 
         # TODO        
-        self.tf_end_effector_frame_id = rospy.get_param("~tf_end_effector_frame_id", "j2n6s300_end_effector")
-        self.tf_root_camera_frame_id = rospy.get_param("~tf_root_camera_frame_id", "camera_base")
+        self.tf_world_floor_frame_id = rospy.get_param("~tf_world_floor_frame_id", "world_floor")
+        self.robot_bases_tf_prefix = rospy.get_param("~robot_bases_tf_prefix", "")
+        self.robot_bases_tf_postfix = rospy.get_param("~robot_bases_tf_postfix", "_base")
 
         self.bridge = CvBridge() # To convert ROS images to openCV imgs.
         self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
-        rospy.Subscriber(self.image_topic_name, sensor_msgs.msg.Image, self.handle_mobile_robot_pose)
+        rospy.Subscriber(self.image_topic_name, sensor_msgs.msg.Image, self.handle_mobile_robot_pose, queue_size=None)
 
     def load_coefficients(self,path):
         """ Loads camera matrix and distortion coefficients. """
@@ -316,6 +317,37 @@ class ArucoRobots2Floor():
                 # k = cv2.waitKey(1)
 
                 # TODO: Publish this image to ROS
+
+            # Transform detected robot locations from camera frame to World frame
+            rvecs_all = self.R_oc @ rvecs_all # (N,3,3) # R_or 
+
+            tvecs_all = self.R_oc.dot(tvecs_all) # (3,N)
+            tvecs_all = self.T_oc + tvecs_all # (3,N) # T_or 
+            # print(np.shape(tvecs_all))
+
+            # Transform detected robot locations from World frame to plane frame
+            rvecs_all = self.R_po.dot(rvecs_all) # (N,3,3) # R_pr 
+
+            tvecs_all = self.R_po.dot(tvecs_all) # (3,N)
+            tvecs_all = self.T_po + tvecs_all # (3,N) # T_pr
+
+            # Finally, create and send tf robot poses wrt floor plane # TODO
+            for joint_name, joint_num in KINECT_JOINT_DICT.items():
+                joint_marker = msg.markers[joint_num]
+                
+                t = geometry_msgs.msg.TransformStamped()
+                # t.header.stamp = rospy.Time.now()
+                t.header.stamp = time_stamp
+
+                t.header.frame_id = self.world_floor_frame_id
+                t.child_frame_id = self.body_joints_tf_prefix + joint_name.lower() + self.body_joints_tf_postfix
+
+                t.transform.translation = joint_marker.pose.position
+                t.transform.rotation = joint_marker.pose.orientation
+
+                self.tf_broadcaster.sendTransform(t)
+        else:
+            rospy.logwarn("No robot could be detected, waiting to detect..")
 
 
         # t = geometry_msgs.msg.TransformStamped()
