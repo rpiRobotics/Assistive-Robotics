@@ -282,7 +282,7 @@ class ArucoRobots2Floor():
                         0.5, (0, 255, 0), 2)
 
                 # Estimate the pose of the detected marker in camera frame
-                rvec, tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(markerCorner, markerSize, self.mtx_new, self.dist_new)
+                rvec, tvec = cv2.aruco.estimatePoseSingleMarkers(markerCorner, markerSize, self.mtx_new, self.dist_new)
                 
                 if self.debug_image_view:
                     cv2.aruco.drawAxis(frame, self.mtx_new, self.dist_new, rvec, tvec, markerSize*0.75)  # Draw Axis
