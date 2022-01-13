@@ -110,7 +110,6 @@ class ArucoRobots2Floor():
         # TODO        
         self.tf_end_effector_frame_id = rospy.get_param("~tf_end_effector_frame_id", "j2n6s300_end_effector")
         self.tf_root_camera_frame_id = rospy.get_param("~tf_root_camera_frame_id", "camera_base")
-        self.arm2camera_pose = rospy.get_param("~arm2camera_pose") 
 
         self.bridge = CvBridge() # To convert ROS images to openCV imgs.
         self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
