@@ -163,7 +163,7 @@ class ArucoRobots2Floor():
 
 
         cv2.imshow("Image window", frame)
-        cv2.waitKey(0.1)
+        cv2.waitKey(1)
 
         # t = geometry_msgs.msg.TransformStamped()
         # t.header.stamp = rospy.Time.now()
