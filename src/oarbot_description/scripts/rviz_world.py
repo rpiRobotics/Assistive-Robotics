@@ -130,7 +130,7 @@ class baseState(object):
         T = self.bot.fwdkin_arm(arm_joint_state)
         omega_base = np.dot(T.R,np.array([msg.angular.x,msg.angular.y,msg.angular.z]))
         nu = np.array([omega_base[0],omega_base[1],omega_base[2],msg.linear.x,msg.linear.y,msg.linear.z])
-        self.arm_joint_vel = np.reshape(np.matmul(np.linalg.pinv(J),np.reshape(nu,(6,1))),(6,))
+        self.arm_joint_vel = np.reshape(np.dot(np.linalg.pinv(J),nu),(6,))
 
         # print("J",J)
         # print("nu",nu)
