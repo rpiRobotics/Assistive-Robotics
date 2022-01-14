@@ -319,7 +319,7 @@ class ArucoRobots2Floor():
                 # TODO: Publish this image to ROS
 
             # Transform detected robot locations from camera frame to World frame
-            rvecs_all = self.R_oc @ rvecs_all # (N,3,3) # R_or 
+            rvecs_all = self.R_oc.dot(rvecs_all) # (N,3,3) # R_or 
 
             tvecs_all = self.R_oc.dot(tvecs_all) # (3,N)
             tvecs_all = self.T_oc + tvecs_all # (3,N) # T_or 
