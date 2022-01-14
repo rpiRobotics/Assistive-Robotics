@@ -332,18 +332,27 @@ class ArucoRobots2Floor():
             tvecs_all = self.T_po + tvecs_all # (3,N) # T_pr
 
             # Finally, create and send tf robot poses wrt floor plane # TODO
-            for joint_name, joint_num in KINECT_JOINT_DICT.items():
-                joint_marker = msg.markers[joint_num]
-                
+            for (place, translation, R) in zip(places_all, tvecs_all.T, rvecs_all):
                 t = geometry_msgs.msg.TransformStamped()
                 # t.header.stamp = rospy.Time.now()
                 t.header.stamp = time_stamp
 
                 t.header.frame_id = self.world_floor_frame_id
-                t.child_frame_id = self.body_joints_tf_prefix + joint_name.lower() + self.body_joints_tf_postfix
+                t.child_frame_id = self.body_joints_tf_prefix + place + self.body_joints_tf_postfix
 
-                t.transform.translation = joint_marker.pose.position
-                t.transform.rotation = joint_marker.pose.orientation
+                # Translation 
+                t.transform.translation.x = translation[0]
+                t.transform.translation.y = translation[1]
+                t.transform.translation.z = translation[2]
+
+                # Convert R rotation matrix to quaternion
+                q = tf_conversions.transformations.quaternion_from_matrix(R)
+
+                # Rotation
+                t.transform.rotation.x = q[0]
+                t.transform.rotation.y = q[1]
+                t.transform.rotation.z = q[2]
+                t.transform.rotation.w = q[3]
 
                 self.tf_broadcaster.sendTransform(t)
         else:
