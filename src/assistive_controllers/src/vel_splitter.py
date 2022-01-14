@@ -75,6 +75,7 @@ class VelSplit():
         self.pub_robot_joint_vel_cmd = rospy.Publisher(self.robot_joint_cmd_vel_topic_name, JointVelocity, queue_size=1)
 
         self.pub_constraint_markers = rospy.Publisher("constraint_marker",Marker,queue_size=1)
+        self.pub_constrained_r = rospy.Publisher("constrained_r",Float64,queue_size=1)
 
         # control law param
         self.control_center = np.array([0.5,0,0.3])
@@ -212,8 +213,8 @@ class VelSplit():
         # print(nu)
 
         # Kq=.001*np.eye(len(q))    #small value to make sure positive definite
-
-        arm_w, base_w = self.weighting(T_arm2ee.p,nu,np.linalg.norm(T_arm2ee.p-self.control_center))
+        constrained_r = np.linalg.norm(T_arm2ee.p-self.control_center)
+        arm_w, base_w = self.weighting(T_arm2ee.p,nu,constrained_r)
 
         # testing
         # arm_w = 10
@@ -248,6 +249,10 @@ class VelSplit():
 
         et = time.perf_counter_ns()
         # print("duration:",(et-st)*1e-9)
+
+        constrained_r_msg = Float64()
+        constrained_r_msg.data = constrained_r
+        self.pub_constrained_r.publish(constrained_r_msg)
 
         return arm_cmd,sup_cmd,base_cmd
     
