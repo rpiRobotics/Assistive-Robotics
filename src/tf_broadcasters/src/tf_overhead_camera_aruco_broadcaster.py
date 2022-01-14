@@ -295,8 +295,8 @@ class ArucoRobots2Floor():
                 R_rm = np.eye(3)# Marker and the Robot has the same orientation assumption, otherwise we had to parse it from csv file adding orientation paramaters
                 T_rm = np.array([x,y,z]).reshape(3,1) # 3x1
 
-                R_cr = R_cm.dot(R_rm.T)
-                T_cr = T_cm - R_cr.dot(T_rm)
+                R_cr = np.matmul(R_cm,R_rm.T)
+                T_cr = T_cm - np.matmul(R_cr,T_rm)
 
                 # print("[INFO] ArUco marker ID: {}".format(markerID))
                 # print(tvec[0].flatten()) # in camera's frame)
@@ -319,56 +319,48 @@ class ArucoRobots2Floor():
                 # TODO: Publish this image to ROS
 
             # Transform detected robot locations from camera frame to World frame
-            rvecs_all = self.R_oc @ rvecs_all # (N,3,3) # R_or 
+            rvecs_all = np.matmul(self.R_oc,rvecs_all) # (N,3,3) # R_or 
 
-            tvecs_all = self.R_oc.dot(tvecs_all) # (3,N)
+            tvecs_all = np.matmul(self.R_oc,tvecs_all) # (3,N)
             tvecs_all = self.T_oc + tvecs_all # (3,N) # T_or 
             # print(np.shape(tvecs_all))
 
             # Transform detected robot locations from World frame to plane frame
-            rvecs_all = self.R_po.dot(rvecs_all) # (N,3,3) # R_pr 
+            rvecs_all = np.matmul(self.R_po,rvecs_all) # (N,3,3) # R_pr 
+            rospy.logwarn("rvecs_all.shape:" + str(rvecs_all.shape))
 
-            tvecs_all = self.R_po.dot(tvecs_all) # (3,N)
+            tvecs_all = np.matmul(self.R_po,tvecs_all) # (3,N)
             tvecs_all = self.T_po + tvecs_all # (3,N) # T_pr
+            rospy.logwarn("tvecs_all.shape:" + str(tvecs_all.shape))
 
             # Finally, create and send tf robot poses wrt floor plane # TODO
-            for joint_name, joint_num in KINECT_JOINT_DICT.items():
-                joint_marker = msg.markers[joint_num]
-                
+            for (place, translation, R) in zip(places_all, tvecs_all.T, rvecs_all):
                 t = geometry_msgs.msg.TransformStamped()
                 # t.header.stamp = rospy.Time.now()
                 t.header.stamp = time_stamp
 
-                t.header.frame_id = self.world_floor_frame_id
-                t.child_frame_id = self.body_joints_tf_prefix + joint_name.lower() + self.body_joints_tf_postfix
+                t.header.frame_id = self.tf_world_floor_frame_id
+                t.child_frame_id = self.robot_bases_tf_prefix + place + self.robot_bases_tf_postfix
 
-                t.transform.translation = joint_marker.pose.position
-                t.transform.rotation = joint_marker.pose.orientation
+                # Translation 
+                t.transform.translation.x = translation[0]
+                t.transform.translation.y = translation[1]
+                t.transform.translation.z = translation[2]
+
+                # Convert R rotation matrix to quaternion
+                q = tf_conversions.transformations.quaternion_from_matrix(R)
+
+                # Rotation
+                t.transform.rotation.x = q[0]
+                t.transform.rotation.y = q[1]
+                t.transform.rotation.z = q[2]
+                t.transform.rotation.w = q[3]
 
                 self.tf_broadcaster.sendTransform(t)
         else:
             rospy.logwarn("No robot could be detected, waiting to detect..")
 
 
-        # t = geometry_msgs.msg.TransformStamped()
-        # t.header.stamp = rospy.Time.now()
-
-        # t.header.frame_id = self.tf_end_effector_frame_id
-        # rospy.logwarn("header: "+ str(t.header.frame_id))
-        # t.child_frame_id = self.tf_root_camera_frame_id
-        # rospy.logwarn("child: "+ str(t.child_frame_id))
-
-        # # print(self.arm2camera_pose)
-        # t.transform.translation.x = self.arm2camera_pose['position']['x']
-        # t.transform.translation.y = self.arm2camera_pose['position']['y']
-        # t.transform.translation.z = self.arm2camera_pose['position']['z']
-        # # q = tf_conversions.transformations.quaternion_from_euler(0, 0, msg.theta)
-        # t.transform.rotation.x = self.arm2camera_pose['orientation']['x']
-        # t.transform.rotation.y = self.arm2camera_pose['orientation']['y']
-        # t.transform.rotation.z = self.arm2camera_pose['orientation']['z']
-        # t.transform.rotation.w = self.arm2camera_pose['orientation']['w']
-
-        # self.tf_broadcaster.sendTransform(t)
 
 if __name__ == '__main__':
     arucoRobots2Floor = ArucoRobots2Floor()
