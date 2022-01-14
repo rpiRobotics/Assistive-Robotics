@@ -348,9 +348,11 @@ class ArucoRobots2Floor():
                 t.transform.translation.z = translation[2]
 
                 # Convert R rotation matrix to quaternion
-                rospy.logwarn("rot_mat.shape:" + str(rot_mat.shape))
-                rospy.logwarn("rot_mat:" + str(rot_mat))
-                q = tf_conversions.transformations.quaternion_from_matrix(rot_mat)
+                rot_mat2 = np.eye(4)
+                rot_mat2[:3,:3] = rot_mat
+                # rospy.logwarn("rot_mat.shape:" + str(rot_mat2.shape))
+                # rospy.logwarn("rot_mat:" + str(rot_mat2))
+                q = tf_conversions.transformations.quaternion_from_matrix(rot_mat2)
 
                 # Rotation
                 t.transform.rotation.x = q[0]
