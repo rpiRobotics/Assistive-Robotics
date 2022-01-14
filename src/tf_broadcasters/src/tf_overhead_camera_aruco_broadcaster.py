@@ -327,14 +327,14 @@ class ArucoRobots2Floor():
 
             # Transform detected robot locations from World frame to plane frame
             rvecs_all = np.matmul(self.R_po,rvecs_all) # (N,3,3) # R_pr 
-            rospy.logwarn("rvecs_all.shape:" + str(rvecs_all.shape))
+            # rospy.logwarn("rvecs_all.shape:" + str(rvecs_all.shape))
 
             tvecs_all = np.matmul(self.R_po,tvecs_all) # (3,N)
             tvecs_all = self.T_po + tvecs_all # (3,N) # T_pr
-            rospy.logwarn("tvecs_all.shape:" + str(tvecs_all.shape))
+            # rospy.logwarn("tvecs_all.shape:" + str(tvecs_all.shape))
 
             # Finally, create and send tf robot poses wrt floor plane # TODO
-            for (place, translation, R) in zip(places_all, tvecs_all.T, rvecs_all):
+            for (place, translation, rot_mat) in zip(places_all, tvecs_all.T, rvecs_all):
                 t = geometry_msgs.msg.TransformStamped()
                 # t.header.stamp = rospy.Time.now()
                 t.header.stamp = time_stamp
@@ -348,7 +348,9 @@ class ArucoRobots2Floor():
                 t.transform.translation.z = translation[2]
 
                 # Convert R rotation matrix to quaternion
-                q = tf_conversions.transformations.quaternion_from_matrix(R)
+                rospy.logwarn("rot_mat.shape:" + str(rot_mat.shape))
+                rospy.logwarn("rot_mat:" + str(rot_mat))
+                q = tf_conversions.transformations.quaternion_from_matrix(rot_mat)
 
                 # Rotation
                 t.transform.rotation.x = q[0]
