@@ -74,7 +74,7 @@ class ArucoRobots2Floor():
         self.debug_image_view = rospy.get_param('~debug_image_view', False)
         self.debug_image_topic_name = rospy.get_param('~debug_image_topic_name', "debug_aruco_detected_image")
         # Debug Image publisher
-        self.pub_image = rospy.Publisher(self.debug_image_topic_name, sensor_msgs.msg.Image)
+        self.pub_image = rospy.Publisher(self.debug_image_topic_name, sensor_msgs.msg.Image, queue_size=1)
         # Raw Image topic name that this node subscribes
         self.image_topic_name = rospy.get_param('~image_topic_name', "/rgb/image_raw")
 
