@@ -62,7 +62,9 @@ The node first transform the velocity (the angular velocity in particular) to th
 
 ![QP_eqn](qp_eqn.gif)
 
-Since the velocity are represented in the arm base frame, the Jacobian matrix is actually a (J_T)arm_base which means it's the Jacobian matrix of the end-effector represented in the arm base frame.
+The QP try to optimized the above equation. You can see that as the weighting get higher, the respected joint velocity will be lower which then it will decide to use the arm more or the base more.
+
+Since the velocity are represented in the arm base frame, the Jacobian matrix is actually a (J_T)arm_base which means it's the Jacobian matrix of the end-effector represented in the arm base frame. 
 
 ### Convert Joint Velocity to Cartisian Velocity
 
