@@ -320,18 +320,18 @@ class ArucoRobots2Floor():
 
             # Transform detected robot locations from camera frame to World frame
             rvecs_all = np.matmul(self.R_oc,rvecs_all) # (N,3,3) # R_or 
-            rospy.logwarn("rvecs_all.shape:" + str(rvecs_all.shape))
 
             tvecs_all = np.matmul(self.R_oc,tvecs_all) # (3,N)
             tvecs_all = self.T_oc + tvecs_all # (3,N) # T_or 
             # print(np.shape(tvecs_all))
-            rospy.logwarn("tvecs_all.shape:" + str(tvecs_all.shape))
 
             # Transform detected robot locations from World frame to plane frame
             rvecs_all = np.matmul(self.R_po,rvecs_all) # (N,3,3) # R_pr 
+            rospy.logwarn("rvecs_all.shape:" + str(rvecs_all.shape))
 
             tvecs_all = np.matmul(self.R_po,tvecs_all) # (3,N)
             tvecs_all = self.T_po + tvecs_all # (3,N) # T_pr
+            rospy.logwarn("tvecs_all.shape:" + str(tvecs_all.shape))
 
             # Finally, create and send tf robot poses wrt floor plane # TODO
             for (place, translation, R) in zip(places_all, tvecs_all.T, rvecs_all):
@@ -339,7 +339,7 @@ class ArucoRobots2Floor():
                 # t.header.stamp = rospy.Time.now()
                 t.header.stamp = time_stamp
 
-                t.header.frame_id = self.rf_world_floor_frame_id
+                t.header.frame_id = self.tf_world_floor_frame_id
                 t.child_frame_id = self.robot_bases_tf_prefix + place + self.robot_bases_tf_postfix
 
                 # Translation 
