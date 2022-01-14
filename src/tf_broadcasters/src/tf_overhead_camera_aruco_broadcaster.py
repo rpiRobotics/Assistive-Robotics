@@ -343,9 +343,9 @@ class ArucoRobots2Floor():
                 t.child_frame_id = self.robot_bases_tf_prefix + place + self.robot_bases_tf_postfix
 
                 # Translation 
-                t.transform.translation.x = translation[0]
-                t.transform.translation.y = translation[1]
-                t.transform.translation.z = translation[2]
+                t.transform.translation.x = translation[0]/1000.0 # convert to meters from mm
+                t.transform.translation.y = translation[1]/1000.0 # convert to meters from mm
+                t.transform.translation.z = translation[2]/1000.0 # convert to meters from mm
 
                 # Convert R rotation matrix to quaternion
                 rot_mat2 = np.eye(4)
