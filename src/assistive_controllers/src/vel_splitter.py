@@ -15,10 +15,10 @@ Parameters:
     - 
 Subscribes to:
     - /$(robot)/desired_vel (geometry_msgs::Twist)
-    - tf2
+    - /joint_states
 Publishes to:
     - /j2n6s300_driver/in/cartesian_velocity (kinova_msgs::PoseVelocity)
-    - /$(robot)/cmd_vel (geometry_msgs::Twist)
+    - /$(robot)/sup_vel (geometry_msgs::Twist)
     - /$(robot)/cmd_vel (geometry_msgs::Twist)
 Broadcasts to:
     - 
