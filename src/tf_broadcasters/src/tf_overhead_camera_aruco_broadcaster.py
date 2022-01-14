@@ -71,8 +71,11 @@ ARUCO_DICT = {
 class ArucoRobots2Floor():
     def __init__(self):
         rospy.init_node('tf_overhead_camera_aruco_broadcaster', anonymous=True)
-        self.debug_image_view = True
-
+        self.debug_image_view = rospy.get_param('~debug_image_view', False)
+        self.debug_image_topic_name = rospy.get_param('~debug_image_topic_name', "debug_aruco_detected_image")
+        # Debug Image publisher
+        self.pub_image = rospy.Publisher(self.debug_image_topic_name, sensor_msgs.msg.Image)
+        # Raw Image topic name that this node subscribes
         self.image_topic_name = rospy.get_param('~image_topic_name', "/rgb/image_raw")
 
         self.path_to_camera_parameters = rospy.get_param('~path_to_camera_parameters', 
@@ -108,7 +111,6 @@ class ArucoRobots2Floor():
         self.aruco_types = list(self.df["aruco_type"].unique())
         print(self.aruco_types)
 
-        # TODO        
         self.tf_world_floor_frame_id = rospy.get_param("~tf_world_floor_frame_id", "world_floor")
         self.robot_bases_tf_prefix = rospy.get_param("~robot_bases_tf_prefix", "")
         self.robot_bases_tf_postfix = rospy.get_param("~robot_bases_tf_postfix", "_base")
@@ -312,11 +314,14 @@ class ArucoRobots2Floor():
 
             if self.debug_image_view:
                 # show the output image
-                cv2.imshow("Image", frame)
-                cv2.waitKey(1)
-                # k = cv2.waitKey(1)
+                # cv2.imshow("Image", frame)
+                # cv2.waitKey(1)
 
-                # TODO: Publish this image to ROS
+                # Publish this image to ROS
+                try:
+                    self.pub_image.publish(self.bridge.cv2_to_imgmsg(frame, "bgr8"))
+                except CvBridgeError as e:
+                    rospy.logwarn("Could not publish the aruco detected debug image")
 
             # Transform detected robot locations from camera frame to World frame
             rvecs_all = np.matmul(self.R_oc,rvecs_all) # (N,3,3) # R_or 

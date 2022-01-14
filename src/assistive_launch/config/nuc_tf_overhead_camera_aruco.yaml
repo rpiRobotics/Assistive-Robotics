@@ -1,5 +1,8 @@
 image_topic_name: 'rgb/image_raw'
 
+debug_image_view: false # if true, publishes the detected aruco tags img
+debug_image_topic_name: 'debug_aruco_detected_image'
+
 path_to_camera_parameters: '~/catkin_ws_assistive/src/assistive_launch/vision_parameters/camera.yml'
 path_to_undistorted_camera_parameters: '~/catkin_ws_assistive/src/assistive_launch/vision_parameters/camera_undistorted.yml'
 path_to_extrinsic_parameters: '~/catkin_ws_assistive/src/assistive_launch/vision_parameters/camera_aruco.yml'
