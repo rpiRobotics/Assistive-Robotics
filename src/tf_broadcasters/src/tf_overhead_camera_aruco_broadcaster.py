@@ -145,8 +145,8 @@ class ArucoRobots2Floor():
             T_co = cv_file.getNode("T_co").mat()
             T_oc = cv_file.getNode("T_oc").mat()
         except:
-            print("[INFO]: could not read R_co, R_oc, T_co, T_oc from: {}".format(path))
-            print(str(R_co), str(R_oc), str(T_co), str(T_oc))
+            rospy.logwarn("[INFO]: could not read R_co, R_oc, T_co, T_oc from: {}".format(path))
+            rospy.logwarn(str(R_co), str(R_oc), str(T_co), str(T_oc))
             cv_file.release()
             return [camera_matrix, dist_matrix]
 
@@ -173,7 +173,7 @@ class ArucoRobots2Floor():
         try:
             frame = self.bridge.imgmsg_to_cv2(msg, "bgr8")
         except CvBridgeError as e:
-            print(e)
+            rospy.logerr(e)
 
         # cv2.imshow("Image window", frame)
         # cv2.waitKey(1)
@@ -216,14 +216,25 @@ class ArucoRobots2Floor():
 
             # verify that the supplied ArUCo tag exists and is supported by OpenCV
             if ARUCO_DICT.get(aruco_type, None) is None:
-                print("[ERROR] ArUCo tag of '{}' is not supported".format(aruco_type))
+                rospy.logerr("[ERROR] ArUCo tag of '{}' is not supported".format(aruco_type))
                 sys.exit(0)
 
             # load the ArUCo dictionary, grab the ArUCo parameters, and detect the markers
-            print("[INFO] detecting '{}' tags...".format(aruco_type))
+            rospy.loginfo("[INFO] detecting '{}' tags...".format(aruco_type))
             arucoDict = cv2.aruco.Dictionary_get(ARUCO_DICT[aruco_type])
+
+            rospy.logwarn("-- 0031 --- %s seconds ---" % (time.time() - start_time))
+            start_time = time.time()
+
             arucoParams = cv2.aruco.DetectorParameters_create()
+
+            rospy.logwarn("-- 0032 --- %s seconds ---" % (time.time() - start_time))
+            start_time = time.time()
+
             (corners, ids, rejected) = cv2.aruco.detectMarkers(gray, arucoDict, parameters=arucoParams)
+
+            rospy.logwarn("-- 0033 --- %s seconds ---" % (time.time() - start_time))
+            start_time = time.time()
             
             # only keep the detections that are NOT on the floor by looking at the IDs
             ids_on_robots_with_current_aruco_type = list(self.df[(self.df["aruco_type"]==aruco_type)]["id"])
