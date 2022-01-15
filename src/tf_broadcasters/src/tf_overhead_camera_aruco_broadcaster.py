@@ -74,6 +74,7 @@ class ArucoRobots2Floor():
         rospy.init_node('tf_overhead_camera_aruco_broadcaster', anonymous=True)
         self.debug_image_view = rospy.get_param('~debug_image_view', False)
         self.debug_image_topic_name = rospy.get_param('~debug_image_topic_name', "debug_aruco_detected_image")
+        self.debug_image_scale_percent = rospy.get_param('~debug_image_scale_percent', 50) # percent of original size
         # Debug Image publisher
         self.pub_image = rospy.Publisher(self.debug_image_topic_name, sensor_msgs.msg.Image, queue_size=1)
         # Raw Image topic name that this node subscribes
@@ -336,14 +337,22 @@ class ArucoRobots2Floor():
 
             if self.debug_image_view:
                 # show the output image
-                cv2.imshow("Image", frame)
-                cv2.waitKey(1)
+                # cv2.imshow("Image", frame)
+                # cv2.waitKey(1)
 
-                # # Publish this image to ROS
-                # try:
-                #     self.pub_image.publish(self.bridge.cv2_to_imgmsg(frame, "bgr8"))
-                # except CvBridgeError as e:
-                #     rospy.logwarn("Could not publish the aruco detected debug image")
+                # Scale down the image efficiently
+                width = int(self.width * self.debug_image_scale_percent / 100)
+                height = int(self.height * self.debug_image_scale_percent / 100)
+                dim = (width, height)
+                
+                # resize image
+                frame = cv2.resize(frame, dim, interpolation = cv2.INTER_NEAREST)
+
+                # Publish this image to ROS as a scaled down image
+                try:
+                    self.pub_image.publish(self.bridge.cv2_to_imgmsg(frame, "bgr8"))
+                except CvBridgeError as e:
+                    rospy.logwarn("Could not publish the aruco detected debug image")
 
             rospy.logwarn("-- 004 --- %s seconds ---" % (time.time() - start_time))
             start_time = time.time()

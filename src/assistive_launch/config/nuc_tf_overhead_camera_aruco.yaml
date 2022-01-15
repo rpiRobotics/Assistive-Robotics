@@ -5,8 +5,9 @@ using_rectified_image: false # Even though a rectified image is used as subsribt
 # parameters provides these 5 distortion parameters (Note that simply ignoring last 4 parameters does not work)
 # see: https://scazlab.github.io/azure_setup_guide.html under title "Calibration" for more details.
 
-debug_image_view: false # if true, publishes the detected aruco tags img (TODO: Does not work properly, but no time to dig in)
+debug_image_view: false # if true, publishes the detected aruco tags img as a scaled down image(TODO: Does not work properly, but no time to dig in)
 debug_image_topic_name: 'debug_aruco_detected_image'
+debug_image_scale_percent: 25 # Smaller is more efficient
 
 path_to_camera_parameters: '~/catkin_ws_assistive/src/assistive_launch/vision_parameters/camera.yml'
 path_to_undistorted_camera_parameters: '~/catkin_ws_assistive/src/assistive_launch/vision_parameters/camera_undistorted.yml'
