@@ -177,7 +177,7 @@ class ArucoRobots2Floor():
         # cv2.imshow("Image window", frame)
         # cv2.waitKey(1)
 
-        if self.map1 == None or self.map2 == None or self.width == None or self.height == None:
+        if  self.map1 is None: # or  self.map2 == None or self.width == None or self.height == None
             # Get the image height and width
             self.height, self.width = frame.shape[:2]
             # Create only once the undistortion maps for efficient undistortions
