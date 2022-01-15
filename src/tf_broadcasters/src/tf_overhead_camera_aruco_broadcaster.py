@@ -46,6 +46,7 @@ import sys
 import pandas as pd
 import math
 import os
+import time
 
 # define names of each possible ArUco tag OpenCV supports
 ARUCO_DICT = {
@@ -77,6 +78,7 @@ class ArucoRobots2Floor():
         self.pub_image = rospy.Publisher(self.debug_image_topic_name, sensor_msgs.msg.Image, queue_size=1)
         # Raw Image topic name that this node subscribes
         self.image_topic_name = rospy.get_param('~image_topic_name', "/rgb/image_raw")
+        self.using_rectified_image = rospy.get_param('~using_rectified_image', False)
 
         self.path_to_camera_parameters = rospy.get_param('~path_to_camera_parameters', 
             "~/catkin_ws_assistive/assistive_launch/vision_parameters/camera.yml")
@@ -169,18 +171,20 @@ class ArucoRobots2Floor():
         # cv2.waitKey(1)
 
         time_stamp = rospy.Time.now()
-            
-        # try undistorted image
-        # h,  w = frame.shape[:2]
-        # newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
-        # undistort
-        # # frame = cv2.undistort(frame, mtx, dist, None, newcameramtx)
-        frame = cv2.undistort(frame, self.mtx, self.dist, None, self.mtx)
-        # # # crop the image
-        # # x, y, w, h = roi
-        # # frame = frame[y:y+h, x:x+w]
+        start_time0 = time.time()
+        start_time = start_time0
+        
+        if not self.using_rectified_image:
+            # try undistorted image
+            frame = cv2.undistort(frame, self.mtx, self.dist, None, self.mtx)
+
+        rospy.logwarn("-- 001 --- %s seconds ---" % (time.time() - start_time))
+        start_time = time.time()
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        rospy.logwarn("-- 002 --- %s seconds ---" % (time.time() - start_time))
+        start_time = time.time()
 
         places_all = []
         types_all = []
@@ -242,6 +246,9 @@ class ArucoRobots2Floor():
             # print(zs_all)
 
         rospy.loginfo("Num of detected Tags: " + str(len(corners_all)))
+
+        rospy.logwarn("-- 003 --- %s seconds ---" % (time.time() - start_time))
+        start_time = time.time()
         
         corners_all = np.array(corners_all)
         ids_all = np.array(ids_all)
@@ -323,6 +330,9 @@ class ArucoRobots2Floor():
                 except CvBridgeError as e:
                     rospy.logwarn("Could not publish the aruco detected debug image")
 
+            rospy.logwarn("-- 004 --- %s seconds ---" % (time.time() - start_time))
+            start_time = time.time()
+
             # Transform detected robot locations from camera frame to World frame
             rvecs_all = np.matmul(self.R_oc,rvecs_all) # (N,3,3) # R_or 
 
@@ -337,6 +347,9 @@ class ArucoRobots2Floor():
             tvecs_all = np.matmul(self.R_po,tvecs_all) # (3,N)
             tvecs_all = self.T_po + tvecs_all # (3,N) # T_pr
             # rospy.logwarn("tvecs_all.shape:" + str(tvecs_all.shape))
+
+            rospy.logwarn("-- 005 --- %s seconds ---" % (time.time() - start_time))
+            start_time = time.time()
 
             # Finally, create and send tf robot poses wrt floor plane # TODO
             for (place, translation, rot_mat) in zip(places_all, tvecs_all.T, rvecs_all):
@@ -366,6 +379,9 @@ class ArucoRobots2Floor():
                 t.transform.rotation.w = q[3]
 
                 self.tf_broadcaster.sendTransform(t)
+
+            rospy.logwarn("-- 006 --- %s seconds ---" % (time.time() - start_time))
+            rospy.logwarn("--------------- ALL --- %s seconds ---" % (time.time() - start_time0))
         else:
             rospy.logwarn("No robot could be detected, waiting to detect..")
 

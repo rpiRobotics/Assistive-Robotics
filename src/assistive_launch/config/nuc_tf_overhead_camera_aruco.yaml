@@ -1,4 +1,5 @@
 image_topic_name: 'rgb/image_raw'
+using_rectified_image: true
 
 debug_image_view: false # if true, publishes the detected aruco tags img
 debug_image_topic_name: 'debug_aruco_detected_image'
