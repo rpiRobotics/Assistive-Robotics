@@ -7,7 +7,7 @@ using_rectified_image: false # Even though a rectified image is used as subsribt
 
 debug_image_view: true # if true, publishes the detected aruco tags img as a scaled down image(TODO: Does not work properly, but no time to dig in)
 debug_image_topic_name: 'debug_aruco_detected_image'
-debug_image_scale_percent: 50 # Smaller is more efficient
+debug_image_scale_percent: 25 # Smaller is more efficient
 
 path_to_camera_parameters: '~/catkin_ws_assistive/src/assistive_launch/vision_parameters/camera_1536p.yml'
 path_to_undistorted_camera_parameters: '~/catkin_ws_assistive/src/assistive_launch/vision_parameters/camera_undistorted_1536p.yml'
