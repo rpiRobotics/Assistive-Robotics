@@ -4,9 +4,9 @@ K: !!opencv-matrix
    rows: 3
    cols: 3
    dt: d
-   data: [ 975.376, 0., 1023.08, 
-            0.,974.791, 778.696, 
-            0., 0., 1. ]
+   data: [ 975.376, 0., 1023.08,
+       0.,974.791, 778.696,
+       0., 0., 1. ]
 D: !!opencv-matrix
    rows: 1
    cols: 8
@@ -14,7 +14,7 @@ D: !!opencv-matrix
    data: [ 5.0e-06, -5.0e-06,
        5.0e-06, -5.0e-05,
        5.0e-06, 5.0e-05, -5.0e-05,
-       5.0e-06, ]
+       5.0e-06 ]
 R_co: !!opencv-matrix
    rows: 3
    cols: 3
