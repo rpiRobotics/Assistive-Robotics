@@ -318,7 +318,7 @@ class ArucoRobots2Floor():
                 T_cm = tvec[0].T # 3x1
 
                 R_rm = np.eye(3)# Marker and the Robot has the same orientation assumption, otherwise we had to parse it from csv file adding orientation paramaters
-                T_rm = np.array([x,y,z]).reshape(3,1) # 3x1
+                T_rm = np.array([x,y,z]).reshape(3,1)*1000.0 # 3x1 # Multiply with 1000 to convert to mm. ( recall reading from csv is in meters)
 
                 R_cr = np.matmul(R_cm,R_rm.T)
                 T_cr = T_cm - np.matmul(R_cr,T_rm)
@@ -375,7 +375,7 @@ class ArucoRobots2Floor():
             # rospy.logwarn("-- 005 --- %s seconds ---" % (time.time() - start_time))
             # start_time = time.time()
 
-            # Finally, create and send tf robot poses wrt floor plane # TODO
+            # Finally, create and send tf robot poses wrt floor plane
             for (place, translation, rot_mat) in zip(places_all, tvecs_all.T, rvecs_all):
                 t = geometry_msgs.msg.TransformStamped()
                 # t.header.stamp = rospy.Time.now()
