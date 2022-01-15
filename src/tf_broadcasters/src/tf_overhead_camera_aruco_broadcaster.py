@@ -185,8 +185,8 @@ class ArucoRobots2Floor():
             self.map1, self.map2 = cv2.initUndistortRectifyMap(self.mtx, self.dist, None, self.mtx, (self.width, self.height), cv2.CV_32FC1)
 
         time_stamp = rospy.Time.now()
-        start_time0 = time.time()
-        start_time = start_time0
+        # start_time0 = time.time()
+        # start_time = start_time0
         
         if not self.using_rectified_image:
             # try to undistort image
@@ -194,13 +194,13 @@ class ArucoRobots2Floor():
             # try to undistort image with remapping (since more efficient)
             frame = cv2.remap(frame,self.map1,self.map2,cv2.INTER_LINEAR)
 
-        rospy.logwarn("-- 001 --- %s seconds ---" % (time.time() - start_time))
-        start_time = time.time()
+        # rospy.logwarn("-- 001 --- %s seconds ---" % (time.time() - start_time))
+        # start_time = time.time()
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        rospy.logwarn("-- 002 --- %s seconds ---" % (time.time() - start_time))
-        start_time = time.time()
+        # rospy.logwarn("-- 002 --- %s seconds ---" % (time.time() - start_time))
+        # start_time = time.time()
 
         places_all = []
         types_all = []
@@ -222,19 +222,8 @@ class ArucoRobots2Floor():
             # load the ArUCo dictionary, grab the ArUCo parameters, and detect the markers
             rospy.loginfo("[INFO] detecting '{}' tags...".format(aruco_type))
             arucoDict = cv2.aruco.Dictionary_get(ARUCO_DICT[aruco_type])
-
-            rospy.logwarn("-- 0031 --- %s seconds ---" % (time.time() - start_time))
-            start_time = time.time()
-
             arucoParams = cv2.aruco.DetectorParameters_create()
-
-            rospy.logwarn("-- 0032 --- %s seconds ---" % (time.time() - start_time))
-            start_time = time.time()
-
             (corners, ids, rejected) = cv2.aruco.detectMarkers(gray, arucoDict, parameters=arucoParams)
-
-            rospy.logwarn("-- 0033 --- %s seconds ---" % (time.time() - start_time))
-            start_time = time.time()
             
             # only keep the detections that are NOT on the floor by looking at the IDs
             ids_on_robots_with_current_aruco_type = list(self.df[(self.df["aruco_type"]==aruco_type)]["id"])
@@ -274,8 +263,8 @@ class ArucoRobots2Floor():
 
         rospy.loginfo("Num of detected Tags: " + str(len(corners_all)))
 
-        rospy.logwarn("-- 003 --- %s seconds ---" % (time.time() - start_time))
-        start_time = time.time()
+        # rospy.logwarn("-- 003 --- %s seconds ---" % (time.time() - start_time))
+        # start_time = time.time()
         
         corners_all = np.array(corners_all)
         ids_all = np.array(ids_all)
@@ -365,8 +354,8 @@ class ArucoRobots2Floor():
                 except CvBridgeError as e:
                     rospy.logwarn("Could not publish the aruco detected debug image")
 
-            rospy.logwarn("-- 004 --- %s seconds ---" % (time.time() - start_time))
-            start_time = time.time()
+            # rospy.logwarn("-- 004 --- %s seconds ---" % (time.time() - start_time))
+            # start_time = time.time()
 
             # Transform detected robot locations from camera frame to World frame
             rvecs_all = np.matmul(self.R_oc,rvecs_all) # (N,3,3) # R_or 
@@ -383,8 +372,8 @@ class ArucoRobots2Floor():
             tvecs_all = self.T_po + tvecs_all # (3,N) # T_pr
             # rospy.logwarn("tvecs_all.shape:" + str(tvecs_all.shape))
 
-            rospy.logwarn("-- 005 --- %s seconds ---" % (time.time() - start_time))
-            start_time = time.time()
+            # rospy.logwarn("-- 005 --- %s seconds ---" % (time.time() - start_time))
+            # start_time = time.time()
 
             # Finally, create and send tf robot poses wrt floor plane # TODO
             for (place, translation, rot_mat) in zip(places_all, tvecs_all.T, rvecs_all):
@@ -415,8 +404,8 @@ class ArucoRobots2Floor():
 
                 self.tf_broadcaster.sendTransform(t)
 
-            rospy.logwarn("-- 006 --- %s seconds ---" % (time.time() - start_time))
-            rospy.logwarn("--------------- ALL --- %s seconds ---" % (time.time() - start_time0))
+            # rospy.logwarn("-- 006 --- %s seconds ---" % (time.time() - start_time))
+            # rospy.logwarn("--------------- ALL --- %s seconds ---" % (time.time() - start_time0))
         else:
             rospy.logwarn("No robot could be detected, waiting to detect..")
 
