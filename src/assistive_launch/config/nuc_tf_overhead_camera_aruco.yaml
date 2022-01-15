@@ -1,5 +1,5 @@
-image_topic_name: 'rgb/image_rect_color' # 'rgb/image_raw' 
-using_rectified_image: true # Even though a rectified image is used as subsribtion, still the undistorted
+image_topic_name: 'rgb/image_raw'  # 'rgb/image_rect_color' # 'rgb/image_raw' 
+using_rectified_image: false # Even though a rectified image is used as subsribtion, still the undistorted
 # camera parameters are needed. That's because, for example kinect uses 9 distortion parameters internally 
 # to undistort raw image. However the aruco detection needs 5 distortion parameters and our own calibration
 # parameters provides these 5 distortion parameters (Note that simply ignoring last 4 parameters does not work)
@@ -14,5 +14,5 @@ path_to_extrinsic_parameters: '~/catkin_ws_assistive/src/assistive_launch/vision
 path_to_aruco_tags_info: '~/catkin_ws_assistive/src/assistive_launch/vision_parameters/aruco_tags_info3.csv'
 
 tf_world_floor_frame_id: 'world_floor'
-robot_bases_tf_prefix: ''
-robot_bases_tf_postfix: '_base'
+robot_bases_tf_prefix: '' # should end with "_", eg. 'robots_'
+robot_bases_tf_postfix: '_base' # should start with "_", eg. '_base'
