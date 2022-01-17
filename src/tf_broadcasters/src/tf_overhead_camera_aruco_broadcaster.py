@@ -121,12 +121,15 @@ class ArucoRobots2Floor():
         self.width = None
         self.height = None
 
+        self.tf_rgb_camera_frame_id = rospy.get_param ("~tf_rgb_camera_frame_id", "cage_rgb_camera_link")
         self.tf_world_floor_frame_id = rospy.get_param("~tf_world_floor_frame_id", "world_floor")
         self.robot_bases_tf_prefix = rospy.get_param("~robot_bases_tf_prefix", "")
         self.robot_bases_tf_postfix = rospy.get_param("~robot_bases_tf_postfix", "_base")
 
         self.bridge = CvBridge() # To convert ROS images to openCV imgs.
-        self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
+        self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster for robots and world frame
+        self.tf_broadcaster_static = tf2_ros.StaticTransformBroadcaster() # Create a static tf broadcster for rbg camera and the world frame
+        self.publish_rgb2world_floor_tf_static()
         rospy.Subscriber(self.image_topic_name, sensor_msgs.msg.Image, self.handle_mobile_robot_pose, queue_size=None)
 
     def load_coefficients(self,path):
@@ -183,6 +186,7 @@ class ArucoRobots2Floor():
             self.height, self.width = frame.shape[:2]
             # Create only once the undistortion maps for efficient undistortions
             self.map1, self.map2 = cv2.initUndistortRectifyMap(self.mtx, self.dist, None, self.mtx, (self.width, self.height), cv2.CV_32FC1)
+
 
         time_stamp = rospy.Time.now()
         # start_time0 = time.time()
@@ -409,6 +413,35 @@ class ArucoRobots2Floor():
         else:
             rospy.logwarn("No robot could be detected, waiting to detect..")
 
+
+    def publish_rgb2world_floor_tf_static(self):
+        translation = self.T_co + np.matmul(self.R_co,self.T_op) 
+        rot_mat = np.matmul(self.R_co,self.R_op)
+        t = geometry_msgs.msg.TransformStamped()
+        t.header.stamp = rospy.Time.now()
+
+        t.header.frame_id = self.tf_rgb_camera_frame_id
+        t.child_frame_id = self.tf_world_floor_frame_id
+
+        # Translation 
+        t.transform.translation.x = translation[0]/1000.0 # convert to meters from mm
+        t.transform.translation.y = translation[1]/1000.0 # convert to meters from mm
+        t.transform.translation.z = translation[2]/1000.0 # convert to meters from mm
+
+        # Convert R rotation matrix to quaternion
+        rot_mat2 = np.eye(4)
+        rot_mat2[:3,:3] = rot_mat
+        # rospy.logwarn("rot_mat.shape:" + str(rot_mat2.shape))
+        # rospy.logwarn("rot_mat:" + str(rot_mat2))
+        q = tf_conversions.transformations.quaternion_from_matrix(rot_mat2)
+
+        # Rotation
+        t.transform.rotation.x = q[0]
+        t.transform.rotation.y = q[1]
+        t.transform.rotation.z = q[2]
+        t.transform.rotation.w = q[3]
+
+        self.tf_broadcaster_static.sendTransform(t)
 
 
 if __name__ == '__main__':
