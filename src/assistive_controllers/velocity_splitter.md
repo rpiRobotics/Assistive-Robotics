@@ -78,3 +78,15 @@ The is the result of moving in y direction, i.e. the desired velocity is has a l
 ![rvsvel](rvsvel.png)
 
 You can see that there's a angular velocity in base. This is because the angular velocity can also cause y-direction linear velocity represented in the arm base frame.
+
+## Debug Hints
+
+1. The constrained sphere center (in the arm base frame) and distance can be adjust in line 80 81.
+```
+self.control_center = np.array([0.5,0,0.3])
+self.control_r = 0.33
+```
+
+2. Make sure that the joint state match between how the code realized and the actual robot state. Otherwise different joint state may cause mis calculation of Jacobian matrix and the contrained status.
+
+3. Map the velocities (the arm velocity, the base velocity and support height velocity) to the right topic.
