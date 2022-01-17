@@ -23,5 +23,10 @@
         <remap from="/diagnostics" to="diagnostics"/>
     </node>
 
+    <!-- Launch TF broadcaster btw Mobile Base and the Arm base -->
+    <node name="tf_mobile_base_arm_base_broadcaster" pkg="tf_broadcasters" type="tf_mobile_base_arm_base_broadcaster.py">
+        <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_mobile_base_arm_base.yaml"/>
+    </node>
+
 </group>
 </launch>

@@ -12,16 +12,24 @@ Description:
     '.yaml' for undistorted camera parameters and world extrinsics
     '.yaml' for and world and floor extrinsic parameters
     '.yaml' for measured aruco tag - robot pose relations
-    for the pre-calculated pose btw end efector and the camera 
-    'arm2camera_pose' # TODO
+    Also, broadcasts the static tf btw. the world floor and the camera rgb frame
 
-Parameters: # TODO
-    - end_effector_pose_topic_name: topic that is the pose of end effector is published by kinova eg."/j2n6s300_driver/out/tool_pose"
-    - tf_end_effector_frame_id: frame name that is the end effector frame of the Kinova Arm, eg, "j2n6s300_end_effector"
-    - tf_root_camera_frame_id: frame name that is the root frame of the camera by Kinect ROS drivers, eg, "camera_base"
-    - arm2camera_pose: the pre-calculated pose btw end efector and the camera with a structure of pose.orientation = [w,x,y,z] and pose.position = [x,y,z]
+Parameters: # TODO for explanations
+    - debug_image_view
+    - debug_image_topic_name
+    - debug_image_scale_percent
+    - image_topic_name
+    - using_rectified_image
+    - path_to_camera_parameters
+    - path_to_undistorted_camera_parameters
+    - path_to_extrinsic_parameters
+    - path_to_aruco_tags_info
+    - tf_rgb_camera_frame_id
+    - tf_world_floor_frame_id
+    - robot_bases_tf_prefix
+    - robot_bases_tf_postfix
 Subscribes to:
-    - /j2n6s300_driver/out/tool_pose (geometry_msgs::PoseStamped)
+    - "/rgb/image_raw" or "/rgb/image_rect_color" (sensor_msgs::Image)
 Publishes to:
     - NONE
 Broadcasts to:
