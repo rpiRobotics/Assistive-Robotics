@@ -259,7 +259,7 @@ class VelSplit():
     def weighting(self, p, nu, r):
 
         if r > self.control_r:
-            r = self.control_r
+            r = self.control_r-0.01
         
         next_r = np.linalg.norm(p+0.01*nu[3:]-self.control_center)
         if next_r < r:

@@ -29,15 +29,15 @@ class Oarbot(object):
         aa = pi/6
         p89x = d4*(sin(aa)/sin(2*aa)) + 2*d4*(sin(aa)/sin(2*aa))*cos(2*aa)
         p89y = 2*d4*sin(aa)
-        H = np.array([ex,ey,ez,ez,-ez,ey,-ey,ez,-cos(pi/6)*ey+sin(pi/6)*ez,-cos(pi/6)*ey-sin(pi/6)*ez]).T
-        P = np.array([0*ex,0*ex,0*ex,l1*ex+l2*ez,0*ex,0*ez,d2*ex+e2*ey,0*ex,-(p89x+d3)*ez+p89y*ey,0*ex,(d6+d4*sin(aa)/sin(2*aa))*(cos(pi/6)*ey+sin(pi/6)*ez)]).T
+        H = np.array([ex,ey,ez,ez,-ez,ey,-ey,-ex,-sin(pi/6)*ex+cos(pi/6)*ey,-ex]).T
+        P = np.array([0*ex,0*ex,0*ex,l1*ex+l2*ez,0*ex,0*ex,d2*ez,d3*ex+e2*ey,p89x*ex-p89y*ey,0*ex,(d6+d4*sin(aa)/sin(2*aa))*ex]).T
         joint_type = np.array([1,1,0,1,0,0,0,0,0,0])
-        joint_upper_limit = np.append([10000,10000,10000,0.5],np.radians([10000,40,180,10000,10000,10000]))
-        joint_lower_limit = np.append([-10000,-10000,-10000,-0.001],np.radians([-10000,-220,-71,-10000,-10000,-10000]))
+        joint_upper_limit = np.append([10000,10000,10000,0.5],np.radians([10000,130,180,10000,10000,10000]))
+        joint_lower_limit = np.append([-10000,-10000,-10000,-0.001],np.radians([-10000,-130,-71,-10000,-10000,-10000]))
         
         # decalre robot
         self.bot = rox.Robot(H,P,joint_type,joint_lower_limit,joint_upper_limit)
-        self.q_zeros = np.array([0,0,0,0,pi,-pi/2,pi/2,pi,pi,0])
+        self.q_zeros = np.array([0,0,0,0,pi,pi,pi/2,0,0,0])
 
         # opt param
         self._ep = 0.01
@@ -45,13 +45,16 @@ class Oarbot(object):
         self._n = 10
 
         # for arm inv
-        H_arm = np.array([-ez,ey,-ey,ez,-cos(pi/6)*ey+sin(pi/6)*ez,-cos(pi/6)*ey-sin(pi/6)*ez]).T
-        P_arm = np.array([d1*ez,0*ez,d2*ex+e2*ey,0*ex,-(p89x+d3)*ez+p89y*ey,0*ex,(d6+d4*sin(aa)/sin(2*aa))*(cos(pi/6)*ey+sin(pi/6)*ez)]).T
+        H_arm = np.array([-ez,ey,-ey,-ex,-sin(pi/6)*ex+cos(pi/6)*ey,-ex]).T
+        P_arm = np.array([d1*ez,0*ez,d2*ez+e2*ey,0*ex,(p89x+d3)*ex-p89y*ey,0*ex,(d6+d4*sin(aa)/sin(2*aa))*ex]).T
+        # P_arm = np.array([d1*ez,0*ez,d2*ez,d3*ex+e2*ey,p89x*ex-p89y*ey,0*ex,(d6+d4*sin(aa)/sin(2*aa))*ex]).T
         joint_type_arm = np.array([0,0,0,0,0,0])
-        joint_upper_limit_arm = np.radians([10000,40,180,10000,10000,10000])
-        joint_lower_limit_arm = np.radians([-10000,-220,-71,-10000,-10000,-10000])
+        # joint_upper_limit_arm = np.radians([10000,130,90,10000,10000,10000])
+        # joint_lower_limit_arm = np.radians([-10000,-130,-71,-10000,-10000,-10000])
+        joint_upper_limit_arm = np.radians([10000,130,180,10000,10000,10000])
+        joint_lower_limit_arm = np.radians([-10000,-130,-71,-10000,-10000,-10000])
         self.arm_bot = rox.Robot(H_arm,P_arm,joint_type_arm,joint_lower_limit_arm,joint_upper_limit_arm)
-        self.q_zeros_arm = np.array([pi,-pi/2,pi/2,pi,pi,0])
+        self.q_zeros_arm = np.array([pi,pi,pi/2,0,0,0])
 
     def fwdkin(self,q):
         
