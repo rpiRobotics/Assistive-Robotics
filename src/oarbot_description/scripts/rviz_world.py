@@ -18,7 +18,7 @@ class baseState(object):
 
         # Parameters
         # self.home_q = np.array([0,0,pi/2,0.15,0,pi/8,-pi/8,pi/6,pi/6,pi/6,0])
-        self.home_q = np.array([0,0,0,0.15,0,0,0,0,0,0,0])
+        self.home_q = np.array([0,0,0,0.15,pi/6,-pi/4,-pi/6,0,0,0,0])
 
         # Variables
         self.joint_base_start = None

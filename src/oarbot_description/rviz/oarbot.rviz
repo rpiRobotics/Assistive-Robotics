@@ -7,6 +7,7 @@ Panels:
         - /Global Options1
         - /Grid1
         - /TF1
+        - /TF1/Frames1
       Splitter Ratio: 0.6470588445663452
     Tree Height: 553
   - Class: rviz/Selection
@@ -212,7 +213,7 @@ Visualization Manager:
         j2n6s300_link_6:
           Value: false
         j2n6s300_link_base:
-          Value: true
+          Value: false
         j2n6s300_link_finger_1:
           Value: false
         j2n6s300_link_finger_2:
@@ -338,9 +339,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5597963333129883
+      Pitch: 0.2947963774204254
       Target Frame: j2n6s300_link_base
-      Yaw: 1.5687559843063354
+      Yaw: 0.7387595772743225
     Saved:
       - Class: rviz/Orbit
         Distance: 3.0174448490142822
@@ -398,5 +399,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1367
-  X: 76
-  Y: 33
+  X: 517
+  Y: 38
