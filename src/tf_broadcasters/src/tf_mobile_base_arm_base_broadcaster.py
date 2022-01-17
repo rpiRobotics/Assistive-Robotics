@@ -58,15 +58,14 @@ class MobileBase2ArmBaseTf():
         self.tf_arm_base_frame_id = rospy.get_param("~tf_arm_base_frame_id", "root_right_arm")
     
         self.mobile_base2arm_base_pose = rospy.get_param("~mobile_base2arm_base_pose") 
-
-        # self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
-        self.tf_broadcaster_static = tf2_ros.StaticTransformBroadcaster() # Create a static tf broadcster for rbg camera and the world frame
-        self.publish_rgb2world_floor_tf_static()
     
         self.z_height = 0.0
         if not self.is_fixed_z:
             rospy.Subscriber(self.z_height_topic_name, geometry_msgs.msg.PointStamped, self.handle_z_height, queue_size=1)
 
+        # self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
+        self.tf_broadcaster_static = tf2_ros.StaticTransformBroadcaster() # Create a static tf broadcster for rbg camera and the world frame
+        self.publish_rgb2world_floor_tf_static()
     
     def handle_z_height(self,msg):
         self.z_height = msg.point.z
