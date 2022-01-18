@@ -10,6 +10,6 @@ mobile_base2arm_base_pose:
     z: 0.0
     w: 1.0
   position: # in meters
-    x: 0.2
-    y: 0.0
-    z: 0.7
+    x: 0.305
+    y: -0.03
+    z: 0.804
