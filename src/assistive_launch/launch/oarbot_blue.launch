@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>   
-<group ns="oarbot_blue">
+<!-- <group ns="oarbot_blue"> -->
     <machine name="oarbot-blue-P15" address="192.168.1.102" env-loader="/home/oarbot_blue/catkin_ws_assistive/scripts/env_oarbot_blue.sh" user="oarbot_blue" password="1234"  default="true"/>
 
     <!-- Launch Kinova Arm with Kinect + Corresponding TF broadcasters, including Body Joint Broadcaster -->
@@ -14,5 +14,5 @@
 
     
 
-</group>
+<!-- </group> -->
 </launch>
