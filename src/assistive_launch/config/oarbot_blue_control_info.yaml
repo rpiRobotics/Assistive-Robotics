@@ -2,8 +2,8 @@ velocity_feedback_topic_name: "vel_feedback"
 motor_command_topic_name: "motor_command"
 motor_feedback_topic_name: "motor_feedback" # "motor_command" #"motor_feedback"
 republished_spacemouse: "e_stop_cmd_vel"
-serial_front: "/dev/serial/by-path/pci-0000:00:14.0-usb-0:4.1:1.0"
-serial_back: "/dev/serial/by-path/pci-0000:00:14.0-usb-0:4.2:1.0"
+serial_front: "/dev/serial/by-path/pci-0000:00:14.0-usb-0:1.6:1.0"
+serial_back: "/dev/serial/by-path/pci-0000:00:14.0-usb-0:1.7:1.0"
 
 radius_wheel: 0.1015 # wheel radius
 l_x: 0.214 # meter
