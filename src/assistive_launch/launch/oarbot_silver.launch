@@ -5,7 +5,7 @@
 
     <!-- Launch Kinova Arm with Kinect + Corresponding TF broadcasters, including Body Joint Broadcaster -->
     <include file="$(find assistive_launch)/launch/test_launch/oarbot_silver_arm_with_kinect.launch">
-        <arg name="prefix_for_tf" value="j2n6s300_left" />  <!-- Applies to both kinova arm and the kinect -->
+        <!-- <arg name="prefix_for_tf" value="j2n6s300_left" />  Applies to both kinova arm and the kinect -->
     </include>
 
     <!-- Launch Oarbot Omnidirectional Base -->

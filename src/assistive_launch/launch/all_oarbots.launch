@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- RVIZ -->
+    <node type="rviz" name="rviz" pkg="rviz" args="-d ~/catkin_ws_assistive/src/assistive_launch/config/rviz/all_oarbots_localized_with_aruco.rviz"/>
+
+    <include file="$(find assistive_launch)/launch/ui_tablet.launch" />
+    <include file="$(find assistive_launch)/launch/oarbot_silver.launch" />
+    <include file="$(find assistive_launch)/launch/oarbot_blue.launch" />
+    <include file="$(find assistive_launch)/launch/test_launch/nuc_kinect_with_aruco.launch" />
+</launch>
