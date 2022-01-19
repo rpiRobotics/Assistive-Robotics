@@ -1,4 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
+from __future__ import absolute_import
+
 import rospy
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Float32 # For battery voltages
@@ -6,7 +9,6 @@ from assistive_msgs.msg import MotorStatus, MotorCmd
 from roboteq.roboteq_handler import RoboteqHandler
 from roboteq import roboteq_commands as cmds
 import threading
-
 
 class OarbotControl_Motor():
     def __init__(self):
