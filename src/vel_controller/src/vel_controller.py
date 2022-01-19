@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import numpy as np
 import rospy
@@ -14,7 +14,7 @@ from assistive_msgs.msg import State2D # Custom message
 
 import tf_conversions # quaternion stuff
 
-from velocity_control_law.velocity_control_law import *
+import velocity_control_law  as vcl
 
 '''
 closed_loop_velocity_controller.py
@@ -128,10 +128,10 @@ class Controller:
 	def process_desired_state(self, desired_state):
 		if self.is_skid_steer_mode:
 			K = self.feedback_gain_xy
-			cmd_vel = control_law_skid_steer_mode(desired_state, self.state_pos,K)
+			cmd_vel = vcl.control_law_skid_steer_mode(desired_state, self.state_pos,K)
 		else:
 			K = np.diag([self.feedback_gain_xy, self.feedback_gain_xy, self.feedback_gain_theta])
-			cmd_vel = control_law(desired_state, self.state_pos, self.vel_limit, K)
+			cmd_vel = vcl.control_law(desired_state, self.state_pos, self.vel_limit, K)
 
 		# Publish commanded velocity
 		cmd_vel_msg = Twist()

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import numpy as np
 
 def control_law(desired_state, position, vel_limit, K):
