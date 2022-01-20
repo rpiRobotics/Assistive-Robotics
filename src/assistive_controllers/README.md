@@ -1,4 +1,0 @@
-# Assistive Control
-
-## Velocity Splitter
-

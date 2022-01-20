@@ -9,7 +9,7 @@ import quadprog as qp
 from math import pi, sin,cos,atan2
 from scipy.linalg import norm
 from cvxopt import matrix, solvers
-from trac_ik_python.trac_ik import IK
+# from trac_ik_python.trac_ik import IK
 
 # solvers.options['show_progress'] = False
 # ik_solver = IK("j2n6s300_link_base","j2n6s300_link_6")
