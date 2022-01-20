@@ -53,7 +53,6 @@ add_message_files(
   MotorCmd.msg
   MotorStatus.msg
   State2D.msg
-  Twist2D.msg
 )
 
 ## Generate services in the 'srv' folder
