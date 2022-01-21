@@ -62,8 +62,8 @@ sudo apt-get install ros-melodic-rgbd-launch
 cd ~/catkin_ws_assistive/src
 git clone https://github.com/burakaksoy/Azure_Kinect_ROS_Driver.git
 cd ..
-catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;assistive_launch;arduino_talker'
-#(or catkin_make --force_cmake -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;assistive_launch;arduino_talker')
+catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;assistive_launch;tablet_arduino_talker'
+#(or catkin_make --force_cmake -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;assistive_launch;tablet_arduino_talker')
 source ~/.bashrc
 source ~/catkin_ws_assistive/devel/setup.bash
 ```

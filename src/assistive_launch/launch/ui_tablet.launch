@@ -5,8 +5,8 @@
 
     <node type="rviz" name="rviz" pkg="rviz" args="-d /home/tablet/catkin_ws_assistive/src/assistive_launch/launch/config.rviz"/>
 
-    <node name="arduino_reader" pkg="arduino_talker" type="arduino_read.py">
-        <rosparam file="$(find assistive_launch)/config/arduino_params.yaml"/>
+    <node name="arduino_reader" pkg="tablet_arduino_talker" type="arduino_read.py">
+        <rosparam file="$(find assistive_launch)/config/tablet_arduino_params.yaml"/>
     </node>
 
     <include file="$(find spacenav_node)/launch/classic.launch"/>
@@ -16,7 +16,7 @@
         <remap from="cmd_vel_out" to="deadman_switch_spacenav_twist"/>
     </node>
 
-    <rosparam command="load" file="$(find assistive_launch)/config/gui_params.yaml"/>
+    <rosparam command="load" file="$(find assistive_launch)/config/tablet_gui_params.yaml"/>
     <node name="assistive_gui" pkg="assistive_gui" type="assistive_gui_user_py3.py"/>
 </group>
 </launch>

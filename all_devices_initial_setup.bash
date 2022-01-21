@@ -11,7 +11,7 @@ SCRIPTS=(
     rm -rf {*,.*};
     git clone https://github.com/rpiRobotics/Assistive-Robotics.git .;
     source /opt/ros/noetic/setup.bash;
-    catkin_make -DCATKIN_WHITELIST_PACKAGES='assistive_msgs;assistive_gui;assistive_launch;arduino_talker';
+    catkin_make -DCATKIN_WHITELIST_PACKAGES='assistive_msgs;assistive_gui;assistive_launch;tablet_arduino_talker';
     grep -qxF 'source ~/catkin_ws_assistive/devel/setup.bash' ~/.bashrc || echo 'source ~/catkin_ws_assistive/devel/setup.bash' >> ~/.bashrc;
     source ~/.bashrc;
     source ~/catkin_ws_assistive/devel/setup.bash;
@@ -70,7 +70,7 @@ SCRIPTS=(
     cd ..;
     ##############
     source /opt/ros/melodic/setup.bash;
-    catkin_make -DCATKIN_BLACKLIST_PACKAGES='arduino_talker';
+    catkin_make -DCATKIN_BLACKLIST_PACKAGES='tablet_arduino_talker';
     # catkin_make -DCATKIN_WHITELIST_PACKAGES='assistive_msgs;assistive_gui;assistive_launch';
     grep -qxF 'source ~/catkin_ws_assistive/devel/setup.bash' ~/.bashrc || echo 'source ~/catkin_ws_assistive/devel/setup.bash' >> ~/.bashrc;
     grep -qxF 'export ROS_IP=192.168.1.100' ~/.bashrc || echo 'export ROS_IP=192.168.1.100' >> ~/.bashrc;
@@ -125,7 +125,7 @@ SCRIPTS=(
     cd ..;
     ##############
     source /opt/ros/melodic/setup.bash;
-    catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;arduino_talker';
+    catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;tablet_arduino_talker';
     grep -qxF 'source ~/catkin_ws_assistive/devel/setup.bash' ~/.bashrc || echo 'source ~/catkin_ws_assistive/devel/setup.bash' >> ~/.bashrc;
     source ~/.bashrc;
     source ~/catkin_ws_assistive/devel/setup.bash;    
@@ -177,7 +177,7 @@ SCRIPTS=(
     cd ..;
     ##############
     source /opt/ros/melodic/setup.bash;
-    catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;arduino_talker';
+    catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;tablet_arduino_talker';
     grep -qxF 'source ~/catkin_ws_assistive/devel/setup.bash' ~/.bashrc || echo 'source ~/catkin_ws_assistive/devel/setup.bash' >> ~/.bashrc;
     source ~/.bashrc;
     source ~/catkin_ws_assistive/devel/setup.bash;    
@@ -230,7 +230,7 @@ SCRIPTS=(
     cd ..;
     ##############
     source /opt/ros/melodic/setup.bash;
-    catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;arduino_talker';
+    catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;tablet_arduino_talker';
     grep -qxF 'source ~/catkin_ws_assistive/devel/setup.bash' ~/.bashrc || echo 'source ~/catkin_ws_assistive/devel/setup.bash' >> ~/.bashrc;
     source ~/.bashrc;
     source ~/catkin_ws_assistive/devel/setup.bash;    

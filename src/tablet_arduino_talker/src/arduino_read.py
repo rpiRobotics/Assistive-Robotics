@@ -8,7 +8,7 @@ import time
 
 class arduinoread:
     def __init__(self):
-        rospy.init_node('arduino_talker', anonymous=True)
+        rospy.init_node('tablet_arduino_talker', anonymous=True)
         self.arduino_deadman_switch_topic=rospy.get_param('~arduino_deadman_switch_topic')
         self.arduino_e_stop_topic=rospy.get_param('~arduino_e_stop_topic')
         
