@@ -42,7 +42,7 @@ class baseState(object):
         self.joint_pub = rospy.Publisher("to_joint_states",JointState,queue_size=1)
 
         # Subscribers
-        self.pose_sub = rospy.Subscriber("oarbot_base_pose",PoseStamped,self.pose_cb,queue_size=1)
+        self.pose_sub = rospy.Subscriber("oarbot_base_pose",PoseStamped,self.pose_cb,queue_size=1) # Not doing anything
 
         # Go home
         self.go_home()

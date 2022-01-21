@@ -61,8 +61,8 @@
   </include>
 
   <!-- load support controller -->
-  <rosparam file="$(find oarbot_control)/config/oarbot_control.yaml" command="load"/>
-  <node name="oarbot_controller" pkg="controller_manager" type="spawner" 
+  <rosparam file="$(find oarbot_base_control)/config/oarbot_base_control.yaml" command="load"/>
+  <node name="oarbot_base_controller" pkg="controller_manager" type="spawner" 
     output="screen" ns="summit_xl"
     args="joint_state_controller
           joint_support_position_controller
