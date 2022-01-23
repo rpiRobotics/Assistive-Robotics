@@ -19,9 +19,7 @@ ey = np.array([0,1,0])
 ez = np.array([0,0,1])
 
 class Oarbot(object):
-    def __init__(self) -> None:
-        super().__init__()
-
+    def __init__(self):
         # robot parameters
         wheel_r,d1 = 0.127, 0.2755
         l1,l2 = 0.3, wheel_r+0.4+d1
