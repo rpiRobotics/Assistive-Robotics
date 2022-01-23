@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/env python
 
 import rospy
 import tf2_ros
@@ -6,16 +6,14 @@ from geometry_msgs.msg import PoseStamped,TransformStamped, Twist
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64
 from kinova_msgs.msg import JointVelocity, PoseVelocity
-from oarbot_moveit.oarbot_moveit import Oarbot
+from oarbot_moveit import Oarbot
 from std_srvs.srv import Trigger, TriggerResponse
 import numpy as np
 from math import pi, cos, sin
 from copy import deepcopy as dp
 
 class baseState(object):
-    def __init__(self) -> None:
-        super().__init__()
-
+    def __init__(self):
         # Parameters
         # self.home_q = np.array([0,0,pi/2,0.15,0,pi/8,-pi/8,pi/6,pi/6,pi/6,0])
         self.home_q = np.array([0,0,0,0.15,pi/6,-pi/4,-pi/6,0,0,0,0])

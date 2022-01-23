@@ -36,7 +36,7 @@ from visualization_msgs.msg import Marker
 
 from kinova_msgs.msg import PoseVelocity,JointVelocity
 
-from oarbot_moveit.oarbot_moveit import Oarbot
+from oarbot_moveit import Oarbot
 from copy import deepcopy as dp
 import general_robotics_toolbox as rox
 from qpsolvers import solve_qp
