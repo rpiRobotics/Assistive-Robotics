@@ -31,12 +31,14 @@ SCRIPTS=(
     echo 1234 | sudo -S apt install -y ros-melodic-spacenav-node;
     echo 1234 | sudo -S apt install -y ros-melodic-twist-mux;
     echo 1234 | sudo -S apt install -y ros-melodic-moveit*;
-    echo 1234 | sudo -S apt install -y python-cvxopt;
+    echo 1234 | sudo -S apt install -y python-cvxopt; # TODO
     echo 1234 | sudo -S apt install -y python3-pip;
     echo 1234 | sudo -S apt install -y python-pip;
     pip3 install pyserial;
     pip install general-robotics-toolbox;
-    pip install quadprog;
+    pip install quadprog; # TODO
+    echo 1234 | sudo -S apt install -y python-dev; # TODO
+    pip install qpsolvers==1.4.1 # TODO
     if ! grep -q '^deb .*https://packages.microsoft.com/ubuntu/18.04/prod' /etc/apt/sources.list /etc/apt/sources.list.d/*; then
         echo 1234 | curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -;
         echo 1234 | sudo apt-add-repository https://packages.microsoft.com/ubuntu/18.04/prod;
@@ -88,12 +90,14 @@ SCRIPTS=(
     echo 1234 | sudo -S apt install -y software-properties-common;
     echo 1234 | sudo -S apt install -y ros-melodic-twist-mux;
     echo 1234 | sudo -S apt install -y ros-melodic-moveit*;
-    echo 1234 | sudo -S apt install -y python-cvxopt;
+    echo 1234 | sudo -S apt install -y python-cvxopt; # TODO
     echo 1234 | sudo -S apt install -y python3-pip;
     echo 1234 | sudo -S apt install -y python-pip;
     pip3 install pyserial;
     pip install general-robotics-toolbox;
-    pip install quadprog;
+    pip install quadprog; # TODO
+    echo 1234 | sudo -S apt install -y python-dev; # TODO
+    pip install qpsolvers==1.4.1 # TODO
     if ! grep -q '^deb .*https://packages.microsoft.com/ubuntu/18.04/prod' /etc/apt/sources.list /etc/apt/sources.list.d/*; then
         echo 1234 | curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -;
         echo 1234 | sudo apt-add-repository https://packages.microsoft.com/ubuntu/18.04/prod;
@@ -142,12 +146,14 @@ SCRIPTS=(
     echo 1234 | sudo -S apt install -y software-properties-common;
     echo 1234 | sudo -S apt install -y ros-melodic-twist-mux;
     echo 1234 | sudo -S apt install -y ros-melodic-moveit*;
-    echo 1234 | sudo -S apt install -y python-cvxopt;
+    echo 1234 | sudo -S apt install -y python-cvxopt; # TODO
     echo 1234 | sudo -S apt install -y python3-pip;
     echo 1234 | sudo -S apt install -y python-pip;
     pip3 install pyserial;
     pip install general-robotics-toolbox;
-    pip install quadprog;
+    pip install quadprog; # TODO
+    echo 1234 | sudo -S apt install -y python-dev; # TODO
+    pip install qpsolvers==1.4.1 # TODO
     if ! grep -q '^deb .*https://packages.microsoft.com/ubuntu/18.04/prod' /etc/apt/sources.list /etc/apt/sources.list.d/*; then
         echo 1234 | curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -;
         echo 1234 | sudo apt-add-repository https://packages.microsoft.com/ubuntu/18.04/prod;
@@ -196,12 +202,14 @@ SCRIPTS=(
     echo 1234 | sudo -S apt install -y software-properties-common;
     echo 1234 | sudo -S apt install -y ros-melodic-twist-mux;
     echo 1234 | sudo -S apt install -y ros-melodic-moveit*;
-    echo 1234 | sudo -S apt install -y python-cvxopt;
+    echo 1234 | sudo -S apt install -y python-cvxopt; # TODO
     echo 1234 | sudo -S apt install -y python3-pip;
     echo 1234 | sudo -S apt install -y python-pip;
     pip3 install pyserial;
     pip install general-robotics-toolbox;
-    pip install quadprog;
+    pip install quadprog; # TODO
+    echo 1234 | sudo -S apt install -y python-dev; # TODO
+    pip install qpsolvers==1.4.1 # TODO
     pip install pandas;
     if ! grep -q '^deb .*https://packages.microsoft.com/ubuntu/18.04/prod' /etc/apt/sources.list /etc/apt/sources.list.d/*; then
         echo 1234 | curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -;
