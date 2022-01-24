@@ -1,10 +1,7 @@
 
-from os import umask
-from general_robotics_toolbox.general_robotics_toolbox import R2q
+
 import numpy as np
 import general_robotics_toolbox as rox
-from numpy.core.fromnumeric import size
-from numpy.core.records import array
 import quadprog as qp
 from math import pi, sin,cos,atan2
 from scipy.linalg import norm
@@ -14,42 +11,116 @@ from cvxopt import matrix, solvers
 # solvers.options['show_progress'] = False
 # ik_solver = IK("j2n6s300_link_base","j2n6s300_link_6")
 
-ex = np.array([1,0,0])
-ey = np.array([0,1,0])
-ez = np.array([0,0,1])
 
 class Oarbot(object):
-    def __init__(self):
-        # robot parameters
-        wheel_r,d1 = 0.127, 0.2755
-        l1,l2 = 0.3, wheel_r+0.4+d1
-        d2, d3, e2, d4, d5, d6= 0.41, 0.2073, 0.0098, 0.0741, 0.0741, 0.16
-        aa = pi/6
-        p89x = d4*(sin(aa)/sin(2*aa)) + 2*d4*(sin(aa)/sin(2*aa))*cos(2*aa)
-        p89y = 2*d4*sin(aa)
-        H = np.array([ex,ey,ez,ez,-ez,ey,-ey,ez,-cos(pi/6)*ey+sin(pi/6)*ez,-cos(pi/6)*ey-sin(pi/6)*ez]).T
-        P = np.array([0*ex,0*ex,0*ex,l1*ex+l2*ez,0*ex,0*ez,d2*ex+e2*ey,0*ex,-(p89x+d3)*ez+p89y*ey,0*ex,(d6+d4*sin(aa)/sin(2*aa))*(cos(pi/6)*ey+sin(pi/6)*ez)]).T
-        joint_type = np.array([1,1,0,1,0,0,0,0,0,0])
-        joint_upper_limit = np.append([10000,10000,10000,0.5],np.radians([10000,40,180,10000,10000,10000]))
-        joint_lower_limit = np.append([-10000,-10000,-10000,-0.001],np.radians([-10000,-220,-71,-10000,-10000,-10000]))
+    def __init__(self, mobile_base2arm_base_xy, arm_base_z_rotation, base_z_up_limit, base_z_low_limit):
+        self.ex = np.array([1.,0.,0.])
+        self.ey = np.array([0.,1.,0.])
+        self.ez = np.array([0.,0.,1.])
+
+        # Kinova arm link lengths
+        self.D1 = 0.2755
+        self.D2 = 0.41
+        self.e2 = 0.0098
+        self.D3 = 0.2073
+        self.D4 = 0.0741
+        self.D5 = 0.0741
+        self.D6 = 0.1600
+
+        # Auxiliary variables
+        self.aa =  pi/6
+        self.ca =  cos(self.aa)
+        self.sa =  sin(self.aa)
+        self.c2a = cos(2*self.aa)
+        self.s2a = sin(2*self.aa)
+        self.d4b = self.D3 + self.D5*(self.sa/self.s2a) 
+        self.d5b = self.D4*(self.sa/self.s2a) + self.D5*(self.sa/self.s2a) 
+        self.d6b = self.D5*(self.sa/self.s2a) + self.D6
         
-        # decalre robot
-        self.bot = rox.Robot(H,P,joint_type,joint_lower_limit,joint_upper_limit)
-        self.q_zeros = np.array([0,0,0,0,pi,-pi/2,pi/2,pi,pi,0])
+        # Product of exponential parameters (kinova arm)
+        h1 = -self.ez
+        h2 = self.ey
+        h3 = -self.ey
+        h4 = self.ez
+        h5 = -self.ey*self.ca + self.ez*self.sa
+        h6 = -self.ey*self.ca - self.ez*self.sa
+        self.H_arm = np.array([h1, h2, h3, h4, h5, h6]).T
+
+        P01 = (self.D1)*self.ez
+        P12 = 0*self.ez
+        P23 = (self.D2)*self.ex + (self.e2)*self.ey
+        P34 = 0*self.ez
+        P45 = (self.d5b*self.ca)*self.ey - (self.d5b*self.sa + self.d4b)*self.ez
+        P56 = 0*self.ez 
+        P6e = (self.d6b*self.ca)*self.ey + (self.d6b*self.sa)*self.ez 
+        self.P_arm = np.array([P01, P12, P23, P34, P45, P56, P6e]).T
+
+        # Tool frame (end effector) adjustment 
+        self.p_tool = 0*self.ez
+        ex_tool = -self.ey*self.sa + self.ez*self.ca
+        ey_tool = self.ex
+        ez_tool = self.ey*self.ca + self.ez*self.sa
+        self.R_tool = np.array([ex_tool,ey_tool,ez_tool]).T
+
+        # Parameters to create the robot object properly
+        self.joint_types_arm = np.array([0,0,0,0,0,0]) # All revolute
+        # self.joint_upper_limits = np.radians([10000,310,341,10000,10000,10000])
+        # self.joint_lower_limits = np.radians([-10000,50,19,-10000,-10000,-10000])
+        self.joint_upper_limits_arm = None
+        self.joint_lower_limits_arm = None
+
+        # Joint angles in Zero config 
+        self.q_zeros_arm = np.array([pi-arm_base_z_rotation,-pi/2,pi/2,pi,pi,0.])
+        # self.q_zero = np.deg2rad(np.array([180,270,90,180,180,0]))
+
+        # for arm inv
+        # Create the kinova robot object with the general robotics toolbox
+        self.arm_bot = rox.Robot(self.H_arm,
+                                self.P_arm,
+                                self.joint_types_arm,
+                                self.joint_lower_limits_arm,
+                                self.joint_upper_limits_arm, 
+                                R_tool=self.R_tool, p_tool=self.p_tool)
+
+        # Oarbat base robot parameters
+        self.L1 = mobile_base2arm_base_xy[0]
+        self.L2 = mobile_base2arm_base_xy[1]
+        self.L3 = base_z_low_limit + self.D1 
+
+        hB1 = self.ex
+        hB2 = self.ey
+        hB3 = self.ez # revolute
+        hB4 = self.ez
+        self.H = np.array([hB1, hB2, hB3, hB4, h1, h2, h3, h4, h5, h6]).T
+
+        PB01 = 0.*self.ex
+        PB12 = 0.*self.ey
+        PB23 = 0.*self.ez
+        PB34 = (self.L1)*self.ex + (self.L2)*self.ey + (self.L3)*self.ez  
+        P01_new = 0*self.ez # Since PB34 already captures D1 length
+        self.P = np.array([PB01, PB12, PB23, PB34, P01_new, P12, P23, P34, P45, P56, P6e]).T
+
+        self.joint_types = np.array([1,1,0,1,0,0,0,0,0,0])
+        self.joint_upper_limits = np.append([10000.,10000.,10000.,base_z_up_limit-base_z_low_limit],np.radians([10000.,10000.,10000.,10000.,10000.,10000.]))
+        self.joint_lower_limits = np.append([-10000.,-10000.,-10000.,-0.001],np.radians([-10000.,-10000.,-10000.,-10000.,-10000.,-10000.]))
+        
+        # Joint angles in Zero config 
+        self.q_zeros = np.array([0.,0.,0.,0.,pi-arm_base_z_rotation,-pi/2,pi/2,pi,pi,0])
+
+        # Create the kinova robot object with the general robotics toolbox
+        self.bot = rox.Robot(self.H,
+                                self.P,
+                                self.joint_types,
+                                self.joint_lower_limits,
+                                self.joint_upper_limits, 
+                                R_tool=self.R_tool, p_tool=self.p_tool)
 
         # opt param
         self._ep = 0.01
         self._er = 0.02
-        self._n = 10
+        self._n = 10.
 
-        # for arm inv
-        H_arm = np.array([-ez,ey,-ey,ez,-cos(pi/6)*ey+sin(pi/6)*ez,-cos(pi/6)*ey-sin(pi/6)*ez]).T
-        P_arm = np.array([d1*ez,0*ez,d2*ex+e2*ey,0*ex,-(p89x+d3)*ez+p89y*ey,0*ex,(d6+d4*sin(aa)/sin(2*aa))*(cos(pi/6)*ey+sin(pi/6)*ez)]).T
-        joint_type_arm = np.array([0,0,0,0,0,0])
-        joint_upper_limit_arm = np.radians([10000,40,180,10000,10000,10000])
-        joint_lower_limit_arm = np.radians([-10000,-220,-71,-10000,-10000,-10000])
-        self.arm_bot = rox.Robot(H_arm,P_arm,joint_type_arm,joint_lower_limit_arm,joint_upper_limit_arm)
-        self.q_zeros_arm = np.array([pi,-pi/2,pi/2,pi,pi,0])
+        
 
     def fwdkin(self,q):
         
@@ -73,8 +144,8 @@ class Oarbot(object):
 
     def invkin(self, end_T, init_guess):
 
-        alpha = 1
-        Kp = 1
+        alpha = 1.
+        Kp = 1.
         
         robot_i = self.bot
         q = init_guess
@@ -123,13 +194,13 @@ class Oarbot(object):
         tmp = np.vstack((np.hstack((np.hstack((np.zeros((3, self._n)),vr)),np.zeros((3,1)))),np.hstack((np.hstack((np.zeros((3,self._n)),np.zeros((3,1)))),vp)))) 
         H2 = np.dot(tmp.T,tmp)
 
-        H3 = -2*np.dot(np.hstack((J,np.zeros((6,2)))).T, tmp)
-        H3 = (H3+H3.T)/2
+        H3 = -2.*np.dot(np.hstack((J,np.zeros((6,2)))).T, tmp)
+        H3 = (H3+H3.T)/2.
 
         tmp2 = np.vstack((np.array([0,0,0,0,0,0,0,0,0,0,np.sqrt(self._er),0]),np.array([0,0,0,0,0,0,0,0,0,0,0,np.sqrt(self._ep)])))
         H4 = np.dot(tmp2.T, tmp2)
 
-        H = 2*(H1+H2+H3+H4)
+        H = 2.*(H1+H2+H3+H4)
 
         return H
 
