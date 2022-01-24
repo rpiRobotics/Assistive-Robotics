@@ -1,0 +1,28 @@
+cmd_vel_topic_name: "cmd_vel" # subscribed
+
+cmd_vel_arm_topic_name: "j2n6s300_left_driver/in/cartesian_velocity" # published
+cmd_vel_base_topic_name: "e_stop_cmd_vel" # published
+
+debug_constraint_marker_topic_name: "constraint_marker"
+debug_constrained_r_topic_name: "constrained_r"
+
+joint_states_arm_topic_name: "j2n6s300_left_driver/out/joint_state"
+
+control_ball_center: [0.5, 0.0, 0.3] # wrt. kinova arm base
+control_ball_radius: 0.33 # meters
+
+
+tf_world_frame_id: "world_floor"
+tf_mobile_base_frame_id: "oarbot_silver_base"
+tf_arm_base_frame_id: "root_left_arm" 
+
+arm_joints_tf_prefix: "j2n6s300_left_" # prefix that joint states of kinova arm has in fron of each joint name
+
+mobile_base2arm_base_xy: [0.305, -0.03] # planar translation amounb from oarbot base center to kinova arm base
+arm_base_z_rotation_deg: 180.0 # For Left arm config, this must be 180. degrees. 
+plate_bottom_min: 0.28 # Minimum z height of the plate bottom from floor
+plate_bottom_max: 0.76 # Max z height of the plate bottom from floor
+plate_bottom2arm_base: 0.0465 # Z height from plate bottom to kinova arm base 
+
+pub_rate_arm: 100.0 # For kinova arm 100 Hz is needed
+pub_rate_base: 25.0 

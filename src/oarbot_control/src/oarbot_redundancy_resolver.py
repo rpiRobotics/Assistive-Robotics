@@ -94,12 +94,6 @@ class OarbotRedundancyResolver():
         self.control_ball_center_xyz = np.array(self.control_ball_center_xyz) # (3,)
         self.control_ball_radius = rospy.get_param("~control_ball_radius", 0.33)
 
-        self.control_upper_xyz = rospy.get_param("~control_upper_xyz", [0.6, 0.3, 0.5])
-        self.control_upper_xyz = np.array(self.control_upper_xyz) # (3,)
-
-        self.control_lower_xyz = rospy.get_param("~control_lower_xyz", [0.25, -0.3, -0.1])
-        self.control_lower_xyz = np.array(self.control_lower_xyz) # (3,)
-
         # Some needed TF frame names
         self.tf_world_frame_id = rospy.get_param("~tf_world_frame_id", "world_floor")
         self.tf_mobile_base_frame_id = rospy.get_param("~tf_mobile_base_frame_id", "oarbot_blue_base")
