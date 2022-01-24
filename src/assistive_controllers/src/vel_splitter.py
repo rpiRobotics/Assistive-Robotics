@@ -24,7 +24,6 @@ Broadcasts to:
     - 
 """
 
-from scipy.linalg.basic import solve
 import rospy
 
 import numpy as np

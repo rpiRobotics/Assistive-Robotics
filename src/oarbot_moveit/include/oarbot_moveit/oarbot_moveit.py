@@ -4,7 +4,7 @@ import numpy as np
 import general_robotics_toolbox as rox
 import quadprog as qp
 from math import pi, sin,cos,atan2
-from scipy.linalg import norm
+from numpy.linalg import norm
 from cvxopt import matrix, solvers
 # from trac_ik_python.trac_ik import IK
 
