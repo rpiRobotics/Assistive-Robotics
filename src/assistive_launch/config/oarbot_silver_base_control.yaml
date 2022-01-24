@@ -1,7 +1,7 @@
 velocity_feedback_topic_name: "vel_feedback"
 motor_command_topic_name: "motor_command"
 motor_feedback_topic_name: "motor_feedback"
-republished_spacemouse: "e_stop_cmd_vel"
+republished_spacemouse: "cmd_vel_base"
 serial_back: "/dev/serial/by-path/pci-0000:00:14.0-usb-0:1.6:1.0"
 serial_front: "/dev/serial/by-path/pci-0000:00:14.0-usb-0:1.7:1.0"
 
