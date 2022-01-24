@@ -129,7 +129,7 @@ class OarbotRedundancyResolver():
         # Subscribers
         self.sub_cmd_vel = rospy.Subscriber(self.cmd_vel_topic_name, 
                                             geometry_msgs.msg.Twist, 
-                                            self.split_vel_callback, 
+                                            self.split_velocity_callback, 
                                             queue_size=1)
 
         self.sub_joint_states_arm = rospy.Subscriber(self.joint_states_arm_topic_name, 
