@@ -400,15 +400,13 @@ class OarbotRedundancyResolver():
         # self.publish_cmd_vel_arm(vx,vy,vz, wx,wy,wz)
 
         # Generate and publish the Twist message
-        cmd_vel = geometry_msgs.msg.Twist()
-        cmd_vel.linear.x = vx
-        cmd_vel.linear.y = vy
-        cmd_vel.linear.z = vz
-        
-        # Scaling
-        cmd_vel.angular.x = wx
-        cmd_vel.angular.y = wy
-        cmd_vel.angular.z = wz
+        cmd_vel = kinova_msgs.msg.PoseVelocity()
+        cmd_vel.twist_linear_x = vx
+        cmd_vel.twist_linear_y = vy
+        cmd_vel.twist_linear_z = vz
+        cmd_vel.twist_angular_x = wx
+        cmd_vel.twist_angular_y = wy
+        cmd_vel.twist_angular_z = wz
 
         self.pub_cmd_vel_arm.publish(cmd_vel)
 
