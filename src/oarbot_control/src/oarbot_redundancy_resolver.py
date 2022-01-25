@@ -366,7 +366,7 @@ class OarbotRedundancyResolver():
 
     def joint_states_arm_callback(self, msg):
         # Figure out at which index in the joint state msg the finger joints at the arm starts
-        if self.joint_arm_state is None:
+        if self.joint_state_arm is None:
             self.joint_arm_start_index = msg.name.index(self.arm_joints_tf_prefix + "j2n6s300_joint_1")
             # If multiple indexes are going to be figured out, comment out above, comment in below, then add more elif conditions
             # for i in range(len(msg.name)):
