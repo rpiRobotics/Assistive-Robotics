@@ -177,117 +177,11 @@ Visualization Manager:
           Value: false
         j2n6s300_left_rgb_camera_link:
           Value: false
-        j2n6s300_right_body_joint_ankle_left:
-          Value: false
-        j2n6s300_right_body_joint_ankle_right:
-          Value: false
-        j2n6s300_right_body_joint_clavicle_left:
-          Value: false
-        j2n6s300_right_body_joint_clavicle_right:
-          Value: false
-        j2n6s300_right_body_joint_ear_left:
-          Value: false
-        j2n6s300_right_body_joint_ear_right:
-          Value: false
-        j2n6s300_right_body_joint_elbow_left:
-          Value: false
-        j2n6s300_right_body_joint_elbow_right:
-          Value: false
-        j2n6s300_right_body_joint_eye_left:
-          Value: false
-        j2n6s300_right_body_joint_eye_right:
-          Value: false
-        j2n6s300_right_body_joint_foot_left:
-          Value: false
-        j2n6s300_right_body_joint_foot_right:
-          Value: false
-        j2n6s300_right_body_joint_hand_left:
-          Value: false
-        j2n6s300_right_body_joint_hand_right:
-          Value: false
-        j2n6s300_right_body_joint_handtip_left:
-          Value: false
-        j2n6s300_right_body_joint_handtip_right:
-          Value: false
-        j2n6s300_right_body_joint_head:
-          Value: true
-        j2n6s300_right_body_joint_hip_left:
-          Value: false
-        j2n6s300_right_body_joint_hip_right:
-          Value: false
-        j2n6s300_right_body_joint_knee_left:
-          Value: false
-        j2n6s300_right_body_joint_knee_right:
-          Value: false
-        j2n6s300_right_body_joint_neck:
-          Value: false
-        j2n6s300_right_body_joint_nose:
-          Value: false
-        j2n6s300_right_body_joint_pelvis:
-          Value: false
-        j2n6s300_right_body_joint_shoulder_left:
-          Value: false
-        j2n6s300_right_body_joint_shoulder_right:
-          Value: false
-        j2n6s300_right_body_joint_spine_chest:
-          Value: false
-        j2n6s300_right_body_joint_spine_navel:
-          Value: false
-        j2n6s300_right_body_joint_thumb_left:
-          Value: false
-        j2n6s300_right_body_joint_thumb_right:
-          Value: false
-        j2n6s300_right_body_joint_wrist_left:
-          Value: false
-        j2n6s300_right_body_joint_wrist_right:
-          Value: false
-        j2n6s300_right_camera_base:
-          Value: true
-        j2n6s300_right_camera_body:
-          Value: false
-        j2n6s300_right_camera_visor:
-          Value: false
-        j2n6s300_right_depth_camera_link:
-          Value: false
-        j2n6s300_right_end_effector:
-          Value: false
-        j2n6s300_right_imu_link:
-          Value: false
-        j2n6s300_right_link_1:
-          Value: false
-        j2n6s300_right_link_2:
-          Value: false
-        j2n6s300_right_link_3:
-          Value: false
-        j2n6s300_right_link_4:
-          Value: false
-        j2n6s300_right_link_5:
-          Value: false
-        j2n6s300_right_link_6:
-          Value: false
-        j2n6s300_right_link_base:
-          Value: false
-        j2n6s300_right_link_finger_1:
-          Value: false
-        j2n6s300_right_link_finger_2:
-          Value: false
-        j2n6s300_right_link_finger_3:
-          Value: false
-        j2n6s300_right_link_finger_tip_1:
-          Value: false
-        j2n6s300_right_link_finger_tip_2:
-          Value: false
-        j2n6s300_right_link_finger_tip_3:
-          Value: false
-        j2n6s300_right_rgb_camera_link:
-          Value: false
         oarbot_blue_base:
           Value: true
         oarbot_silver_base:
           Value: true
         root_left_arm:
-          Value: true
-        root_right_arm:
           Value: true
         world_floor:
           Value: true
@@ -308,98 +202,7 @@ Visualization Manager:
             cage_rgb_camera_link:
               world_floor:
                 oarbot_blue_base:
-                  root_right_arm:
-                    j2n6s300_right_link_base:
-                      j2n6s300_right_link_1:
-                        j2n6s300_right_link_2:
-                          j2n6s300_right_link_3:
-                            j2n6s300_right_link_4:
-                              j2n6s300_right_link_5:
-                                j2n6s300_right_link_6:
-                                  j2n6s300_right_end_effector:
-                                    j2n6s300_right_camera_base:
-                                      j2n6s300_right_camera_body:
-                                        {}
-                                      j2n6s300_right_camera_visor:
-                                        {}
-                                      j2n6s300_right_depth_camera_link:
-                                        j2n6s300_right_body_joint_ankle_left:
-                                          {}
-                                        j2n6s300_right_body_joint_ankle_right:
-                                          {}
-                                        j2n6s300_right_body_joint_clavicle_left:
-                                          {}
-                                        j2n6s300_right_body_joint_clavicle_right:
-                                          {}
-                                        j2n6s300_right_body_joint_ear_left:
-                                          {}
-                                        j2n6s300_right_body_joint_ear_right:
-                                          {}
-                                        j2n6s300_right_body_joint_elbow_left:
-                                          {}
-                                        j2n6s300_right_body_joint_elbow_right:
-                                          {}
-                                        j2n6s300_right_body_joint_eye_left:
-                                          {}
-                                        j2n6s300_right_body_joint_eye_right:
-                                          {}
-                                        j2n6s300_right_body_joint_foot_left:
-                                          {}
-                                        j2n6s300_right_body_joint_foot_right:
-                                          {}
-                                        j2n6s300_right_body_joint_hand_left:
-                                          {}
-                                        j2n6s300_right_body_joint_hand_right:
-                                          {}
-                                        j2n6s300_right_body_joint_handtip_left:
-                                          {}
-                                        j2n6s300_right_body_joint_handtip_right:
-                                          {}
-                                        j2n6s300_right_body_joint_head:
-                                          {}
-                                        j2n6s300_right_body_joint_hip_left:
-                                          {}
-                                        j2n6s300_right_body_joint_hip_right:
-                                          {}
-                                        j2n6s300_right_body_joint_knee_left:
-                                          {}
-                                        j2n6s300_right_body_joint_knee_right:
-                                          {}
-                                        j2n6s300_right_body_joint_neck:
-                                          {}
-                                        j2n6s300_right_body_joint_nose:
-                                          {}
-                                        j2n6s300_right_body_joint_pelvis:
-                                          {}
-                                        j2n6s300_right_body_joint_shoulder_left:
-                                          {}
-                                        j2n6s300_right_body_joint_shoulder_right:
-                                          {}
-                                        j2n6s300_right_body_joint_spine_chest:
-                                          {}
-                                        j2n6s300_right_body_joint_spine_navel:
-                                          {}
-                                        j2n6s300_right_body_joint_thumb_left:
-                                          {}
-                                        j2n6s300_right_body_joint_thumb_right:
-                                          {}
-                                        j2n6s300_right_body_joint_wrist_left:
-                                          {}
-                                        j2n6s300_right_body_joint_wrist_right:
-                                          {}
-                                        j2n6s300_right_imu_link:
-                                          {}
-                                        j2n6s300_right_rgb_camera_link:
-                                          {}
-                                  j2n6s300_right_link_finger_1:
-                                    j2n6s300_right_link_finger_tip_1:
-                                      {}
-                                  j2n6s300_right_link_finger_2:
-                                    j2n6s300_right_link_finger_tip_2:
-                                      {}
-                                  j2n6s300_right_link_finger_3:
-                                    j2n6s300_right_link_finger_tip_3:
-                                      {}
+                  {}
                 oarbot_silver_base:
                   root_left_arm:
                     j2n6s300_left_link_base:
@@ -625,79 +428,6 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        j2n6s300_right_end_effector:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        j2n6s300_right_link_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_link_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_link_3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_link_4:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_link_5:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_link_6:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_link_base:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_link_finger_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_link_finger_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_link_finger_3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_link_finger_tip_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_link_finger_tip_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_link_finger_tip_3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        root_right_arm:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
       Name: RobotModel
       Robot Description: /oarbot_blue/robot_description
       TF Prefix: ""
@@ -745,21 +475,6 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        j2n6s300_right_camera_base:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_camera_body:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_camera_visor:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
       Name: RobotModel
       Robot Description: /oarbot_blue/azure_description
       TF Prefix: ""
@@ -840,6 +555,14 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /oarbot_silver/constraint_marker
+      Name: Marker
+      Namespaces:
+        "": true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -875,26 +598,26 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.4780779182910919
-        Y: 0.6905893683433533
-        Z: 1.1658027172088623
+        X: 0.5980599522590637
+        Y: 1.1876890659332275
+        Z: 1.241174340248108
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4297971725463867
+      Pitch: 0.34979724884033203
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.6117427349090576
+      Yaw: 2.9585514068603516
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: true
-  Height: 2049
+  Height: 1518
   Hide Left Dock: true
   Hide Right Dock: true
-  QMainWindow State: 000000ff00000000fd0000000400000000000004d0000006f9fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b000000b000fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000b0fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073000000006e000006f90000018200fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000015f000006f9fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000006e000006f90000013200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e1000001970000000300000eb600000060fc0100000002fb0000000800540069006d0065010000000000000eb60000057100fffffffb0000000800540069006d0065010000000000000450000000000000000000000eb6000006f900000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000004d0000006f9fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b000000b000fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000b0fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073000000006e000006f90000018200fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000015f000006f9fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000006e000006f90000013200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000006af00000060fc0100000002fb0000000800540069006d00650100000000000006af0000057100fffffffb0000000800540069006d00650100000000000004500000000000000000000006af000004e600000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -903,6 +626,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: true
-  Width: 3766
-  X: 74
-  Y: 55
+  Width: 1711
+  X: 1254
+  Y: 409
