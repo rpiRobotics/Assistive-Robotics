@@ -234,29 +234,40 @@ class OarbotRedundancyResolver():
 
         # ||JA qadot + JB qbdot - vd||^2 + qadot^T W_a qadot + qbdot^T W_b qbdot
         # rospy.logwarn("q: " + str(q))
-        J = self.bot.jacobian(q)
-        J_arm = self.bot.arm_jacobian(q[4:])
 
-        # u,s,v = np.linalg.svd(J_arm)
-        # print(s)
+        J_world2ee_in_world = self.bot.jacobian(q) # 6x10
+        J_armbase2ee_in_armbase = self.bot.arm_jacobian(q[4:]) # 6x6
+
+        R_mobilebase2world = rox.rot([0,0,1],q[2]).T # TODO: could have get it from TF
 
         if self.is_left_arm_config:
-            R_sup2base = np.transpose(rox.rot([0,0,1],(q[2]+math.pi)))
+            R_mobilebase2armbase = rox.rot([0,0,1],math.pi) # TODO: could have get it from TF
         else:
-            R_sup2base = np.transpose(rox.rot([0,0,1],q[2]))
-            
-        Jee_sup = np.dot(R_sup2base,J[:3,:])
-        Jee_sup = np.vstack((Jee_sup,np.dot(R_sup2base,J[3:,:])))
+            R_mobilebase2armbase = rox.rot([0,0,1],0.0) # TODO: could have get it from TF
 
-        T_arm2ee = self.bot.fwdkin_arm(q[4:])
+        R_armbase2world = np.matmul(R_mobilebase2armbase.T, R_mobilebase2world) # TODO: could have get it from TF
 
-        nu_omega = np.dot(T_arm2ee.R,des_cmd[:3])
-        nu = np.append(nu_omega,des_cmd[3:])
+        J_world2armbase_in_world = J_world2ee_in_world[:4,:] # 6x4
+        # np.kron(np.eye(2),a) # Creates a block diagonal version of given matrix a repeated 2 times
+        J_world2armbase_in_armbase = np.matmul(np.kron(np.eye(2),R_armbase2world), J_world2armbase_in_world) # 6x4
+
+        J_armbase2ee_in_world = J_world2ee_in_world[4:,:] # 6x6
+        J_armbase2ee_in_armbase_2 = np.matmul(np.kron(np.eye(2),R_armbase2world), J_armbase2ee_in_world) 
+        
+        # TODO: Check the above J_armbase2ee_in_armbase == The self.bot.arm_jacobian(q[4:])  
+        assert J_armbase2ee_in_armbase_2 == J_armbase2ee_in_armbase
+
+        J_world2ee_in_armbase = np.vstack((J_world2armbase_in_armbase,J_armbase2ee_in_armbase)) # 6x10
+
+        T_armbase2ee_in_armbase = self.bot.fwdkin_arm(q[4:]) # TODO: could have get it from TF
+
+        nu_omega = np.dot(T_armbase2ee_in_armbase.R, des_cmd[:3]) # Desired omega represented in arm_base (previously it was represented in ee)
+        nu_v = np.dot(R_mobilebase2armbase.T, des_cmd[3:]) # Desired linear vel represented in arm_base (previously it was represented in mobile base)
+        nu = np.append(nu_omega,nu_v) # 6x1 hence nu is in arm_base frame
         # print(nu)
 
-        # Kq=.001*np.eye(len(q))    #small value to make sure positive definite
-        constrained_r = np.linalg.norm(T_arm2ee.p-self.control_ball_center_xyz)
-        arm_w, base_w = self.weighting(T_arm2ee.p,nu,constrained_r)
+        constrained_r = np.linalg.norm(T_armbase2ee_in_armbase.p-self.control_ball_center_xyz)
+        arm_w, base_w = self.weighting(T_armbase2ee_in_armbase.p,nu,constrained_r)
 
         # testing
         # arm_w = 10
@@ -265,12 +276,12 @@ class OarbotRedundancyResolver():
         # the more the weight, the less it's used
         Wa = np.ones(6)*arm_w # weighting for arm axis velocity
         Wb = np.ones(len(q)-6)*base_w # weighting for base axis velocity
-        Wba = np.diag(np.append(Wb,Wa))
+        Wba = np.diag(np.append(Wb,Wa)) # 10x10
 
-        H = np.dot(np.transpose(Jee_sup),Jee_sup)+Wba
-        H = (H+np.transpose(H))/2
+        H = np.matmul(J_world2ee_in_armbase.T,J_world2ee_in_armbase) + Wba
+        H = (H+H.T)/2
 
-        f = -np.dot(np.transpose(Jee_sup),nu).reshape((len(q),))
+        f = -np.dot(J_world2ee_in_armbase.T,nu).reshape((len(q),))
         # print("f",f)
         # print("H",H)
 
@@ -279,13 +290,14 @@ class OarbotRedundancyResolver():
         # print("nu res",np.dot(Jee_sup,qdot))
         # print("=================")
 
-        arm_cmd = np.dot(J_arm,qdot[4:])
-        arm_cmd[:3] = np.dot(np.transpose(T_arm2ee.R),arm_cmd[:3])
+        arm_cmd = np.dot(J_armbase2ee_in_armbase,qdot[4:])
+        arm_cmd[:3] = np.dot(np.transpose(T_armbase2ee_in_armbase.R),arm_cmd[:3]) # represent omega back in the ee (it was found at armbase)
 
-        Rbo = np.array([[math.cos(q[2]),math.sin(q[2])],[-math.sin(q[2]),math.cos(q[2])]])
-        qdotbase_xy = np.dot(Rbo,qdot[:2])
+        # Rbo = np.array([[math.cos(q[2]),math.sin(q[2])],[-math.sin(q[2]),math.cos(q[2])]])
+        
+        qdotbase_xy = np.dot(R_mobilebase2world[:2,:2],qdot[:2])
         base_cmd = np.array([0,0,qdot[2],qdotbase_xy[0],qdotbase_xy[1],qdot[3]])
-        # base_cmd = np.array([0,0,qdot[2],qdot[0],qdot[1],0])
+        # wx wy wz vx vy vz
 
         # et = time.perf_counter_ns()
         # print("duration:",(et-st)*1e-9)
