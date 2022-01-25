@@ -13,7 +13,7 @@ from cvxopt import matrix, solvers
 
 
 class Oarbot(object):
-    def __init__(self, mobile_base2arm_base_xy, arm_base_z_rotation, base_z_up_limit, base_z_low_limit):
+    def __init__(self, mobile_base2arm_base_xy, is_left_arm_config, base_z_up_limit, base_z_low_limit):
         self.ex = np.array([1.,0.,0.])
         self.ey = np.array([0.,1.,0.])
         self.ez = np.array([0.,0.,1.])
@@ -38,28 +38,51 @@ class Oarbot(object):
         self.d6b = self.D5*(self.sa/self.s2a) + self.D6
         
         # Product of exponential parameters (kinova arm)
-        h1 = -self.ez
-        h2 = self.ey
-        h3 = -self.ey
-        h4 = self.ez
-        h5 = -self.ey*self.ca + self.ez*self.sa
-        h6 = -self.ey*self.ca - self.ez*self.sa
+        if is_left_arm_config:
+            h1 = -self.ez
+            h2 = -self.ey
+            h3 = self.ey
+            h4 = self.ez
+            h5 = self.ey*self.ca + self.ez*self.sa
+            h6 = self.ey*self.ca - self.ez*self.sa
+        else: # Default arm configuration is right arm
+            h1 = -self.ez
+            h2 = self.ey
+            h3 = -self.ey
+            h4 = self.ez
+            h5 = -self.ey*self.ca + self.ez*self.sa
+            h6 = -self.ey*self.ca - self.ez*self.sa
         self.H_arm = np.array([h1, h2, h3, h4, h5, h6]).T
 
-        P01 = (self.D1)*self.ez
-        P12 = 0*self.ez
-        P23 = (self.D2)*self.ex + (self.e2)*self.ey
-        P34 = 0*self.ez
-        P45 = (self.d5b*self.ca)*self.ey - (self.d5b*self.sa + self.d4b)*self.ez
-        P56 = 0*self.ez 
-        P6e = (self.d6b*self.ca)*self.ey + (self.d6b*self.sa)*self.ez 
+        if is_left_arm_config:
+            P01 = (self.D1)*self.ez
+            P12 = 0*self.ez
+            P23 = -(self.D2)*self.ex - (self.e2)*self.ey
+            P34 = 0*self.ez
+            P45 = -(self.d5b*self.ca)*self.ey - (self.d5b*self.sa + self.d4b)*self.ez
+            P56 = 0*self.ez 
+            P6e = -(self.d6b*self.ca)*self.ey + (self.d6b*self.sa)*self.ez 
+        else: # Default arm configuration is right arm
+            P01 = (self.D1)*self.ez
+            P12 = 0*self.ez
+            P23 = (self.D2)*self.ex + (self.e2)*self.ey
+            P34 = 0*self.ez
+            P45 = (self.d5b*self.ca)*self.ey - (self.d5b*self.sa + self.d4b)*self.ez
+            P56 = 0*self.ez 
+            P6e = (self.d6b*self.ca)*self.ey + (self.d6b*self.sa)*self.ez 
         self.P_arm = np.array([P01, P12, P23, P34, P45, P56, P6e]).T
 
         # Tool frame (end effector) adjustment 
-        self.p_tool = 0*self.ez
-        ex_tool = -self.ey*self.sa + self.ez*self.ca
-        ey_tool = self.ex
-        ez_tool = self.ey*self.ca + self.ez*self.sa
+        if is_left_arm_config:
+            self.p_tool = 0*self.ez
+            ex_tool = self.ey*self.sa + self.ez*self.ca
+            ey_tool = -self.ex
+            ez_tool = -self.ey*self.ca + self.ez*self.sa 
+        else: # Default arm configuration is right arm
+            self.p_tool = 0*self.ez
+            ex_tool = -self.ey*self.sa + self.ez*self.ca
+            ey_tool = self.ex
+            ez_tool = self.ey*self.ca + self.ez*self.sa
         self.R_tool = np.array([ex_tool,ey_tool,ez_tool]).T
 
         # Parameters to create the robot object properly
@@ -70,7 +93,7 @@ class Oarbot(object):
         self.joint_lower_limits_arm = None
 
         # Joint angles in Zero config 
-        self.q_zeros_arm = np.array([pi-arm_base_z_rotation,-pi/2,pi/2,pi,pi,0.])
+        self.q_zeros_arm = np.array([pi,-pi/2,pi/2,pi,pi,0.])
         # self.q_zero = np.deg2rad(np.array([180,270,90,180,180,0]))
 
         # for arm inv
@@ -106,7 +129,7 @@ class Oarbot(object):
         self.joint_lower_limits = np.append([-10000.,-10000.,-10000.,-self.tolerance_meter],np.radians([-10000.,-10000.,-10000.,-10000.,-10000.,-10000.]))
         
         # Joint angles in Zero config 
-        self.q_zeros = np.array([0.,0.,0.,0.,pi-arm_base_z_rotation,-pi/2,pi/2,pi,pi,0])
+        self.q_zeros = np.array([0.,0.,0.,0.,pi,-pi/2,pi/2,pi,pi,0])
 
         # Create the kinova robot object with the general robotics toolbox
         self.bot = rox.Robot(self.H,

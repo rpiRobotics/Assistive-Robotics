@@ -19,7 +19,7 @@ tf_arm_base_frame_id: "root_left_arm"
 arm_joints_tf_prefix: "j2n6s300_left_" # prefix that joint states of kinova arm has in fron of each joint name
 
 mobile_base2arm_base_xy: [0.275, 0.0] # planar translation amounb from oarbot base center to kinova arm base
-arm_base_z_rotation_deg: 180.0 # For Left arm config, this must be 180. degrees. 
+is_left_arm_config: true # For Left arm config  
 plate_bottom_min: 0.28 # Minimum z height of the plate bottom from floor
 plate_bottom_max: 0.76 # Max z height of the plate bottom from floor
 plate_bottom2arm_base: 0.0465 # Z height from plate bottom to kinova arm base 

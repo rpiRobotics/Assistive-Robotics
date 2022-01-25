@@ -27,7 +27,7 @@ Parameters:
     - tf_arm_base_frame_id
     - arm_joints_tf_prefix
     - mobile_base2arm_base_xy
-    - arm_base_z_rotation_deg
+    - is_left_arm_config
     - plate_bottom_min
     - plate_bottom_max
     - plate_bottom2arm_base
@@ -107,7 +107,7 @@ class OarbotRedundancyResolver():
 
         # Get zero-config transformation between arm base and the mobile base
         self.mobile_base2arm_base_xy = rospy.get_param("~mobile_base2arm_base_xy", [0.305, -0.03])
-        self.arm_base_z_rotation_deg = rospy.get_param("~arm_base_z_rotation_deg", 0.0)
+        self.is_left_arm_config = rospy.get_param("~is_left_arm_config", False)
         # Get z height limits from base
         self.plate_bottom_min = rospy.get_param("~plate_bottom_min", 0.295)
         self.plate_bottom_max = rospy.get_param("~plate_bottom_max", 0.76)
@@ -116,7 +116,7 @@ class OarbotRedundancyResolver():
         self.base_z_up_limit = self.plate_bottom_max + self.plate_bottom2arm_base
         self.base_z_low_limit = self.plate_bottom_min + self.plate_bottom2arm_base
         # Create oarbot toolbox from robotics toolbox
-        self.bot = Oarbot(self.mobile_base2arm_base_xy, np.deg2rad(self.arm_base_z_rotation_deg),
+        self.bot = Oarbot(self.mobile_base2arm_base_xy, self.is_left_arm_config,
                           self.base_z_up_limit,self.base_z_low_limit)
 
         # Variables
@@ -313,7 +313,6 @@ class OarbotRedundancyResolver():
 
         return wa,wb
 
-    
     def command_base(self, event=None):
         # If the velocity command for base is sent and the time's been past more than the timeout amount
         if self.velocity_command_sent_base and (rospy.Time.now().to_sec() - self.time_last_cmd_vel > self.base_cmd_wait_timeout):
@@ -321,7 +320,7 @@ class OarbotRedundancyResolver():
             self.publish_cmd_vel_base(0.,0.,0.,0.)
 
             if not self.is_zero_cmd_vel_base_sent_ever:
-                rospy.logwarn("Zero velocities to the BASE are sent for the first time")
+                rospy.logwarn_once("Zero velocities to the BASE are sent for the first time")
                 self.is_zero_cmd_vel_base_sent_ever = True
 
         else:
@@ -337,7 +336,6 @@ class OarbotRedundancyResolver():
                 
             self.is_zero_cmd_vel_base_sent_ever = False
 
-
     def command_arm(self, event=None):
         # If the velocity command for arm is sent and the time's been past more than the timeout amount
         if self.velocity_command_sent_arm and (rospy.Time.now().to_sec() - self.time_last_cmd_vel > self.arm_cmd_wait_timeout):
@@ -345,7 +343,7 @@ class OarbotRedundancyResolver():
             self.publish_cmd_vel_arm(0.,0.,0.,0.,0.,0.)
 
             if not self.is_zero_cmd_vel_arm_sent_ever:
-                rospy.logwarn("Zero velocities to the ARM are sent for the first time")
+                rospy.logwarn_once("Zero velocities to the ARM are sent for the first time")
                 self.is_zero_cmd_vel_arm_sent_ever = True
         else:
             # send the latest velocity command
@@ -361,8 +359,6 @@ class OarbotRedundancyResolver():
             self.velocity_command_sent_arm = True
                 
             self.is_zero_cmd_vel_arm_sent_ever = False
-
-
 
     def joint_states_arm_callback(self, msg):
         # Figure out at which index in the joint state msg the finger joints at the arm starts
@@ -431,7 +427,6 @@ class OarbotRedundancyResolver():
         m.color.g = 1
 
         self.pub_constraint_markers.publish(m)
-
 
     def euler_from_quaternion(self, x, y, z, w):
         """
