@@ -100,9 +100,10 @@ class Oarbot(object):
         P01_new = 0*self.ez # Since PB34 already captures D1 length
         self.P = np.array([PB01, PB12, PB23, PB34, P01_new, P12, P23, P34, P45, P56, P6e]).T
 
+        self.tolerance_meter = 0.01 # 1 cm tolerance for joint limits
         self.joint_types = np.array([1,1,0,1,0,0,0,0,0,0])
-        self.joint_upper_limits = np.append([10000.,10000.,10000.,base_z_up_limit-base_z_low_limit],np.radians([10000.,10000.,10000.,10000.,10000.,10000.]))
-        self.joint_lower_limits = np.append([-10000.,-10000.,-10000.,-0.001],np.radians([-10000.,-10000.,-10000.,-10000.,-10000.,-10000.]))
+        self.joint_upper_limits = np.append([10000.,10000.,10000.,base_z_up_limit-base_z_low_limit+self.tolerance_meter],np.radians([10000.,10000.,10000.,10000.,10000.,10000.]))
+        self.joint_lower_limits = np.append([-10000.,-10000.,-10000.,-self.tolerance_meter],np.radians([-10000.,-10000.,-10000.,-10000.,-10000.,-10000.]))
         
         # Joint angles in Zero config 
         self.q_zeros = np.array([0.,0.,0.,0.,pi-arm_base_z_rotation,-pi/2,pi/2,pi,pi,0])
