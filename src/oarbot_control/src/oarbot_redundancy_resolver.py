@@ -247,11 +247,11 @@ class OarbotRedundancyResolver():
 
         R_armbase2world = np.matmul(R_mobilebase2armbase.T, R_mobilebase2world) # TODO: could have get it from TF
 
-        J_world2armbase_in_world = J_world2ee_in_world[:4,:] # 6x4
+        J_world2armbase_in_world = J_world2ee_in_world[:,:4] # 6x4
         # np.kron(np.eye(2),a) # Creates a block diagonal version of given matrix a repeated 2 times
         J_world2armbase_in_armbase = np.matmul(np.kron(np.eye(2),R_armbase2world), J_world2armbase_in_world) # 6x4
 
-        J_armbase2ee_in_world = J_world2ee_in_world[4:,:] # 6x6
+        J_armbase2ee_in_world = J_world2ee_in_world[:,:4] # 6x6
         J_armbase2ee_in_armbase_2 = np.matmul(np.kron(np.eye(2),R_armbase2world), J_armbase2ee_in_world) 
         
         # TODO: Check the above J_armbase2ee_in_armbase == The self.bot.arm_jacobian(q[4:])  
