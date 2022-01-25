@@ -255,7 +255,9 @@ class OarbotRedundancyResolver():
         J_armbase2ee_in_armbase_2 = np.matmul(np.kron(np.eye(2),R_armbase2world), J_armbase2ee_in_world) 
         
         # TODO: Check the above J_armbase2ee_in_armbase == The self.bot.arm_jacobian(q[4:])  
-        assert J_armbase2ee_in_armbase_2 == J_armbase2ee_in_armbase
+        # assert J_armbase2ee_in_armbase_2 == J_armbase2ee_in_armbase
+        rospy.logwarn("J_armbase2ee_in_armbase_2: " + str(J_armbase2ee_in_armbase_2))
+        rospy.logwarn("J_armbase2ee_in_armbase: " + str(J_armbase2ee_in_armbase))
 
         J_world2ee_in_armbase = np.vstack((J_world2armbase_in_armbase,J_armbase2ee_in_armbase)) # 6x10
 
