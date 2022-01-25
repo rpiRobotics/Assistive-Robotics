@@ -233,7 +233,7 @@ class OarbotRedundancyResolver():
         # st = time.perf_counter_ns()
 
         # ||JA qadot + JB qbdot - vd||^2 + qadot^T W_a qadot + qbdot^T W_b qbdot
-
+        rospy.logwarn("q: " + str(q))
         J = self.bot.jacobian(q)
         J_arm = self.bot.arm_jacobian(q[4:])
 
