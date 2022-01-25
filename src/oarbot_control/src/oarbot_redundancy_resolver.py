@@ -240,7 +240,11 @@ class OarbotRedundancyResolver():
         # u,s,v = np.linalg.svd(J_arm)
         # print(s)
 
-        R_sup2base = np.transpose(rox.rot([0,0,1],q[2]))
+        if self.is_left_arm_config:
+            R_sup2base = np.transpose(rox.rot([0,0,1],(q[2]+math.pi)))
+        else:
+            R_sup2base = np.transpose(rox.rot([0,0,1],q[2]))
+            
         Jee_sup = np.dot(R_sup2base,J[:3,:])
         Jee_sup = np.vstack((Jee_sup,np.dot(R_sup2base,J[3:,:])))
 
