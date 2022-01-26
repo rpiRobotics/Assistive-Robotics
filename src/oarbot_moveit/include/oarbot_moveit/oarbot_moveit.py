@@ -83,7 +83,7 @@ class Oarbot(object):
             ex_tool = -self.ey*self.sa + self.ez*self.ca
             ey_tool = self.ex
             ez_tool = self.ey*self.ca + self.ez*self.sa
-        self.R_tool = np.array([ex_tool,ey_tool,ez_tool]).T
+        self.R_tool = np.array([ex_tool,ey_tool,ez_tool])
 
         # Parameters to create the robot object properly
         self.joint_types_arm = np.array([0,0,0,0,0,0]) # All revolute
