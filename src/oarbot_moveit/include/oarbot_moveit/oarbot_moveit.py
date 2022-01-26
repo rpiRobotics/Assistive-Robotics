@@ -38,52 +38,59 @@ class Oarbot(object):
         self.d6b = self.D5*(self.sa/self.s2a) + self.D6
         
         # Product of exponential parameters (kinova arm)
-        if is_left_arm_config:
-            h1 = -self.ez
-            h2 = -self.ey
-            h3 = self.ey
-            h4 = self.ez
-            h5 = self.ey*self.ca + self.ez*self.sa
-            h6 = self.ey*self.ca - self.ez*self.sa
-        else: # Default arm configuration is right arm
-            h1 = -self.ez
-            h2 = self.ey
-            h3 = -self.ey
-            h4 = self.ez
-            h5 = -self.ey*self.ca + self.ez*self.sa
-            h6 = -self.ey*self.ca - self.ez*self.sa
-        self.H_arm = np.array([h1, h2, h3, h4, h5, h6]).T
+        # if is_left_arm_config:
+        h1_left = -self.ez
+        h2_left = -self.ey
+        h3_left = self.ey
+        h4_left = self.ez
+        h5_left = self.ey*self.ca + self.ez*self.sa
+        h6_left = self.ey*self.ca - self.ez*self.sa
+        self.H_arm_left = np.array([h1_left, h2_left, h3_left, h4_left, h5_left, h6_left]).T
 
-        if is_left_arm_config:
-            P01 = (self.D1)*self.ez
-            P12 = 0*self.ez
-            P23 = -(self.D2)*self.ex - (self.e2)*self.ey
-            P34 = 0*self.ez
-            P45 = -(self.d5b*self.ca)*self.ey - (self.d5b*self.sa + self.d4b)*self.ez
-            P56 = 0*self.ez 
-            P6e = -(self.d6b*self.ca)*self.ey + (self.d6b*self.sa)*self.ez 
-        else: # Default arm configuration is right arm
-            P01 = (self.D1)*self.ez
-            P12 = 0*self.ez
-            P23 = (self.D2)*self.ex + (self.e2)*self.ey
-            P34 = 0*self.ez
-            P45 = (self.d5b*self.ca)*self.ey - (self.d5b*self.sa + self.d4b)*self.ez
-            P56 = 0*self.ez 
-            P6e = (self.d6b*self.ca)*self.ey + (self.d6b*self.sa)*self.ez 
-        self.P_arm = np.array([P01, P12, P23, P34, P45, P56, P6e]).T
+        # else: # Default arm configuration is right arm
+        h1_right = -self.ez
+        h2_right = self.ey
+        h3_right = -self.ey
+        h4_right = self.ez
+        h5_right = -self.ey*self.ca + self.ez*self.sa
+        h6_right = -self.ey*self.ca - self.ez*self.sa
+        self.H_arm_right = np.array([h1_right, h2_right, h3_right, h4_right, h5_right, h6_right]).T
+
+        # if is_left_arm_config:
+        P01_left = (self.D1)*self.ez
+        P12_left = 0*self.ez
+        P23_left = -(self.D2)*self.ex - (self.e2)*self.ey
+        P34_left = 0*self.ez
+        P45_left = -(self.d5b*self.ca)*self.ey - (self.d5b*self.sa + self.d4b)*self.ez
+        P56_left = 0*self.ez 
+        P6e_left = -(self.d6b*self.ca)*self.ey + (self.d6b*self.sa)*self.ez
+        self.P_arm_left = np.array([P01_left, P12_left, P23_left, P34_left, P45_left, P56_left, P6e_left]).T
+        
+        # else: # Default arm configuration is right arm
+        P01_right = (self.D1)*self.ez
+        P12_right = 0*self.ez
+        P23_right = (self.D2)*self.ex + (self.e2)*self.ey
+        P34_right = 0*self.ez
+        P45_right = (self.d5b*self.ca)*self.ey - (self.d5b*self.sa + self.d4b)*self.ez
+        P56_right = 0*self.ez 
+        P6e_right = (self.d6b*self.ca)*self.ey + (self.d6b*self.sa)*self.ez 
+        self.P_arm_right = np.array([P01_right, P12_right, P23_right, P34_right, P45_right, P56_right, P6e_right]).T 
 
         # Tool frame (end effector) adjustment 
-        if is_left_arm_config:
-            self.p_tool = 0*self.ez
-            ex_tool = self.ey*self.sa + self.ez*self.ca
-            ey_tool = -self.ex
-            ez_tool = -self.ey*self.ca + self.ez*self.sa 
-        else: # Default arm configuration is right arm
-            self.p_tool = 0*self.ez
-            ex_tool = -self.ey*self.sa + self.ez*self.ca
-            ey_tool = self.ex
-            ez_tool = self.ey*self.ca + self.ez*self.sa
-        self.R_tool = np.array([ex_tool,ey_tool,ez_tool]).T
+        # if is_left_arm_config:
+        self.p_tool_left = 0*self.ez
+        ex_tool_left = self.ey*self.sa + self.ez*self.ca
+        ey_tool_left = -self.ex
+        ez_tool_left = -self.ey*self.ca + self.ez*self.sa 
+        self.R_tool_left = np.array([ex_tool_left,ey_tool_left,ez_tool_left]).T
+
+        # else: # Default arm configuration is right arm
+        self.p_tool_right = 0*self.ez
+        ex_tool_right = -self.ey*self.sa + self.ez*self.ca
+        ey_tool_right = self.ex
+        ez_tool_right = self.ey*self.ca + self.ez*self.sa
+        self.R_tool_right = np.array([ex_tool_right,ey_tool_right,ez_tool_right]).T
+        
 
         # Parameters to create the robot object properly
         self.joint_types_arm = np.array([0,0,0,0,0,0]) # All revolute
@@ -98,12 +105,12 @@ class Oarbot(object):
 
         # for arm inv
         # Create the kinova robot object with the general robotics toolbox
-        self.arm_bot = rox.Robot(self.H_arm,
-                                self.P_arm,
+        self.arm_bot = rox.Robot(self.H_arm_right,
+                                self.P_arm_right,
                                 self.joint_types_arm,
                                 self.joint_lower_limits_arm,
                                 self.joint_upper_limits_arm, 
-                                R_tool=self.R_tool, p_tool=self.p_tool)
+                                R_tool=self.R_tool_right, p_tool=self.p_tool_right)
 
         # Oarbat base robot parameters
         self.L1 = mobile_base2arm_base_xy[0]
@@ -114,14 +121,20 @@ class Oarbot(object):
         hB2 = self.ey
         hB3 = self.ez # revolute
         hB4 = self.ez
-        self.H = np.array([hB1, hB2, hB3, hB4, h1, h2, h3, h4, h5, h6]).T
+        if is_left_arm_config:
+            self.H = np.array([hB1, hB2, hB3, hB4, h1_left, h2_left, h3_left, h4_left, h5_left, h6_left]).T
+        else:
+            self.H = np.array([hB1, hB2, hB3, hB4, h1_right, h2_right, h3_right, h4_right, h5_right, h6_right]).T
 
         PB01 = 0.*self.ex
         PB12 = 0.*self.ey
         PB23 = 0.*self.ez
         PB34 = (self.L1)*self.ex + (self.L2)*self.ey + (self.L3)*self.ez  
         P01_new = 0*self.ez # Since PB34 already captures D1 length
-        self.P = np.array([PB01, PB12, PB23, PB34, P01_new, P12, P23, P34, P45, P56, P6e]).T
+        if is_left_arm_config:
+            self.P = np.array([PB01, PB12, PB23, PB34, P01_new, P12_left, P23_left, P34_left, P45_left, P56_left, P6e_left]).T
+        else:
+            self.P = np.array([PB01, PB12, PB23, PB34, P01_new, P12_right, P23_right, P34_right, P45_right, P56_right, P6e_right]).T
 
         self.tolerance_meter = 0.01 # 1 cm tolerance for joint limits
         self.joint_types = np.array([1,1,0,1,0,0,0,0,0,0])
@@ -144,7 +157,6 @@ class Oarbot(object):
         self._er = 0.02
         self._n = 10.
 
-        
 
     def fwdkin(self,q):
         

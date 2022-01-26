@@ -117,10 +117,10 @@ class OarbotRedundancyResolver():
         self.base_z_up_limit = self.plate_bottom_max + self.plate_bottom2arm_base
         self.base_z_low_limit = self.plate_bottom_min + self.plate_bottom2arm_base
         # Create oarbot toolbox from robotics toolbox
-        # self.bot = Oarbot(self.mobile_base2arm_base_xy, self.is_left_arm_config,
-        #                   self.base_z_up_limit,self.base_z_low_limit)
-        self.bot = Oarbot(self.mobile_base2arm_base_xy, False,
+        self.bot = Oarbot(self.mobile_base2arm_base_xy, self.is_left_arm_config,
                           self.base_z_up_limit,self.base_z_low_limit)
+        # self.bot = Oarbot(self.mobile_base2arm_base_xy, False,
+        #                   self.base_z_up_limit,self.base_z_low_limit)
 
         # Variables
         self.joint_state_arm = None
