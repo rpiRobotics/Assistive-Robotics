@@ -241,23 +241,23 @@ class OarbotRedundancyResolver():
         J_armbase2ee_in_armbase = self.bot.arm_jacobian(q[4:]) # 6x6
 
         R_mobilebase2world = rox.rot([0,0,1],q[2]).T # TODO: could have get it from TF
-        rospy.logerr("R_mobilebase2world: " + str(R_mobilebase2world))
+        rospy.logerr("R_mobilebase2world: " + str(rox.R2q(R_mobilebase2world)))
 
         if self.is_left_arm_config:
             R_mobilebase2armbase = rox.rot([0,0,1],math.pi) # TODO: could have get it from TF
         else:
             R_mobilebase2armbase = rox.rot([0,0,1],0.0) # TODO: could have get it from TF
-        rospy.logerr("R_mobilebase2armbase: " + str(R_mobilebase2armbase))
+        rospy.logerr("R_mobilebase2armbase: " + str(rox.R2q(R_mobilebase2armbase)))
 
         R_armbase2world = np.matmul(R_mobilebase2armbase.T, R_mobilebase2world) # TODO: could have get it from TF
-        rospy.logerr("R_armbase2world: " + str(R_armbase2world))
+        rospy.logerr("R_armbase2world: " + str(rox.R2q(R_armbase2world)))
 
         # np.kron(np.eye(2),a) # Creates a block diagonal version of given matrix a repeated 2 times
         J_world2ee_in_armbase = np.matmul(np.kron(np.eye(2),R_armbase2world), J_world2ee_in_world) # 6x10
 
         T_armbase2ee_in_armbase = self.bot.fwdkin_arm(q[4:]) # TODO: could have get it from TF
         rospy.logerr("P_armbase2ee_in_armbase: " + str(T_armbase2ee_in_armbase.p))
-        rospy.logerr("R_armbase2ee_in_armbase: " + str(T_armbase2ee_in_armbase.R))
+        rospy.logerr("R_armbase2ee_in_armbase: " + str(rox.R2q(T_armbase2ee_in_armbase.R)))
 
         nu_omega = np.dot(T_armbase2ee_in_armbase.R, des_cmd[:3]) # Desired omega represented in arm_base (previously it was represented in ee)
         nu_v = np.dot(R_mobilebase2armbase.T, des_cmd[3:]) # Desired linear vel represented in arm_base (previously it was represented in mobile base)
