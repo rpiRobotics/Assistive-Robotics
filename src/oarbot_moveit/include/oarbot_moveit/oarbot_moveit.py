@@ -145,12 +145,20 @@ class Oarbot(object):
         self.q_zeros = np.array([0.,0.,0.,0.,pi,-pi/2,pi/2,pi,pi,0])
 
         # Create the kinova robot object with the general robotics toolbox
-        self.bot = rox.Robot(self.H,
+        if is_left_arm_config:
+            self.bot = rox.Robot(self.H,
                                 self.P,
                                 self.joint_types,
                                 self.joint_lower_limits,
                                 self.joint_upper_limits, 
-                                R_tool=self.R_tool, p_tool=self.p_tool)
+                                R_tool=self.R_tool_left, p_tool=self.p_tool_left)
+        else:
+            self.bot = rox.Robot(self.H,
+                                    self.P,
+                                    self.joint_types,
+                                    self.joint_lower_limits,
+                                    self.joint_upper_limits, 
+                                    R_tool=self.R_tool_right, p_tool=self.p_tool_right)
 
         # opt param
         self._ep = 0.01
