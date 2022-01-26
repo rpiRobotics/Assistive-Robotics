@@ -331,7 +331,7 @@ class OarbotRedundancyResolver():
         # If the velocity command for base is sent and the time's been past more than the timeout amount
         if self.velocity_command_sent_base and (rospy.Time.now().to_sec() - self.time_last_cmd_vel > self.base_cmd_wait_timeout):
             # send zero velocity command
-            self.publish_cmd_vel_base(0.,0.,0.,0.)
+            # self.publish_cmd_vel_base(0.,0.,0.,0.)
 
             if not self.is_zero_cmd_vel_base_sent_ever:
                 rospy.logwarn_once("Zero velocities to the BASE are sent for the first time")
@@ -354,7 +354,7 @@ class OarbotRedundancyResolver():
         # If the velocity command for arm is sent and the time's been past more than the timeout amount
         if self.velocity_command_sent_arm and (rospy.Time.now().to_sec() - self.time_last_cmd_vel > self.arm_cmd_wait_timeout):
             # send zero velocity command
-            self.publish_cmd_vel_arm(0.,0.,0.,0.,0.,0.)
+            # self.publish_cmd_vel_arm(0.,0.,0.,0.,0.,0.)
 
             if not self.is_zero_cmd_vel_arm_sent_ever:
                 rospy.logwarn_once("Zero velocities to the ARM are sent for the first time")
