@@ -1,8 +1,8 @@
-robot_cartesian_cmd_vel_topic_name: 'j2n6s300_right_driver/in/cartesian_velocity'
+robot_cartesian_cmd_vel_topic_name: 'e_stop_cmd_vel' # 'j2n6s300_right_driver/in/cartesian_velocity'
 
 tf_followed_body_joint_frame_name: 'j2n6s300_right_body_JOINT_SHOULDER_LEFT' # 'JOINT_HEAD' #'JOINT_WRIST_LEFT' # see https://docs.microsoft.com/en-us/azure/kinect-dk/body-joints, dont forget to add "JOINT_" to the beginning
 tf_end_effector_frame_name: 'j2n6s300_right_end_effector'
-tf_arm_base_frame_name: 'j2n6s300_right_link_base'
+tf_arm_base_frame_name: 'oarbot_blue_base' # 'j2n6s300_right_link_base'
 
 v_p_gain: 3.0 # 3.0
 v_d_gain: 0.0 # Not implemented
