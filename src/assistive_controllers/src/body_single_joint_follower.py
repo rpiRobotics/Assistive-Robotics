@@ -14,7 +14,7 @@ Subscribes to:
     - tf2
 Publishes to:
     - /j2n6s300_driver/in/cartesian_velocity (kinova_msgs::PoseVelocity) 
-        or /oarbot_xxx/e_stop_cmd_vel (geometry_msgs::Twist)
+        or /oarbot_xxx/cmd_vel (geometry_msgs::Twist)
 
 Broadcasts to:
     - 

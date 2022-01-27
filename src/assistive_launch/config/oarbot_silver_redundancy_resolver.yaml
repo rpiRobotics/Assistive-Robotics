@@ -1,4 +1,4 @@
-cmd_vel_topic_name: "e_stop_cmd_vel" # subscribed
+cmd_vel_topic_name: "cmd_vel" # subscribed
 
 cmd_vel_arm_topic_name: "j2n6s300_left_driver/in/cartesian_velocity" # published
 cmd_vel_base_topic_name: "cmd_vel_base" # published
