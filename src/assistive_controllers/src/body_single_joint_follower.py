@@ -13,7 +13,9 @@ Parameters:
 Subscribes to:
     - tf2
 Publishes to:
-    - /j2n6s300_driver/in/cartesian_velocity (kinova_msgs::PoseVelocity)
+    - /j2n6s300_driver/in/cartesian_velocity (kinova_msgs::PoseVelocity) 
+        or /oarbot_xxx/e_stop_cmd_vel (geometry_msgs::Twist)
+
 Broadcasts to:
     - 
 """
@@ -42,13 +44,18 @@ class BodySingleJointFollower():
 
         # Topic name to publish
         self.robot_cartesian_cmd_vel_topic_name = rospy.get_param("~robot_cartesian_cmd_vel_topic_name", "j2n6s300_driver/in/cartesian_velocity")
+        # Publishgin msg type (either Geometry_msgs::Twist or kinova_msgs::PoseVelocity)
+        self.robot_cartesian_cmd_vel_msg_type = rospy.get_param("~robot_cartesian_cmd_vel_msg_type", "geometry_msgs.msg.Twist")
 
         # Publish rate
         self.pub_rate = rospy.get_param("~pub_rate", 100.0) # 100Hz needed for kinova arm
         self.rate = rospy.Rate(self.pub_rate)
 
         # Publisher
-        self.pub_pose_vel_cmd = rospy.Publisher(self.robot_cartesian_cmd_vel_topic_name, kinova_msgs.msg.PoseVelocity, queue_size=1)
+        if self.robot_cartesian_cmd_vel_msg_type == "geometry_msgs.msg.Twist":
+            self.pub_pose_vel_cmd = rospy.Publisher(self.robot_cartesian_cmd_vel_topic_name, geometry_msgs.msg.Twist, queue_size=1)
+        elif self.robot_cartesian_cmd_vel_msg_type == "kinova_msgs.msg.PoseVelocity":
+            self.pub_pose_vel_cmd = rospy.Publisher(self.robot_cartesian_cmd_vel_topic_name, kinova_msgs.msg.PoseVelocity, queue_size=1)
 
         # Control Law Gains
         self.v_p_gain = rospy.get_param("~v_p_gain", 2*1.5)
@@ -122,14 +129,25 @@ class BodySingleJointFollower():
 
 
     def publishPoseVelCmd(self, Vx, Vy, Vz, Wx, Wy, Wz):
-        pose_vel_msg = kinova_msgs.msg.PoseVelocity()
-        pose_vel_msg.twist_linear_x = Vx  
-        pose_vel_msg.twist_linear_y = Vy
-        pose_vel_msg.twist_linear_z = Vz
-        pose_vel_msg.twist_angular_x = Wx
-        pose_vel_msg.twist_angular_y = Wy
-        pose_vel_msg.twist_angular_z = Wz
-        self.pub_pose_vel_cmd.publish(pose_vel_msg)
+        if self.robot_cartesian_cmd_vel_msg_type == "geometry_msgs.msg.Twist":
+            pose_vel_msg = geometry_msgs.msg.Twist()
+            pose_vel_msg.linear.x = Vx
+            pose_vel_msg.linear.y = Vy
+            pose_vel_msg.linear.z = Vz
+            pose_vel_msg.angular.x = Wx
+            pose_vel_msg.angular.y = Wy
+            pose_vel_msg.angular.z = Wz
+            self.pub_pose_vel_cmd.publish(pose_vel_msg)
+
+        elif self.robot_cartesian_cmd_vel_msg_type == "kinova_msgs.msg.PoseVelocity":
+            pose_vel_msg = kinova_msgs.msg.PoseVelocity()
+            pose_vel_msg.twist_linear_x = Vx  
+            pose_vel_msg.twist_linear_y = Vy
+            pose_vel_msg.twist_linear_z = Vz
+            pose_vel_msg.twist_angular_x = Wx
+            pose_vel_msg.twist_angular_y = Wy
+            pose_vel_msg.twist_angular_z = Wz
+            self.pub_pose_vel_cmd.publish(pose_vel_msg)
 
     def poseErrorCalculator(self):
         """

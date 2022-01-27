@@ -1,4 +1,5 @@
 robot_cartesian_cmd_vel_topic_name: 'e_stop_cmd_vel' # 'j2n6s300_right_driver/in/cartesian_velocity'
+robot_cartesian_cmd_vel_msg_type: 'geometry_msgs.msg.Twist' # 'kinova_msgs.msg.PoseVelocity'
 
 tf_followed_body_joint_frame_name: 'j2n6s300_right_body_JOINT_SHOULDER_LEFT' # 'JOINT_HEAD' #'JOINT_WRIST_LEFT' # see https://docs.microsoft.com/en-us/azure/kinect-dk/body-joints, dont forget to add "JOINT_" to the beginning
 tf_end_effector_frame_name: 'j2n6s300_right_end_effector'
