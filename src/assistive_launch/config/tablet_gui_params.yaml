@@ -9,17 +9,17 @@ open_loop_swarm_command_topic: "/just_swarm_vel"
 
 resize_scaling_factor: 0.05
 
-base_only_open_loop_command_topics:
-  - "/just_base_vel_0"
-  - "/just_base_vel_1"
-
-arm_only_open_loop_command_topics:
-  - "/just_arm_vel_0"
-  - "/just_arm_vel_1"
-
 whole_robot_open_loop_command_topics:
   - "/oarbot_silver/cmd_vel"
   - "/oarbot_blue/cmd_vel"
+
+arm_only_open_loop_command_topics:
+  - "/oarbot_silver/cmd_vel_arm"
+  - "/oarbot_blue/cmd_vel_arm"
+
+base_only_open_loop_command_topics:
+  - "/oarbot_silver/cmd_vel_base"
+  - "/oarbot_blue/cmd_vel_base"
 
 robot_node_names:
   - ["/uwb_front_oarbot_silver","/uwb_back_oarbot_silver","/sensor_fusion_oarbot_silver","/oarbot_silver_ctrl"]

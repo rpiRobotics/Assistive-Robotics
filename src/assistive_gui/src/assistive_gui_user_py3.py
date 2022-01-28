@@ -52,9 +52,9 @@ class robot_button:
         if commandmode == "whole_robot":
             self.text=text+"\nOarbot Enable"
         elif commandmode == "arm_only":
-            self.text=text+"Only \nArm Enable"
+            self.text=text+" Only \nArm Enable"
         elif commandmode == "base_only":
-            self.text=text+"Only \nBase Enable"
+            self.text=text+" Only \nBase Enable"
         self.enabled=False
         # self.motion_frame="world"
         self.button=QPushButton()
