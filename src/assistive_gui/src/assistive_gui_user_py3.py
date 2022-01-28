@@ -49,12 +49,14 @@ class swarm_button:
 
 class robot_button:
     def __init__(self,number,topic,commandmode,sizex,sizey,text):
-        if(commandmode):
-            self.text=text+"\nMotion Enable"
-        else:
-            self.text=text+" Frame\nMotion Enable"
+        if commandmode == "whole_robot":
+            self.text=text+"\nOarbot Enable"
+        elif commandmode == "arm_only":
+            self.text=text+"Only \nArm Enable"
+        elif commandmode == "base_only":
+            self.text=text+"Only \nBase Enable"
         self.enabled=False
-        self.motion_frame="world"
+        # self.motion_frame="world"
         self.button=QPushButton()
         self.button.setFixedSize(sizex,sizey)
         self.button.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
@@ -67,12 +69,12 @@ class robot_button:
         #self.button2.setFont(QFont('Ubuntu',11))
         #self.button2.setText(self.text2)
         #self.button2.pressed.connect(self.button_pressed2)
-    def publish_out_message(self):
-        message=FrameTwist()
-        h=std_msgs.msg.Header()
-        h.stamp=rospy.Time.now()
-        message.header=h
-        message.motion_frame=self.motion_frame
+    # def publish_out_message(self):
+    #     message=FrameTwist()
+    #     h=std_msgs.msg.Header()
+    #     h.stamp=rospy.Time.now()
+    #     message.header=h
+    #     message.motion_frame=self.motion_frame
         
     def button_pressed(self):
         self.enabled=not(self.enabled)
@@ -85,8 +87,8 @@ class robot_button:
             
             self.button.setStyleSheet('QPushButton {background-color: white; color: black;}')
     
-    def button_pressed2(self):
-        pass
+    # def button_pressed2(self):
+    #     pass
     
 class LEDManager:
     def __init__(self,nodenames,led_objects):
@@ -170,8 +172,11 @@ class SWARMGUI(QtWidgets.QMainWindow):
         try:
             self.number_of_bots=rospy.get_param('number_of_robots')
             self.nodenames=rospy.get_param('robot_node_names')
-            self.open_loop_command_topics=rospy.get_param('open_loop_command_topics')
-            self.close_loop_command_topics=rospy.get_param('closed_loop_command_topics')
+
+            self.whole_robot_open_loop_command_topics=rospy.get_param('whole_robot_open_loop_command_topics')
+            self.arm_only_open_loop_command_topics=rospy.get_param('arm_only_open_loop_command_topics')
+            self.base_only_open_loop_command_topics=rospy.get_param('base_only_open_loop_command_topics')
+
             self.input_command_topic=rospy.get_param('input_command_topic')
             self.robot_types=rospy.get_param('robot_type_information')
             self.closed_loop_swarm_command_topic=rospy.get_param('closed_loop_swarm_command_topic')
@@ -201,7 +206,7 @@ class SWARMGUI(QtWidgets.QMainWindow):
             led=LEDIndicator(i)
             #led.setDisabled(True)
             
-            self.Robotlayout.addWidget(led,3,i)
+            self.Robotlayout.addWidget(led,4,i)
             self.Leds.append(led)
             led.led_change(True)
     
@@ -228,17 +233,22 @@ class SWARMGUI(QtWidgets.QMainWindow):
         
         #print(self.robot_types[1] is "Holonomic")
         for i in range(self.number_of_bots):
-            if(len(self.open_loop_command_topics) != self.number_of_bots and len(self.open_loop_command_topics)!=len(self.close_loop_command_topics)):
+            if(len(self.whole_robot_open_loop_command_topics) != self.number_of_bots and len(self.whole_robot_open_loop_command_topics)!=len(self.arm_only_open_loop_command_topics)):
                 print("NOT ENOUGH COMMAND TOPICS GIVEN FOR NUMBER OF ROBOTS")
                 break
             
             
-            button_class_object=robot_button(i,self.open_loop_command_topics[i],True,buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
-            button_class_object2=robot_button(i,self.close_loop_command_topics[i],False,buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
+            button_class_object=robot_button(i,self.whole_robot_open_loop_command_topics[i],"whole_robot",buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
             self.Robotlayout.addWidget(button_class_object.button,1,i)
-            self.Robotlayout.addWidget(button_class_object2.button,2,i)
             self.buttons.append(button_class_object)
+
+            button_class_object2=robot_button(i,self.arm_only_open_loop_command_topics[i],"arm_only",buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
+            self.Robotlayout.addWidget(button_class_object2.button,2,i)
             self.buttons.append(button_class_object2)
+
+            button_class_object3=robot_button(i,self.base_only_open_loop_command_topics[i],"base_only",buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
+            self.Robotlayout.addWidget(button_class_object3.button,3,i)
+            self.buttons.append(button_class_object3)
 
         """
         self.robot1led=LEDIndicator()

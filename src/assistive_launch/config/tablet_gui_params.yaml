@@ -9,11 +9,15 @@ open_loop_swarm_command_topic: "/just_swarm_vel"
 
 resize_scaling_factor: 0.05
 
-closed_loop_command_topics:
-  - "/just_robot_vel_0"
-  - "/just_robot_vel_1"
+base_only_open_loop_command_topics:
+  - "/just_base_vel_0"
+  - "/just_base_vel_1"
 
-open_loop_command_topics:
+arm_only_open_loop_command_topics:
+  - "/just_arm_vel_0"
+  - "/just_arm_vel_1"
+
+whole_robot_open_loop_command_topics:
   - "/oarbot_silver/cmd_vel"
   - "/oarbot_blue/cmd_vel"
 
