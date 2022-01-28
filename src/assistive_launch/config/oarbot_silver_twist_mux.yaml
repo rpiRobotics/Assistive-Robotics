@@ -6,5 +6,5 @@ topics:
 locks:
 - name    : e_stop
   topic   : /e_stop
-  timeout : 1.0
+  timeout : 0.1
   priority: 255
