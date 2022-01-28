@@ -39,7 +39,7 @@ Subscribes to:
     - /joint_states (eg. /oarbot_silver/j2n6s300_left_driver/out/joint_state)
     - tf2
 Publishes to:
-    - /$(robot)/cmd_vel_arm for (/j2n6s300_driver/in/cartesian_velocity (kinova_msgs::CartesianVelocity))
+    - /$(robot)/cmd_vel_arm (geometry_msgs::Twist)
     - /$(robot)/cmd_vel_base (geometry_msgs::Twist)
 Broadcasts to:
     - 
@@ -79,7 +79,7 @@ class OarbotRedundancyResolver():
 
         # Publishers
         self.pub_cmd_vel_base = rospy.Publisher(self.cmd_vel_base_topic_name, geometry_msgs.msg.Twist, queue_size=1)
-        self.pub_cmd_vel_arm = rospy.Publisher(self.cmd_vel_arm_topic_name, kinova_msgs.msg.PoseVelocity, queue_size=1)
+        self.pub_cmd_vel_arm = rospy.Publisher(self.cmd_vel_arm_topic_name, geometry_msgs.msg.Twist, queue_size=1)
 
         # Debug publishers
         self.pub_constraint_markers = rospy.Publisher(self.debug_constraint_marker_topic_name, visualization_msgs.msg.Marker, queue_size=1)
@@ -412,14 +412,24 @@ class OarbotRedundancyResolver():
         # example usage: 
         # self.publish_cmd_vel_arm(vx,vy,vz, wx,wy,wz)
 
+        cmd_vel = geometry_msgs.msg.Twist()
+        cmd_vel.linear.x = vx
+        cmd_vel.linear.y = vy
+        cmd_vel.linear.z = vz
+        
+        # Scaling
+        cmd_vel.angular.x = wx
+        cmd_vel.angular.y = wy
+        cmd_vel.angular.z = wz
+
         # Generate and publish the Twist message
-        cmd_vel = kinova_msgs.msg.PoseVelocity()
-        cmd_vel.twist_linear_x = vx
-        cmd_vel.twist_linear_y = vy
-        cmd_vel.twist_linear_z = vz
-        cmd_vel.twist_angular_x = wx
-        cmd_vel.twist_angular_y = wy
-        cmd_vel.twist_angular_z = wz
+        # cmd_vel = kinova_msgs.msg.PoseVelocity()
+        # cmd_vel.twist_linear_x = vx
+        # cmd_vel.twist_linear_y = vy
+        # cmd_vel.twist_linear_z = vz
+        # cmd_vel.twist_angular_x = wx
+        # cmd_vel.twist_angular_y = wy
+        # cmd_vel.twist_angular_z = wz
 
         self.pub_cmd_vel_arm.publish(cmd_vel)
 
