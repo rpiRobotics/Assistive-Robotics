@@ -9,7 +9,11 @@
         <rosparam file="$(find assistive_launch)/config/tablet_arduino_params.yaml"/>
     </node>
 
-    <include file="$(find spacenav_node)/launch/classic.launch"/>
+    <!-- <include file="$(find spacenav_node)/launch/classic.launch"/> -->
+    <node pkg="spacenav_node" type="spacenav_node" name="$(spacenav_node)" output="screen">
+        <param name="zero_when_static" value="true"/>
+        <param name="static_count_threshold" value="30"/>
+    </node>
 
     <node pkg="twist_mux" type="twist_mux" name="twist_mux" output="screen">
         <rosparam command="load" file="$(find assistive_launch)/config/tablet_twist_mux.yaml" />
