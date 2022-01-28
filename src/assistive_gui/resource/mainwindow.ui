@@ -2,6 +2,7 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,15 +14,22 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+
   <widget class="QWidget" name="centralwidget">
+
    <layout class="QVBoxLayout" name="verticalLayout_2">
-    <item>
+
+    <item>  <!-- verticalLayout_2: item begin -->
+
      <layout class="QVBoxLayout" name="verticalLayout">
+
       <item>
        <layout class="QHBoxLayout" name="Frameresizinglayout"/>
       </item>
+
       <item>
        <layout class="QHBoxLayout" name="Sizelayout">
+        
         <item>
          <widget class="QPushButton" name="minusbutton">
           <property name="sizePolicy">
@@ -35,6 +43,7 @@
           </property>
          </widget>
         </item>
+
         <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
@@ -48,6 +57,7 @@
           </property>
          </spacer>
         </item>
+
         <item>
          <widget class="QLabel" name="label">
           <property name="font">
@@ -60,6 +70,7 @@
           </property>
          </widget>
         </item>
+
         <item>
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
@@ -73,6 +84,7 @@
           </property>
          </spacer>
         </item>
+
         <item>
          <widget class="QPushButton" name="plusbutton">
           <property name="sizePolicy">
@@ -86,10 +98,13 @@
           </property>
          </widget>
         </item>
-       </layout>
+
+       </layout> <!-- Sizelayout -->
       </item>
+
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
+
         <item>
          <widget class="QPushButton" name="Savestructure">
           <property name="sizePolicy">
@@ -114,6 +129,7 @@
           </property>
          </widget>
         </item>
+       
         <item>
          <widget class="QPushButton" name="Loadstructure">
           <property name="sizePolicy">
@@ -138,6 +154,7 @@
           </property>
          </widget>
         </item>
+       
         <item>
          <widget class="QPushButton" name="Disablerotation">
           <property name="sizePolicy">
@@ -162,8 +179,35 @@
           </property>
          </widget>
         </item>
-       </layout>
+
+        <item>
+         <widget class="QPushButton" name="Disabletranslation">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Disable Translation</string>
+          </property>
+         </widget>
+        </item>
+
+       </layout> <!-- horizontalLayout -->
       </item>
+
       <item>
        <widget class="QPushButton" name="syncFrames">
         <property name="minimumSize">
@@ -182,6 +226,7 @@
         </property>
        </widget>
       </item>
+      
       <item>
        <widget class="QPushButton" name="Moveswarm">
         <property name="minimumSize">
@@ -200,6 +245,7 @@
         </property>
        </widget>
       </item>
+      
       <item>
        <widget class="QPushButton" name="Moveswarmframe">
         <property name="minimumSize">
@@ -218,6 +264,7 @@
         </property>
        </widget>
       </item>
+      
       <item>
        <layout class="QGridLayout" name="Robotlayout">
         <property name="bottomMargin">
@@ -225,11 +272,19 @@
         </property>
        </layout>
       </item>
-     </layout>
-    </item>
-   </layout>
-  </widget>
- </widget>
+
+     </layout> <!-- verticalLayout end -->
+
+    </item> <!-- verticalLayout_2: item end -->
+
+   </layout> <!-- verticalLayout_2: layout end -->
+    
+  </widget> <!-- centralwidget -->
+
+ </widget> <!-- MainWindow -->
+
  <resources/>
+
  <connections/>
+
 </ui>

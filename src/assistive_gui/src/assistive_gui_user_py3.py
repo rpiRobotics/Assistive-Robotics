@@ -280,14 +280,20 @@ class SWARMGUI(QtWidgets.QMainWindow):
         self.package_path = rp.get_path('assistive_gui')
         #self.plusbutton.resize(width/3,height/5)
         #self.minusbutton.resize(width/3,height/5)
+
         self.rotation_disabled=False
         self.Disablerotation.pressed.connect(self.disable_rotation)
+        
+        self.translation_disabled=False
+        self.Disabletranslation.pressed.connect(self.disable_translation)
+
         #self.Savestructure.resize(width/3,height/5)
         #self.repubme=rospy.Publisher(self.input_command_topic, Twist, queue_size=0)
         #rospy.Timer(rospy.Duration(0.1), self.move_swarm_frame)
         self.Savestructure.pressed.connect(self.save_structure)
         self.Loadstructure.pressed.connect(self.load_structure)
         #self.Assumestructure.pressed.connect(self.assume_structure)
+        
         self.tf_changer=rospy.Publisher(self.tf_changer_topic,PoseStamped,queue_size=10)
         self.windowresized()
         self.show()
@@ -295,13 +301,21 @@ class SWARMGUI(QtWidgets.QMainWindow):
 
     def disable_rotation(self):
         self.rotation_disabled=not(self.rotation_disabled)
+
         if(self.rotation_disabled):
-            
             self.Disablerotation.setStyleSheet('QPushButton {background-color: orange; color: white;}')
             
         else:
+            self.Disablerotation.setStyleSheet('QPushButton {background-color: white; color: black;}')  
+    
+    def disable_translation(self):
+        self.translation_disabled=not(self.translation_disabled)
+
+        if(self.translation_disabled):
+            self.Disabletranslation.setStyleSheet('QPushButton {background-color: orange; color: white;}')
             
-            self.Disablerotation.setStyleSheet('QPushButton {background-color: white; color: black;}')    
+        else:
+            self.Disabletranslation.setStyleSheet('QPushButton {background-color: white; color: black;}') 
    
     def callback_gui(self,evt):
         self.status_manager.poll_node_names()
@@ -374,6 +388,16 @@ class SWARMGUI(QtWidgets.QMainWindow):
                 data.angular.x = data.angular.x*1.0
                 data.angular.y = data.angular.y*1.0
                 data.angular.z = data.angular.z*1.0
+
+            if(self.translation_disabled):
+                data.linear.x = data.linear.x*0.
+                data.linear.y = data.linear.y*0.
+                data.linear.z = data.linear.z*0.
+            else:
+                data.linear.x = data.linear.x*1.0
+                data.linear.y = data.linear.y*1.0
+                data.linear.z = data.linear.z*1.0
+
             for i in range(len(self.buttons)):
                 if(self.buttons[i].enabled):
                     self.buttons[i].publisher.publish(data)
@@ -440,6 +464,7 @@ class SWARMGUI(QtWidgets.QMainWindow):
         self.Savestructure.setFont(f)
         self.Loadstructure.setFont(f)
         self.Disablerotation.setFont(f)
+        self.Disabletranslation.setFont(f)
         #self.Assumestructure.setFont(f)
         self.syncFrames.setFont(f)
 
