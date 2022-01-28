@@ -357,8 +357,12 @@ class SWARMGUI(QtWidgets.QMainWindow):
     def offset_callback(self,data):
         with callback_lock:
             if(self.rotation_disabled):
-                data.angular.z = data.angular.z*0
+                data.angular.x = data.angular.x*0.
+                data.angular.y = data.angular.y*0.
+                data.angular.z = data.angular.z*0.
             else:
+                data.angular.x = data.angular.x*1.0
+                data.angular.y = data.angular.y*1.0
                 data.angular.z = data.angular.z*1.0
             for i in range(len(self.buttons)):
                 if(self.buttons[i].enabled):
