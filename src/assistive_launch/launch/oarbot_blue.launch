@@ -14,7 +14,7 @@
 
     <!-- Launch Oarbot redundancy resolver -->
     <group ns="oarbot_blue">
-        <node name="oarbot_redundancy_resolver" pkg="oarbot_control" type="oarbot_redundancy_resolver.py">
+        <node name="oarbot_redundancy_resolver" pkg="oarbot_control" type="oarbot_redundancy_resolver.py" output="screen">
             <rosparam file="$(find assistive_launch)/config/oarbot_blue_redundancy_resolver.yaml"/>
         </node>
     </group>

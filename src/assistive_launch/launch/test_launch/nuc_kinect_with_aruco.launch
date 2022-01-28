@@ -56,7 +56,7 @@
     </include>
 
     <!-- Launch Aruco Detection and TF broadcasters -->
-    <node name="tf_overhead_camera_aruco_broadcaster" pkg="tf_broadcasters" type="tf_overhead_camera_aruco_broadcaster.py">
+    <node name="tf_overhead_camera_aruco_broadcaster" pkg="tf_broadcasters" type="tf_overhead_camera_aruco_broadcaster.py" output="screen">
         <rosparam file="$(find assistive_launch)/config/nuc_tf_overhead_camera_aruco.yaml"/>
     </node>
 

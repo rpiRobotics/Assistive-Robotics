@@ -3,28 +3,28 @@
 <group ns="oarbot_blue">
     <machine name="oarbot-blue-P15" address="192.168.1.102" env-loader="/home/oarbot_blue/catkin_ws_assistive/scripts/env_oarbot_blue.sh" user="oarbot_blue" password="1234"  default="true"/>
 
-    <node name="ctrl_inv_kin" pkg="oarbot_base_control" type="inv_kin.py">
+    <node name="ctrl_inv_kin" pkg="oarbot_base_control" type="inv_kin.py" output="screen">
         <rosparam file="$(find assistive_launch)/config/oarbot_blue_base_control.yaml"/>
     </node>
-    <node name="ctrl_motor" pkg="oarbot_base_control" type="motor_control.py">
+    <node name="ctrl_motor" pkg="oarbot_base_control" type="motor_control.py" output="screen">
         <rosparam file="$(find assistive_launch)/config/oarbot_blue_base_control.yaml"/>
     </node>
-    <node name="ctrl_fwd_kin" pkg="oarbot_base_control" type="fwd_kin.py">
+    <node name="ctrl_fwd_kin" pkg="oarbot_base_control" type="fwd_kin.py" output="screen">
         <rosparam file="$(find assistive_launch)/config/oarbot_blue_base_control.yaml"/>
     </node>
 
-    <node name="cl_state" pkg="vel_controller" type="vel_controller.py">
+    <node name="cl_state" pkg="vel_controller" type="vel_controller.py" output="screen">
         <rosparam file="$(find assistive_launch)/config/oarbot_blue_cl_state.yaml"/>
     </node>
 
-    <node pkg="twist_mux" type="twist_mux" name="twist_mux">
+    <node pkg="twist_mux" type="twist_mux" name="twist_mux" output="screen">
         <rosparam command="load" file="$(find assistive_launch)/config/oarbot_blue_twist_mux.yaml" />
         <remap from="cmd_vel_out" to="e_stop_cmd_vel"/>
         <remap from="/diagnostics" to="diagnostics"/>
     </node>
 
     <!-- Launch TF broadcaster btw Mobile Base and the Arm base -->
-    <node name="tf_mobile_base_arm_base_broadcaster" pkg="tf_broadcasters" type="tf_mobile_base_arm_base_broadcaster.py">
+    <node name="tf_mobile_base_arm_base_broadcaster" pkg="tf_broadcasters" type="tf_mobile_base_arm_base_broadcaster.py" output="screen">
         <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_mobile_base_arm_base.yaml"/>
     </node>
 
