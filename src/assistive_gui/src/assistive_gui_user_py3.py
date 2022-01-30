@@ -110,6 +110,71 @@ class arm_home_button:
         if not self.client.wait_for_result(rospy.Duration(5.0)):
             rospy.logerr(self.text + ': the joint angle action timed-out')
             self.client.cancel_all_goals()
+
+class finger_control:
+    def __init__(self, action_address, fingers_max_turn, sizex,sizey,text):
+        # create QVBox layout as container
+        self.layout = QVBoxLayout()
+        
+        # Create description label
+        self.text = text + ": Fingers Control"
+        self.label = QLabel(self.text)
+        self.label.setAlignment(Qt.AlignCenter)
+        self.label.setFixedSize(sizex,sizey)
+        self.label.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
+        self.label.setFont(QFont('Ubuntu',10))
+    
+        # Create Slider
+        self.slider = QSlider(Qt.Horizontal)
+        self.slider.setMinimum(0.)
+        self.slider.setMaximum(100.)
+        self.slider_init_value = 100.0
+        self.slider.setValue(self.slider_init_value)
+        self.slider.setTickInterval(10.)
+        self.slider.setSingleStep(10.)
+        self.slider.setTickPosition(QSlider.TicksBothSides)
+        self.slider.setFocusPolicy(Qt.StrongFocus)
+        self.slider.setFixedSize(sizex,sizey)
+        self.slider.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
+        self.slider.valueChanged.connect(self.updateButtonLabel)
+
+        self.button = QPushButton()
+        self.button.setFixedSize(sizex,sizey)
+        self.button.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
+        self.button.setFont(QFont('Ubuntu',13))
+        self.text_button = "Open fingers " + str(self.slider_init_value) + "%" 
+        self.button.setText(self.text_button)
+        self.button.clicked.connect(self.button_clicked)
+
+        self.layout.addWidget(self.label)
+        self.layout.addWidget(self.slider)
+        self.layout.addWidget(self.button)
+        # self.layout.addStretch(1)
+
+        # self.setLayout(self.layout)
+
+        self.client = actionlib.SimpleActionClient(action_address, kinova_msgs.msg.SetFingersPositionAction)
+
+        self.goal = kinova_msgs.msg.SetFingersPositionGoal()
+        self.fingers_max_turn = fingers_max_turn
+        
+
+    def updateButtonLabel(self, value):
+        self.text_button = "Open fingers " + str(value) + "%"
+        self.text_button = "Open fingers " + str(self.slider.value()) + "%"
+        self.button.setText(self.text_button)
+        
+    def button_clicked(self):
+        self.client.wait_for_server()
+
+        self.goal.fingers.finger1 = float(self.fingers_max_turn * self.slider.value()/100.)
+        self.goal.fingers.finger2 = float(self.fingers_max_turn * self.slider.value()/100.)
+        self.goal.fingers.finger3 = float(self.fingers_max_turn * self.slider.value()/100.)
+
+        self.client.send_goal(self.goal)
+        if not self.client.wait_for_result(rospy.Duration(5.0)):
+            rospy.logerr(self.text + ': the fingers action timed-out')
+            self.client.cancel_all_goals()
         
 class LEDManager:
     def __init__(self,nodenames,led_objects):
@@ -198,8 +263,11 @@ class SWARMGUI(QtWidgets.QMainWindow):
             self.arm_only_open_loop_command_topics=rospy.get_param('arm_only_open_loop_command_topics')
             self.base_only_open_loop_command_topics=rospy.get_param('base_only_open_loop_command_topics')
             self.arm_joint_angles_action_address=rospy.get_param('arm_joint_angles_action_address')
+            self.arm_fingers_action_address=rospy.get_param('arm_fingers_action_address')
 
             self.arm_joint_angles_home=rospy.get_param('arm_joint_angles_home')
+            self.arm_fingers_max_turn=rospy.get_param('arm_fingers_max_turn')
+
 
             self.input_command_topic=rospy.get_param('input_command_topic')
             self.robot_types=rospy.get_param('robot_type_information')
@@ -232,7 +300,7 @@ class SWARMGUI(QtWidgets.QMainWindow):
             led=LEDIndicator(i)
             #led.setDisabled(True)
             
-            self.Robotlayout.addWidget(led,5,i)
+            self.Robotlayout.addWidget(led,6,i)
             self.Leds.append(led)
             led.led_change(True)
     
@@ -278,7 +346,10 @@ class SWARMGUI(QtWidgets.QMainWindow):
 
             button_class_object4=arm_home_button(self.arm_joint_angles_action_address[i],self.arm_joint_angles_home[i],buttonwidth//self.number_of_bots,heightnew//8,self.arm_types[i])
             self.Robotlayout.addWidget(button_class_object4.button,4,i)
-            self.buttons.append(button_class_object4)
+            # self.buttons.append(button_class_object4)
+
+            layout_finger_control_object = finger_control(self.arm_fingers_action_address[i],self.arm_fingers_max_turn[i],buttonwidth//self.number_of_bots,heightnew//8,self.arm_types[i])
+            self.Robotlayout.addWidget(layout_finger_control_object.layout,5,i)
 
         """
         self.robot1led=LEDIndicator()
