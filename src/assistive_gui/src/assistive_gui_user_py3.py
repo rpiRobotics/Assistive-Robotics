@@ -90,7 +90,7 @@ class arm_home_button:
         self.button.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
         self.button.setFont(QFont('Ubuntu',13))
         self.button.setText(self.text)
-        self.button.pressed.connect(self.button_pressed)
+        self.button.clicked.connect(self.button_clicked)
         
         self.client = actionlib.SimpleActionClient(action_address, kinova_msgs.msg.ArmJointAnglesAction)
 
@@ -103,7 +103,7 @@ class arm_home_button:
         self.goal.angles.joint6 = home_joint_angles[5]
         self.goal.angles.joint7 = 0.0
         
-    def button_pressed(self):
+    def button_clicked(self):
         self.client.wait_for_server()
 
         self.client.send_goal(self.goal)
