@@ -71,14 +71,11 @@ class robot_button:
         
     def button_pressed(self):
         self.enabled=not(self.enabled)
-        
         if(self.enabled):
-            
             self.button.setStyleSheet('QPushButton {background-color: orange; color: white;}')
-            
         else:
-            
             self.button.setStyleSheet('QPushButton {background-color: white; color: black;}')
+        rospy.logerr("Assistive GUI: ROBOT Button pressed")
     
     
 class arm_home_button:
@@ -113,11 +110,8 @@ class arm_home_button:
         self.enabled=not(self.enabled)
         
         if(self.enabled):
-            
             self.button.setStyleSheet('QPushButton {background-color: orange; color: white;}')
-            
         else:
-            
             self.button.setStyleSheet('QPushButton {background-color: white; color: black;}')
 
         rospy.logerr("Assistive GUI: arm home command, Button pressed")
