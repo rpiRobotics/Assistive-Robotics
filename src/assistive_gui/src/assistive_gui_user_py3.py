@@ -91,39 +91,37 @@ class arm_home_button:
 
         self.enabled=False
         
-        try:
-            self.action_address= action_address
-            self.client = actionlib.SimpleActionClient(self.action_address, kinova_msgs.msg.ArmJointAnglesAction)
+        # try:
+        #     self.action_address= action_address
+        #     self.client = actionlib.SimpleActionClient(self.action_address, kinova_msgs.msg.ArmJointAnglesAction)
 
-            self.goal = kinova_msgs.msg.ArmJointAnglesGoal()
-            self.goal.angles.joint1 = home_joint_angles[0]
-            self.goal.angles.joint2 = home_joint_angles[1]
-            self.goal.angles.joint3 = home_joint_angles[2]
-            self.goal.angles.joint4 = home_joint_angles[3]
-            self.goal.angles.joint5 = home_joint_angles[4]
-            self.goal.angles.joint6 = home_joint_angles[5]
-            self.goal.angles.joint7 = 0.0
-        except:
-            rospy.logerr("Assistive GUI: Somethingh went wrong while creating arm home button")
+        #     self.goal = kinova_msgs.msg.ArmJointAnglesGoal()
+        #     self.goal.angles.joint1 = home_joint_angles[0]
+        #     self.goal.angles.joint2 = home_joint_angles[1]
+        #     self.goal.angles.joint3 = home_joint_angles[2]
+        #     self.goal.angles.joint4 = home_joint_angles[3]
+        #     self.goal.angles.joint5 = home_joint_angles[4]
+        #     self.goal.angles.joint6 = home_joint_angles[5]
+        #     self.goal.angles.joint7 = 0.0
+        # except:
+        #     rospy.logerr("Assistive GUI: Somethingh went wrong while creating arm home button")
         
     def button_clicked(self):
         self.enabled=not(self.enabled)
-        
         if(self.enabled):
             self.button.setStyleSheet('QPushButton {background-color: orange; color: white;}')
         else:
             self.button.setStyleSheet('QPushButton {background-color: white; color: black;}')
-
         rospy.logerr("Assistive GUI: arm home command, Button pressed")
-        try:
-            self.client.wait_for_server()
+        # try:
+        #     self.client.wait_for_server()
 
-            self.client.send_goal(self.goal)
-            if not self.client.wait_for_result(rospy.Duration(5.0)):
-                rospy.logerr(self.text + ': the joint angle action timed-out')
-                self.client.cancel_all_goals()
-        except:
-            rospy.logerr("Assistive GUI: Somethingh went wrong while sending arm home command")
+        #     self.client.send_goal(self.goal)
+        #     if not self.client.wait_for_result(rospy.Duration(5.0)):
+        #         rospy.logerr(self.text + ': the joint angle action timed-out')
+        #         self.client.cancel_all_goals()
+        # except:
+        #     rospy.logerr("Assistive GUI: Somethingh went wrong while sending arm home command")
 
 class finger_control:
     def __init__(self, action_address, fingers_max_turn, sizex,sizey,text):
