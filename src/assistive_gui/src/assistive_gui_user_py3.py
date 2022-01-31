@@ -90,7 +90,7 @@ class arm_home_button:
         self.button.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
         self.button.setFont(QFont('Ubuntu',13))
         self.button.setText(self.text)
-        self.button.clicked.connect(self.button_clicked)
+        self.button.pressed.connect(self.button_clicked)
         
         try:
             self.action_address= action_address
@@ -108,6 +108,7 @@ class arm_home_button:
             rospy.logerr("Assistive GUI: Somethingh went wrong while creating arm home button")
         
     def button_clicked(self):
+        rospy.logerr("Assistive GUI: arm home command, Button pressed")
         try:
             self.client.wait_for_server()
 
@@ -163,7 +164,7 @@ class finger_control:
         self.button.setFont(QFont('Ubuntu',13))
         self.text_button = "Open fingers " + str(self.slider_init_value) + "%" 
         self.button.setText(self.text_button)
-        self.button.clicked.connect(self.button_clicked)
+        self.button.pressed.connect(self.button_clicked)
 
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.slider)
@@ -187,6 +188,7 @@ class finger_control:
         self.button.setText(self.text_button)
         
     def button_clicked(self):
+        rospy.logerr("Assistive GUI: finger control command, Button pressed")
         try:
             self.client.wait_for_server()
 
