@@ -92,7 +92,8 @@ class arm_home_button:
         self.button.setText(self.text)
         self.button.clicked.connect(self.button_clicked)
         
-        self.client = actionlib.SimpleActionClient(action_address, kinova_msgs.msg.ArmJointAnglesAction)
+        self.client = None
+        self.action_address= action_address
 
         self.goal = kinova_msgs.msg.ArmJointAnglesGoal()
         self.goal.angles.joint1 = home_joint_angles[0]
@@ -104,6 +105,8 @@ class arm_home_button:
         self.goal.angles.joint7 = 0.0
         
     def button_clicked(self):
+        self.client = actionlib.SimpleActionClient(self.action_address, kinova_msgs.msg.ArmJointAnglesAction)
+        
         self.client.wait_for_server()
 
         self.client.send_goal(self.goal)
@@ -164,9 +167,8 @@ class finger_control:
         # self.layout.addStretch(1)
 
         # self.setLayout(self.layout)
-
-        self.client = actionlib.SimpleActionClient(action_address, kinova_msgs.msg.SetFingersPositionAction)
-
+        self.client = None
+        self.action_address= action_address
         self.goal = kinova_msgs.msg.SetFingersPositionGoal()
         self.fingers_max_turn = fingers_max_turn
         
@@ -177,6 +179,7 @@ class finger_control:
         self.button.setText(self.text_button)
         
     def button_clicked(self):
+        self.client = actionlib.SimpleActionClient(self.action_address, kinova_msgs.msg.SetFingersPositionAction)
         self.client.wait_for_server()
 
         self.goal.fingers.finger1 = self.fingers_max_turn * float(self.slider.value())/100.

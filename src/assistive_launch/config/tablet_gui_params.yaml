@@ -22,8 +22,8 @@ base_only_open_loop_command_topics:
   - "/oarbot_blue/cmd_vel_base"
 
 arm_joint_angles_action_address:
-  - '/j2n6s300_left_driver/joints_action/joint_angles' # For oarbot silver, left
-  - '/j2n6s300_right_driver/joints_action/joint_angles' # For oarbot blue, right
+  - '/oarbot_silver/j2n6s300_left_driver/joints_action/joint_angles' # For oarbot silver, left
+  - '/oarbot_blue/j2n6s300_right_driver/joints_action/joint_angles' # For oarbot blue, right
 
 arm_joint_angles_home:
   - [116.91, 167.59, 288.52, 126.34, 241.57, 275.86] # deg # Left arm config, oarbot silver
