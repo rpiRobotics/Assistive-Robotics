@@ -81,6 +81,8 @@ class robot_button:
 class arm_home_button:
     def __init__(self,action_address,home_joint_angles,sizex,sizey,text):
         self.text=text +"\nArm Home"
+        rospy.logerr(str(action_address))
+        rospy.logerr(str(home_joint_angles))
         
         self.button = QPushButton()
         self.button.setFixedSize(sizex,sizey)
