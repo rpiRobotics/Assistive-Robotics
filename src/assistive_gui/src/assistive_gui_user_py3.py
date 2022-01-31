@@ -107,7 +107,7 @@ class arm_home_button:
     def button_clicked(self):
         rospy.logerr("Assistive GUI: arm home command, Button pressed")
         try:
-            self.client.wait_for_server()
+            self.client.wait_for_server(timeout = rospy.Duration(1.0))
 
             self.client.send_goal(self.goal)
             if not self.client.wait_for_result(rospy.Duration(5.0)):
@@ -187,7 +187,7 @@ class finger_control:
     def button_clicked(self):
         rospy.logerr("Assistive GUI: finger control command, Button pressed")
         try:
-            self.client.wait_for_server()
+            self.client.wait_for_server(timeout = rospy.Duration(1.0))
 
             self.goal.fingers.finger1 = self.fingers_max_turn * float(self.slider.value())/100.
             self.goal.fingers.finger2 = self.fingers_max_turn * float(self.slider.value())/100.
