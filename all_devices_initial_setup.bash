@@ -10,8 +10,13 @@ SCRIPTS=(
     cd catkin_ws_assistive; 
     rm -rf {*,.*};
     git clone https://github.com/rpiRobotics/Assistive-Robotics.git .;
+    cd src;
+    git clone https://github.com/burakaksoy/kinova-ros.git kinova-ros;
+
+    cd ..;
+    ####################
     source /opt/ros/noetic/setup.bash;
-    catkin_make -DCATKIN_WHITELIST_PACKAGES='assistive_msgs;assistive_gui;assistive_launch;tablet_arduino_talker';
+    catkin_make -DCATKIN_WHITELIST_PACKAGES='assistive_msgs;assistive_gui;assistive_launch;tablet_arduino_talker;kinova_msgs';
     grep -qxF 'source ~/catkin_ws_assistive/devel/setup.bash' ~/.bashrc || echo 'source ~/catkin_ws_assistive/devel/setup.bash' >> ~/.bashrc;
     source ~/.bashrc;
     source ~/catkin_ws_assistive/devel/setup.bash;
