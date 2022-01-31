@@ -30,8 +30,8 @@ arm_joint_angles_home:
   - [251.64, 190.34, 77.5, 234.34, 128.93, 70.16] # deg # Right arm config, oarbot blue
 
 arm_fingers_action_address:
-  - '/j2n6s300_left_driver/fingers_action/finger_positions' # For oarbot silver, left
-  - '/j2n6s300_right_driver/fingers_action/finger_positions' # For oarbot blue, right
+  - '/oarbot_silver/j2n6s300_left_driver/fingers_action/finger_positions' # For oarbot silver, left
+  - '/oarbot_blue/j2n6s300_right_driver/fingers_action/finger_positions' # For oarbot blue, right
 
 arm_fingers_max_turn: 
   - 6800 # or 7300 # This value is mapped btw 0-100%
