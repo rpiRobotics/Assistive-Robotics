@@ -159,7 +159,7 @@ class finger_control:
         self.button.setFixedSize(sizex,sizey//2)
         self.button.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
         self.button.setFont(QFont('Ubuntu',13))
-        self.text_button = "Open fingers " + str(self.slider_init_value) + "%" 
+        self.text_button = "Close fingers " + str(self.slider_init_value) + "%" 
         self.button.setText(self.text_button)
         self.button.pressed.connect(self.button_clicked)
 
@@ -180,8 +180,8 @@ class finger_control:
         
 
     def updateButtonLabel(self, value):
-        self.text_button = "Open fingers " + str(value) + "%"
-        self.text_button = "Open fingers " + str(self.slider.value()) + "%"
+        self.text_button = "Close fingers " + str(value) + "%"
+        self.text_button = "Close fingers " + str(self.slider.value()) + "%"
         self.button.setText(self.text_button)
         
     def button_clicked(self):
@@ -234,8 +234,8 @@ class SWARMGUI(QtWidgets.QMainWindow):
     def __init__(self):
         super(SWARMGUI, self).__init__()
         self.buttons=[]
-        self.buttons_onetime=[]
-        self.layouts=[]
+        self.buttons_arm_home=[]
+        self.layouts_finger_control=[]
         self.labels=[]
         self.setObjectName('MyPlugin')
         self.synced_control_enabled=False
@@ -372,11 +372,11 @@ class SWARMGUI(QtWidgets.QMainWindow):
 
             button_class_object4=arm_home_button(self.arm_joint_angles_action_address[i],self.arm_joint_angles_home[i],buttonwidth//self.number_of_bots,heightnew//8,self.arm_types[i])
             self.Robotlayout.addWidget(button_class_object4.button,4,i)
-            self.buttons_onetime.append(button_class_object4)
+            self.buttons_arm_home.append(button_class_object4)
 
             layout_finger_control_object = finger_control(self.arm_fingers_action_address[i],self.arm_fingers_max_turn[i],buttonwidth//self.number_of_bots,heightnew//8,self.arm_types[i])
             self.Robotlayout.addLayout(layout_finger_control_object.layout,5,i)
-            self.layouts.append(layout_finger_control_object)
+            self.layouts_finger_control.append(layout_finger_control_object)
 
         """
         self.robot1led=LEDIndicator()
