@@ -91,6 +91,8 @@ class arm_home_button:
         self.button.setFont(QFont('Ubuntu',13))
         self.button.setText(self.text)
         self.button.pressed.connect(self.button_clicked)
+
+        self.enabled=False
         
         try:
             self.action_address= action_address
@@ -108,6 +110,16 @@ class arm_home_button:
             rospy.logerr("Assistive GUI: Somethingh went wrong while creating arm home button")
         
     def button_clicked(self):
+        self.enabled=not(self.enabled)
+        
+        if(self.enabled):
+            
+            self.button.setStyleSheet('QPushButton {background-color: orange; color: white;}')
+            
+        else:
+            
+            self.button.setStyleSheet('QPushButton {background-color: white; color: black;}')
+
         rospy.logerr("Assistive GUI: arm home command, Button pressed")
         try:
             self.client.wait_for_server()
@@ -375,8 +387,8 @@ class SWARMGUI(QtWidgets.QMainWindow):
             self.Robotlayout.addWidget(button_class_object4.button,4,i)
             # self.buttons.append(button_class_object4)
 
-            layout_finger_control_object = finger_control(self.arm_fingers_action_address[i],self.arm_fingers_max_turn[i],buttonwidth//self.number_of_bots,heightnew//8,self.arm_types[i])
-            self.Robotlayout.addLayout(layout_finger_control_object.layout,5,i)
+            # layout_finger_control_object = finger_control(self.arm_fingers_action_address[i],self.arm_fingers_max_turn[i],buttonwidth//self.number_of_bots,heightnew//8,self.arm_types[i])
+            # self.Robotlayout.addLayout(layout_finger_control_object.layout,5,i)
 
         """
         self.robot1led=LEDIndicator()
