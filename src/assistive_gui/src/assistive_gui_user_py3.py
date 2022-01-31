@@ -120,9 +120,9 @@ class finger_control:
         self.text = text + ": Fingers Control"
         self.label = QLabel(self.text)
         self.label.setAlignment(Qt.AlignCenter)
-        self.label.setFixedSize(sizex,sizey)
+        self.label.setFixedSize(sizex,sizey//3)
         self.label.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
-        self.label.setFont(QFont('Ubuntu',10))
+        self.label.setFont(QFont('Ubuntu',12))
     
         # Create Slider
         self.slider = QSlider(Qt.Horizontal)
@@ -135,11 +135,23 @@ class finger_control:
         self.slider.setTickPosition(QSlider.TicksBothSides)
         self.slider.setFocusPolicy(Qt.StrongFocus)
         self.slider.setFixedSize(sizex,sizey)
+        self.slider.setStyleSheet("QSlider::groove:horizontal { "
+                      "height: 40px; "
+                      "background: grey; "
+                      "margin: 20px 0; "
+                      "border: 1px solid #999999; "
+                      "} "
+                      "QSlider::handle:horizontal { "
+                      "background: orange; "
+                      "width: 60px; "
+                      "margin: -20px 0px; "
+                      "border: 1px solid #999999; "
+                      "} ")
         self.slider.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
         self.slider.valueChanged.connect(self.updateButtonLabel)
 
         self.button = QPushButton()
-        self.button.setFixedSize(sizex,sizey)
+        self.button.setFixedSize(sizex,sizey//2)
         self.button.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
         self.button.setFont(QFont('Ubuntu',13))
         self.text_button = "Open fingers " + str(self.slider_init_value) + "%" 
