@@ -241,6 +241,7 @@ class SWARMGUI(QtWidgets.QMainWindow):
     def __init__(self):
         super(SWARMGUI, self).__init__()
         self.buttons=[]
+        self.buttons2=[]
         self.labels=[]
         self.setObjectName('MyPlugin')
         self.synced_control_enabled=False
@@ -377,7 +378,7 @@ class SWARMGUI(QtWidgets.QMainWindow):
 
             button_class_object4=arm_home_button(self.arm_joint_angles_action_address[i],self.arm_joint_angles_home[i],buttonwidth//self.number_of_bots,heightnew//8,self.arm_types[i])
             self.Robotlayout.addWidget(button_class_object4.button,4,i)
-            self.buttons.append(button_class_object4)
+            self.buttons2.append(button_class_object4)
 
             # layout_finger_control_object = finger_control(self.arm_fingers_action_address[i],self.arm_fingers_max_turn[i],buttonwidth//self.number_of_bots,heightnew//8,self.arm_types[i])
             # self.Robotlayout.addLayout(layout_finger_control_object.layout,5,i)
