@@ -26,7 +26,8 @@
         <remap from="cmd_vel_out" to="deadman_switch_spacenav_twist"/>
     </node>
 
-    <rosparam command="load" file="$(find assistive_launch)/config/tablet_gui_params.yaml"/>
-    <node name="assistive_gui" pkg="assistive_gui" type="assistive_gui_user_py3.py" output="screen"/>
+    <node name="assistive_gui" pkg="assistive_gui" type="assistive_gui_user_py3.py" output="screen">
+        <rosparam command="load" file="$(find assistive_launch)/config/tablet_gui_params.yaml" />
+    </node>
 </group>
 </launch>
