@@ -24,7 +24,7 @@ SCRIPTS=(
     echo 1234 | sudo -S apt install -y ros-noetic-spacenav-node;
     echo 1234 | sudo -S apt install -y ros-noetic-twist-mux;
     echo 1234 | sudo -S usermod -a -G dialout tablet;
-    pip3 install pyserial
+    pip3 install pyserial;
     "
 
     ############### RAZER (MAIN COMPUTER) ##############

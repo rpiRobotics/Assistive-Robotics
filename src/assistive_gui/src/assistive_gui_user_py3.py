@@ -126,12 +126,12 @@ class finger_control:
     
         # Create Slider
         self.slider = QSlider(Qt.Horizontal)
-        self.slider.setMinimum(0.)
-        self.slider.setMaximum(100.)
-        self.slider_init_value = 100.0
+        self.slider.setMinimum(0)
+        self.slider.setMaximum(100)
+        self.slider_init_value = 100
         self.slider.setValue(self.slider_init_value)
-        self.slider.setTickInterval(10.)
-        self.slider.setSingleStep(10.)
+        self.slider.setTickInterval(10)
+        self.slider.setSingleStep(10)
         self.slider.setTickPosition(QSlider.TicksBothSides)
         self.slider.setFocusPolicy(Qt.StrongFocus)
         self.slider.setFixedSize(sizex,sizey)
@@ -167,9 +167,9 @@ class finger_control:
     def button_clicked(self):
         self.client.wait_for_server()
 
-        self.goal.fingers.finger1 = float(self.fingers_max_turn * self.slider.value()/100.)
-        self.goal.fingers.finger2 = float(self.fingers_max_turn * self.slider.value()/100.)
-        self.goal.fingers.finger3 = float(self.fingers_max_turn * self.slider.value()/100.)
+        self.goal.fingers.finger1 = self.fingers_max_turn * float(self.slider.value())/100.
+        self.goal.fingers.finger2 = self.fingers_max_turn * float(self.slider.value())/100.
+        self.goal.fingers.finger3 = self.fingers_max_turn * float(self.slider.value())/100.
 
         self.client.send_goal(self.goal)
         if not self.client.wait_for_result(rospy.Duration(5.0)):
@@ -349,7 +349,7 @@ class SWARMGUI(QtWidgets.QMainWindow):
             # self.buttons.append(button_class_object4)
 
             layout_finger_control_object = finger_control(self.arm_fingers_action_address[i],self.arm_fingers_max_turn[i],buttonwidth//self.number_of_bots,heightnew//8,self.arm_types[i])
-            self.Robotlayout.addWidget(layout_finger_control_object.layout,5,i)
+            self.Robotlayout.addLayout(layout_finger_control_object.layout,5,i)
 
         """
         self.robot1led=LEDIndicator()
