@@ -3,7 +3,7 @@
 <group ns="tablet">
     <machine name="tablet" address="192.168.1.99" env-loader="/home/tablet/catkin_ws_assistive/scripts/env_tablet.sh" user="tablet" password="1234" default="true"/>
 
-    <node type="rviz" name="rviz" pkg="rviz" args="-d /home/tablet/catkin_ws_assistive/src/assistive_launch/launch/config.rviz" output="screen"/>
+    <!-- <node type="rviz" name="rviz" pkg="rviz" args="-d /home/tablet/catkin_ws_assistive/src/assistive_launch/launch/config.rviz" output="screen"/> -->
 
     <node name="arduino_reader" pkg="tablet_arduino_talker" type="arduino_read.py" output="screen">
         <rosparam file="$(find assistive_launch)/config/tablet_arduino_params.yaml"/>

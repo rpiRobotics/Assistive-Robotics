@@ -1,0 +1,11 @@
+<launch>
+  <node pkg="rosbag" type="play" name="rosbag" required="true" args="$(env HOME)/Videos/2022-02-01-FirstPouringExperiment/2022-02-01-Salt.bag"/>
+  <node name="extract" pkg="image_view" type="extract_images" respawn="false" required="true" output="screen" cwd="ROS_HOME">
+    <remap from="image" to="/oarbot_blue/rgb/image_rect_color"/>
+  </node> 
+  <!-- This will put the extracted images to home/.ros -->
+  <!-- If your bag file contains compressed images for example on /camera/image_raw/compressed it will be necessary for you to decompress the images before exporting.
+      rosrun image_transport republish compressed in:=camera/image_raw raw out:=camera_out/image -->
+
+      <!-- FOR ROSBAG to VIDEO see: https://github.com/mlaiacker/rosbag2video -->
+</launch>
