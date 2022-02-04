@@ -49,8 +49,8 @@
     <param name="tool_wrench_topic_name_in" value="$(arg kinova_robotName)_driver/out/tool_wrench" />
     
     <param name="wrench_filter_factor" value="0.1" />
-    <param name="force_dead_zone_thres" value="8.0" />
-    <param name="torque_dead_zone_thres" value="2.0" />
+    <param name="force_dead_zone_thres" value="10.0" />
+    <param name="torque_dead_zone_thres" value="3.0" />
   </node>
 
 </launch>
