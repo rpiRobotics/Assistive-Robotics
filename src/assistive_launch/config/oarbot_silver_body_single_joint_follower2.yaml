@@ -4,7 +4,7 @@ robot_cartesian_cmd_vel_msg_type: 'geometry_msgs.msg.Twist' # 'kinova_msgs.msg.P
 tf_followed_body_joint_frame_name: 'j2n6s300_left_body_JOINT_CLAVICLE_RIGHT' # 'JOINT_HEAD' #'JOINT_WRIST_LEFT' # see https://docs.microsoft.com/en-us/azure/kinect-dk/body-joints, dont forget to add "JOINT_" to the beginning
 tf_end_effector_frame_name: 'j2n6s300_left_end_effector'
 tf_robot_base_frame_name: 'oarbot_silver_base' # 'j2n6s300_left_link_base'
-tf_arm_base_frame_name: 'j2n6s300_left_link_base
+tf_arm_base_frame_name: 'j2n6s300_left_link_base'
 
 pub_rate: 110.0 # It is a must to be 100 Hz for Kinova arm (If higher kinova can continue to move after the the command sendings stops bcs of the queue size)
 
