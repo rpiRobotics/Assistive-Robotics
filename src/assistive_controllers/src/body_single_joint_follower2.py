@@ -319,12 +319,12 @@ class BodySingleJointFollower():
         F_ang_z = R_err[2] * self.K_ang_z  
 
         # Virtual Damping (Derivative Control) (F = F - D * deltaX_dot)
-        F_lin_x -= self.Vx * self.D_lin_x  
-        F_lin_y -= self.Vy * self.D_lin_y 
-        F_lin_z -= self.Vz * self.D_lin_z 
-        F_ang_x -= self.Wx * self.D_ang_x 
-        F_ang_y -= self.Wy * self.D_ang_y 
-        F_ang_z -= self.Wz * self.D_ang_z 
+        F_lin_x = F_lin_x - (self.Vx * self.D_lin_x)  
+        F_lin_y = F_lin_y - (self.Vy * self.D_lin_y) 
+        F_lin_z = F_lin_z - (self.Vz * self.D_lin_z) 
+        F_ang_x = F_ang_x - (self.Wx * self.D_ang_x) 
+        F_ang_y = F_ang_y - (self.Wy * self.D_ang_y) 
+        F_ang_z = F_ang_z - (self.Wz * self.D_ang_z) 
 
         # Calculate External Wrench wrt robot mobile base frame from arm base frame
         qw_cur = self.T_base2armbase.transform.rotation.w # Scalar part of quaternion
@@ -340,12 +340,12 @@ class BodySingleJointFollower():
         F_ang_external = np.dot(R_base2armbase[:3,:3],F_ang_external)
 
         # Adding External Force and Desired Control Force
-        F_lin_x += (self.admittance_ratio * F_lin_external[0] + self.F_lin_x_control)
-        F_lin_y += (self.admittance_ratio * F_lin_external[1] + self.F_lin_y_control)
-        F_lin_z += (self.admittance_ratio * F_lin_external[2] + self.F_lin_z_control)
-        F_ang_x += (self.admittance_ratio * F_ang_external[0] + self.F_ang_x_control)
-        F_ang_y += (self.admittance_ratio * F_ang_external[1] + self.F_ang_y_control)
-        F_ang_z += (self.admittance_ratio * F_ang_external[2] + self.F_ang_z_control)        
+        F_lin_x = F_lin_x + (self.admittance_ratio * F_lin_external[0] + self.F_lin_x_control)
+        F_lin_y = F_lin_y + (self.admittance_ratio * F_lin_external[1] + self.F_lin_y_control)
+        F_lin_z = F_lin_z + (self.admittance_ratio * F_lin_external[2] + self.F_lin_z_control)
+        F_ang_x = F_ang_x + (self.admittance_ratio * F_ang_external[0] + self.F_ang_x_control)
+        F_ang_y = F_ang_y + (self.admittance_ratio * F_ang_external[1] + self.F_ang_y_control)
+        F_ang_z = F_ang_z + (self.admittance_ratio * F_ang_external[2] + self.F_ang_z_control)        
 
         # Virtual Mass (a = F/m)
         a_lin_x = F_lin_x / self.M_lin_x
