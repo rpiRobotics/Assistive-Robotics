@@ -90,7 +90,7 @@ class BodySingleJointFollower():
         # Admittance ratio between 0 to 1
         self.admittance_ratio = rospy.get_param("admittance_ratio", 1.0)
         # Make sure self.admittance_ratio is between 0-1
-        if self.self.admittance_ratio < 0.0:
+        if self.admittance_ratio < 0.0:
             self.admittance_ratio = 0.
         if self.admittance_ratio > 1.0:
             self.admittance_ratio = 1.0
