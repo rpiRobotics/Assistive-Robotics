@@ -3,8 +3,8 @@
 <group ns="oarbot_silver">
     <machine name="oarbot-silver-P15" address="192.168.1.101" env-loader="/home/oarbot_silver/catkin_ws_assistive/scripts/env_oarbot_silver.sh" user="oarbot_silver" password="1234"  default="true"/>
 
-    <node name="body_single_joint_follower" pkg="assistive_controllers" type="body_single_joint_follower.py" output="screen">
-        <rosparam file="$(find assistive_launch)/config/oarbot_silver_body_single_joint_follower.yaml"/>
+    <node name="body_single_joint_follower" pkg="assistive_controllers" type="body_single_joint_follower2.py" output="screen">
+        <rosparam file="$(find assistive_launch)/config/oarbot_silver_body_single_joint_follower2.yaml"/>
     </node>
 
 </group>
