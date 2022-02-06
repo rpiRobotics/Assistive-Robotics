@@ -336,8 +336,8 @@ class BodySingleJointFollower():
 
         F_lin_external = np.array([self.F_lin_x_external,self.F_lin_y_external,self.F_lin_z_external])
         F_ang_external = np.array([self.F_ang_x_external,self.F_ang_y_external,self.F_ang_z_external])
-        F_lin_external = np.dot(R_base2armbase,F_lin_external)
-        F_ang_external = np.dot(R_base2armbase,F_ang_external)
+        F_lin_external = np.dot(R_base2armbase[:3,:3],F_lin_external)
+        F_ang_external = np.dot(R_base2armbase[:3,:3],F_ang_external)
 
         # Adding External Force and Desired Control Force
         F_lin_x += (self.admittance_ratio * F_lin_external[0] + self.F_lin_x_control)
