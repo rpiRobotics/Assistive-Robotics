@@ -63,7 +63,7 @@ class BodySingleJointFollower():
         self.wrench_external_topic_name = rospy.get_param("~wrench_external_topic_name", "j2n6s300_driver/out/tool_wrench_filtered")
         self.wrench_control_topic_name = rospy.get_param("~wrench_control_topic_name", "j2n6s300_driver/out/tool_wrench_control")
         # Subscriber
-        rospy.Subscriber(self.wrench_control_topic_name, geometry_msgs.msg.WrenchStamped, self.wrench_external_callback , queue_size=1)
+        rospy.Subscriber(self.wrench_external_topic_name, geometry_msgs.msg.WrenchStamped, self.wrench_external_callback , queue_size=1)
         rospy.Subscriber(self.wrench_control_topic_name, geometry_msgs.msg.WrenchStamped, self.wrench_control_callback , queue_size=1)
 
         # Control Law Parameters and Gains
