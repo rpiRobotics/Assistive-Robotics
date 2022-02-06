@@ -14,12 +14,12 @@ wrench_control_topic_name: 'j2n6s300_left_driver/tool_wrench_control'
 position_err_thres: 0.005 # meter # 0.5cm
 orientation_err_thres: 0.015 # radian # 5 degrees = 0.09 radians 
 
-K_lin_x: 3.0
-K_lin_y: 3.0
-K_lin_z: 3.0
-K_ang_x: 5.0
-K_ang_y: 5.0
-K_ang_z: 5.0
+K_lin_x: 0.0 # K_lin_x: 3.0
+K_lin_y: 0.0 # K_lin_y: 3.0
+K_lin_z: 0.0 # K_lin_z: 3.0
+K_ang_x: 0.0 # K_ang_x: 5.0
+K_ang_y: 0.0 # K_ang_y: 5.0
+K_ang_z: 0.0 # K_ang_z: 5.0
 
 D_lin_x: 0.
 D_lin_y: 0.
