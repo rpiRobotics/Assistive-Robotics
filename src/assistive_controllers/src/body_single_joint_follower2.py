@@ -72,12 +72,12 @@ class BodySingleJointFollower():
         self.orientation_err_thres = rospy.get_param("~orientation_err_thres", 0.015) # 5 degrees = 0.09 radians
 
         # (Virtual spring)
-        self.K_lin_x = rospy.get_param("K_lin_x", 1.0)
-        self.K_lin_y = rospy.get_param("K_lin_y", 1.0)
-        self.K_lin_z = rospy.get_param("K_lin_z", 1.0)
-        self.K_ang_x = rospy.get_param("K_ang_x", 1.0)
-        self.K_ang_y = rospy.get_param("K_ang_y", 1.0)
-        self.K_ang_z = rospy.get_param("K_ang_z", 1.0)
+        self.K_lin_x = rospy.get_param("K_lin_x", 0.0)
+        self.K_lin_y = rospy.get_param("K_lin_y", 0.0)
+        self.K_lin_z = rospy.get_param("K_lin_z", 0.0)
+        self.K_ang_x = rospy.get_param("K_ang_x", 0.0)
+        self.K_ang_y = rospy.get_param("K_ang_y", 0.0)
+        self.K_ang_z = rospy.get_param("K_ang_z", 0.0)
 
         # (Virtual damping)
         self.D_lin_x = rospy.get_param("D_lin_x", 0.0)
@@ -88,7 +88,7 @@ class BodySingleJointFollower():
         self.D_ang_z = rospy.get_param("D_ang_z", 0.0)
 
         # Admittance ratio between 0 to 1
-        self.admittance_ratio = rospy.get_param("admittance_ratio", 1.0)
+        self.admittance_ratio = rospy.get_param("admittance_ratio", 0.1)
         # Make sure self.admittance_ratio is between 0-1
         if self.admittance_ratio < 0.0:
             self.admittance_ratio = 0.
