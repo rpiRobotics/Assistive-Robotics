@@ -66,6 +66,9 @@ class BodySingleJointFollower():
         rospy.Subscriber(self.wrench_external_topic_name, geometry_msgs.msg.WrenchStamped, self.wrench_external_callback , queue_size=1)
         rospy.Subscriber(self.wrench_control_topic_name, geometry_msgs.msg.WrenchStamped, self.wrench_control_callback , queue_size=1)
 
+        self.enable_body_joint_following = rospy.get_param("~enable_body_joint_following", True)
+        self.enable_admittance = rospy.get_param("~enable_admittance", True)
+
         # Control Law Parameters and Gains
         # Error deadzone 
         self.position_err_thres = rospy.get_param("~position_err_thres", 0.005) # 0.5 cm
@@ -162,14 +165,21 @@ class BodySingleJointFollower():
         # Find the transform between the specified joint and the end effector
         try:
             # returns type geometry_msgs.msg.TransformStamped
-            self.T_ee2joint = self.tfBuffer.lookup_transform(self.tf_end_effector_frame_name, self.tf_body_joint_frame_name, rospy.Time()) # in ee frame 
             self.T_base2ee = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, self.tf_end_effector_frame_name,  rospy.Time()) # in base frame 
-            self.T_base2joint = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, self.tf_body_joint_frame_name,  rospy.Time()) # in base frame 
-            self.T_base2armbase = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, self.tf_arm_base_frame_name,  rospy.Time()) # in base frame 
+
+            if self.enable_body_joint_following:
+                self.T_ee2joint = self.tfBuffer.lookup_transform(self.tf_end_effector_frame_name, self.tf_body_joint_frame_name, rospy.Time()) # in ee frame     
+                self.T_base2joint = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, self.tf_body_joint_frame_name,  rospy.Time()) # in base frame 
+            if self.enable_admittance:
+                self.T_base2armbase = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, self.tf_arm_base_frame_name,  rospy.Time()) # in base frame 
 
             if self.is_following_started:
-                # Calculate the error btw the desired and the current pose
-                position_error, orientation_error = self.poseErrorCalculator()
+                if self.enable_body_joint_following:
+                    # Calculate the error btw the desired and the current pose
+                    position_error, orientation_error = self.poseErrorCalculator()
+                else:
+                    position_error = [0.0,0.0,0.0]
+                    orientation_error = [0.0,0.0,0.0]
 
                 # rospy.logwarn("position_error: " + "{:.3f}".format(position_error[0]) + ", {:.3f}".format(position_error[1]) + ", {:.3f}".format(position_error[2])  )
                 # rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
@@ -188,10 +198,11 @@ class BodySingleJointFollower():
                     self.is_following_started = True
                     rospy.logwarn_once("FOLLOWING SHOULD START NOW")
 
-                # Save the current Pose as the desired pose btw end effector and the joint to be followed
-                self.T_ee2joint_desired = self.T_ee2joint # in ee frame
-                self.T_base2ee_desired = self.T_base2ee # in base frame
-                self.T_base2joint_desired = self.T_base2joint # in base frame
+                if self.enable_body_joint_following:
+                    # Save the current Pose as the desired pose btw end effector and the joint to be followed
+                    self.T_ee2joint_desired = self.T_ee2joint # in ee frame
+                    self.T_base2ee_desired = self.T_base2ee # in base frame
+                    self.T_base2joint_desired = self.T_base2joint # in base frame
         
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
@@ -274,7 +285,7 @@ class BodySingleJointFollower():
         qy_cur = self.T_base2ee.transform.rotation.y
         qz_cur = self.T_base2ee.transform.rotation.z
         q_base2ee = [qx_cur,qy_cur,qz_cur, qw_cur]
-        self.R_base2ee = tf.transformations.quaternion_matrix(q_base2ee)
+        R_base2ee = tf.transformations.quaternion_matrix(q_base2ee)
         # q_base2ee_inv = tf_conversions.transformations.quaternion_inverse(q_base2ee)
 
         # Quaternion orientation_error
@@ -284,7 +295,7 @@ class BodySingleJointFollower():
         # orientation_error = q_orientation_error[0:3].tolist()
 
         # Rotation orientation error
-        R_orientation_error = np.dot(self.R_base2ee.T, R_base2ee_goal)
+        R_orientation_error = np.dot(R_base2ee.T, R_base2ee_goal)
 
         # Euler XYZ
         # orientation_error = tf_conversions.transformations.euler_from_quaternion(q_orientation_error)
@@ -306,10 +317,14 @@ class BodySingleJointFollower():
 
         return position_error, orientation_error
 
-    def controlLaw(self,position_error, orientation_error):
-        P_err = [self.allowence(n, self.position_err_thres) for n in position_error] # 0.5cm
-        R_err = [self.allowence(n, self.orientation_err_thres) for n in orientation_error] 
-        
+    def controlLaw(self,position_error=[0.0,0.0,0.0], orientation_error=[0.0,0.0,0.0]):
+        if self.enable_body_joint_following:
+            P_err = [self.allowence(n, self.position_err_thres) for n in position_error] # 0.5cm
+            R_err = [self.allowence(n, self.orientation_err_thres) for n in orientation_error] 
+        else:
+            P_err = [0.0,0.0,0.0]
+            R_err = [0.0,0.0,0.0]
+            
         # Virtual Spring (Proportinal Control) (F = K * deltaX)
         F_lin_x = P_err[0] * self.K_lin_x   
         F_lin_y = P_err[1] * self.K_lin_y  
@@ -326,27 +341,37 @@ class BodySingleJointFollower():
         F_ang_y = F_ang_y - (self.Wy * self.D_ang_y) 
         F_ang_z = F_ang_z - (self.Wz * self.D_ang_z) 
 
-        # Calculate External Wrench wrt robot mobile base frame from arm base frame
-        qw_cur = self.T_base2armbase.transform.rotation.w # Scalar part of quaternion
-        qx_cur = self.T_base2armbase.transform.rotation.x
-        qy_cur = self.T_base2armbase.transform.rotation.y
-        qz_cur = self.T_base2armbase.transform.rotation.z
-        q_base2armbase = [qx_cur,qy_cur,qz_cur, qw_cur]
-        R_base2armbase = tf.transformations.quaternion_matrix(q_base2armbase)
+        if self.enable_admittance:
+            # Calculate External Wrench wrt robot mobile base frame from arm base frame
+            qw_cur = self.T_base2armbase.transform.rotation.w # Scalar part of quaternion
+            qx_cur = self.T_base2armbase.transform.rotation.x
+            qy_cur = self.T_base2armbase.transform.rotation.y
+            qz_cur = self.T_base2armbase.transform.rotation.z
+            q_base2armbase = [qx_cur,qy_cur,qz_cur, qw_cur]
+            R_base2armbase = tf.transformations.quaternion_matrix(q_base2armbase)
 
-        F_lin_external = np.array([self.F_lin_x_external,self.F_lin_y_external,self.F_lin_z_external])
-        F_ang_external = np.array([self.F_ang_x_external,self.F_ang_y_external,self.F_ang_z_external])
-        F_lin_external = np.dot(R_base2armbase[:3,:3],F_lin_external) # Linear must be wrt mobile base
-        R_ee2armbase = np.dot(self.R_base2ee[:3,:3].T,R_base2armbase[:3,:3]) 
-        F_ang_external = np.dot(R_ee2armbase,F_ang_external) # Angular must be wrt end effector
+            # Quaternion base2ee (current)
+            qw_cur = self.T_base2ee.transform.rotation.w # Scalar part of quaternion
+            qx_cur = self.T_base2ee.transform.rotation.x
+            qy_cur = self.T_base2ee.transform.rotation.y
+            qz_cur = self.T_base2ee.transform.rotation.z
+            q_base2ee = [qx_cur,qy_cur,qz_cur, qw_cur]
+            R_base2ee = tf.transformations.quaternion_matrix(q_base2ee)
 
-        # Adding External Force and Desired Control Force
-        F_lin_x = F_lin_x + (self.K_admittance_lin_x * F_lin_external[0] + self.F_lin_x_control)
-        F_lin_y = F_lin_y + (self.K_admittance_lin_y * F_lin_external[1] + self.F_lin_y_control)
-        F_lin_z = F_lin_z + (self.K_admittance_lin_z * F_lin_external[2] + self.F_lin_z_control)
-        F_ang_x = F_ang_x + (self.K_admittance_ang_x * F_ang_external[0] + self.F_ang_x_control)
-        F_ang_y = F_ang_y + (self.K_admittance_ang_y * F_ang_external[1] + self.F_ang_y_control)
-        F_ang_z = F_ang_z + (self.K_admittance_ang_z * F_ang_external[2] + self.F_ang_z_control)        
+            R_ee2armbase = np.dot(R_base2ee[:3,:3].T,R_base2armbase[:3,:3]) 
+
+            F_lin_external = np.array([self.F_lin_x_external,self.F_lin_y_external,self.F_lin_z_external])
+            F_ang_external = np.array([self.F_ang_x_external,self.F_ang_y_external,self.F_ang_z_external])
+            F_lin_external = np.dot(R_base2armbase[:3,:3],F_lin_external) # Linear must be wrt mobile base
+            F_ang_external = np.dot(R_ee2armbase,F_ang_external) # Angular must be wrt end effector
+
+            # Adding External Force and Desired Control Force
+            F_lin_x = F_lin_x + (self.K_admittance_lin_x * F_lin_external[0] + self.F_lin_x_control)
+            F_lin_y = F_lin_y + (self.K_admittance_lin_y * F_lin_external[1] + self.F_lin_y_control)
+            F_lin_z = F_lin_z + (self.K_admittance_lin_z * F_lin_external[2] + self.F_lin_z_control)
+            F_ang_x = F_ang_x + (self.K_admittance_ang_x * F_ang_external[0] + self.F_ang_x_control)
+            F_ang_y = F_ang_y + (self.K_admittance_ang_y * F_ang_external[1] + self.F_ang_y_control)
+            F_ang_z = F_ang_z + (self.K_admittance_ang_z * F_ang_external[2] + self.F_ang_z_control)        
 
         # Virtual Mass (a = F/m)
         a_lin_x = F_lin_x / self.M_lin_x
@@ -363,11 +388,11 @@ class BodySingleJointFollower():
         a_ang_norm = np.linalg.norm(a_ang)
     
         if a_lin_norm > self.max_lin_acc:
-            rospy.logwarn("Admittance generates high linear acceleration!")
+            rospy.logwarn("Follower generates high linear acceleration!")
             # Normalize the acceleration
             a_lin *= (self.max_lin_acc / a_lin_norm) 
         if a_ang_norm > self.max_ang_acc:
-            rospy.logwarn("Admittance generates high angular acceleration!")
+            rospy.logwarn("Follower generates high angular acceleration!")
             # Normalize the acceleration
             a_ang *= (self.max_ang_acc / a_ang_norm) 
 
