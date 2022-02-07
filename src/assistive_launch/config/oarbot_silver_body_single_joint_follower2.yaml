@@ -33,9 +33,9 @@ admittance_ratio: 0.2 # 0.1 # btw 0-1. Other values are ignored to max or minimu
 M_lin_x: 2.0
 M_lin_y: 2.0
 M_lin_z: 2.0
-M_ang_x: 0.5
-M_ang_y: 0.5
-M_ang_z: 0.5
+M_ang_x: 0.1
+M_ang_y: 0.1
+M_ang_z: 0.1
 
 # Load admittance control wrt robot base, can be updated by publishing to parameter: wrench_control_topic_name above.
 F_lin_x_control: 0.0
