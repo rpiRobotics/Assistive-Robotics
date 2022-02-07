@@ -35,7 +35,7 @@ K_admittance_lin_x: 0.1
 K_admittance_lin_y: 0.1
 K_admittance_lin_z: 0.1
 K_admittance_ang_x: 3.0
-K_admittance_ang_y: 6.0
+K_admittance_ang_y: 3.0
 K_admittance_ang_z: 3.0
 
 M_lin_x: 1.0
