@@ -88,12 +88,12 @@ class BodySingleJointFollower():
         self.D_ang_z = rospy.get_param("~D_ang_z", 0.0)
 
         # Admittance ratio between 0 to 1
-        self.admittance_ratio = rospy.get_param("admittance_ratio", 0.1)
-        # Make sure self.admittance_ratio is between 0-1
-        if self.admittance_ratio < 0.0:
-            self.admittance_ratio = 0.
-        if self.admittance_ratio > 1.0:
-            self.admittance_ratio = 1.0
+        self.K_admittance_lin_x = rospy.get_param("~K_admittance_lin_x", 1.0)
+        self.K_admittance_lin_y = rospy.get_param("~K_admittance_lin_y", 1.0)
+        self.K_admittance_lin_z = rospy.get_param("~K_admittance_lin_z", 1.0)
+        self.K_admittance_ang_x = rospy.get_param("~K_admittance_ang_x", 1.0)
+        self.K_admittance_ang_y = rospy.get_param("~K_admittance_ang_y", 1.0)
+        self.K_admittance_ang_z = rospy.get_param("~K_admittance_ang_z", 1.0)
 
         # (Virtual mass) matrix values
         self.M_lin_x = rospy.get_param("~M_lin_x", 1.0)
@@ -341,12 +341,12 @@ class BodySingleJointFollower():
         F_ang_external = np.dot(R_ee2armbase,F_ang_external) # Angular must be wrt end effector
 
         # Adding External Force and Desired Control Force
-        F_lin_x = F_lin_x + (self.admittance_ratio * F_lin_external[0] + self.F_lin_x_control)
-        F_lin_y = F_lin_y + (self.admittance_ratio * F_lin_external[1] + self.F_lin_y_control)
-        F_lin_z = F_lin_z + (self.admittance_ratio * F_lin_external[2] + self.F_lin_z_control)
-        F_ang_x = F_ang_x + (self.admittance_ratio * F_ang_external[0] + self.F_ang_x_control)
-        F_ang_y = F_ang_y + (self.admittance_ratio * F_ang_external[1] + self.F_ang_y_control)
-        F_ang_z = F_ang_z + (self.admittance_ratio * F_ang_external[2] + self.F_ang_z_control)        
+        F_lin_x = F_lin_x + (self.K_admittance_lin_x * F_lin_external[0] + self.F_lin_x_control)
+        F_lin_y = F_lin_y + (self.K_admittance_lin_y * F_lin_external[1] + self.F_lin_y_control)
+        F_lin_z = F_lin_z + (self.K_admittance_lin_z * F_lin_external[2] + self.F_lin_z_control)
+        F_ang_x = F_ang_x + (self.K_admittance_ang_x * F_ang_external[0] + self.F_ang_x_control)
+        F_ang_y = F_ang_y + (self.K_admittance_ang_y * F_ang_external[1] + self.F_ang_y_control)
+        F_ang_z = F_ang_z + (self.K_admittance_ang_z * F_ang_external[2] + self.F_ang_z_control)        
 
         # Virtual Mass (a = F/m)
         a_lin_x = F_lin_x / self.M_lin_x
