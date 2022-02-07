@@ -72,20 +72,20 @@ class BodySingleJointFollower():
         self.orientation_err_thres = rospy.get_param("~orientation_err_thres", 0.015) # 5 degrees = 0.09 radians
 
         # (Virtual spring)
-        self.K_lin_x = rospy.get_param("K_lin_x", 0.0)
-        self.K_lin_y = rospy.get_param("K_lin_y", 0.0)
-        self.K_lin_z = rospy.get_param("K_lin_z", 0.0)
-        self.K_ang_x = rospy.get_param("K_ang_x", 0.0)
-        self.K_ang_y = rospy.get_param("K_ang_y", 0.0)
-        self.K_ang_z = rospy.get_param("K_ang_z", 0.0)
+        self.K_lin_x = rospy.get_param("~K_lin_x", 0.0)
+        self.K_lin_y = rospy.get_param("~K_lin_y", 0.0)
+        self.K_lin_z = rospy.get_param("~K_lin_z", 0.0)
+        self.K_ang_x = rospy.get_param("~K_ang_x", 0.0)
+        self.K_ang_y = rospy.get_param("~K_ang_y", 0.0)
+        self.K_ang_z = rospy.get_param("~K_ang_z", 0.0)
 
         # (Virtual damping)
-        self.D_lin_x = rospy.get_param("D_lin_x", 0.0)
-        self.D_lin_y = rospy.get_param("D_lin_y", 0.0)
-        self.D_lin_z = rospy.get_param("D_lin_z", 0.0)
-        self.D_ang_x = rospy.get_param("D_ang_x", 0.0)
-        self.D_ang_y = rospy.get_param("D_ang_y", 0.0)
-        self.D_ang_z = rospy.get_param("D_ang_z", 0.0)
+        self.D_lin_x = rospy.get_param("~D_lin_x", 0.0)
+        self.D_lin_y = rospy.get_param("~D_lin_y", 0.0)
+        self.D_lin_z = rospy.get_param("~D_lin_z", 0.0)
+        self.D_ang_x = rospy.get_param("~D_ang_x", 0.0)
+        self.D_ang_y = rospy.get_param("~D_ang_y", 0.0)
+        self.D_ang_z = rospy.get_param("~D_ang_z", 0.0)
 
         # Admittance ratio between 0 to 1
         self.admittance_ratio = rospy.get_param("admittance_ratio", 0.1)
@@ -96,18 +96,18 @@ class BodySingleJointFollower():
             self.admittance_ratio = 1.0
 
         # (Virtual mass) matrix values
-        self.M_lin_x = rospy.get_param("M_lin_x", 1.0)
-        self.M_lin_y = rospy.get_param("M_lin_y", 1.0)
-        self.M_lin_z = rospy.get_param("M_lin_z", 1.0)
-        self.M_ang_x = rospy.get_param("M_ang_x", 1.0)
-        self.M_ang_y = rospy.get_param("M_ang_y", 1.0)
-        self.M_ang_z = rospy.get_param("M_ang_z", 1.0)
+        self.M_lin_x = rospy.get_param("~M_lin_x", 1.0)
+        self.M_lin_y = rospy.get_param("~M_lin_y", 1.0)
+        self.M_lin_z = rospy.get_param("~M_lin_z", 1.0)
+        self.M_ang_x = rospy.get_param("~M_ang_x", 1.0)
+        self.M_ang_y = rospy.get_param("~M_ang_y", 1.0)
+        self.M_ang_z = rospy.get_param("~M_ang_z", 1.0)
 
         # Maximum accelaration and velocity
-        self.max_lin_acc = rospy.get_param("max_lin_acc", 1000.0)
-        self.max_lin_vel = rospy.get_param("max_lin_vel", 1000.0) # Not used
-        self.max_ang_acc = rospy.get_param("max_ang_acc", 1000.0)
-        self.max_ang_vel = rospy.get_param("max_ang_vel", 1000.0) # Not used
+        self.max_lin_acc = rospy.get_param("~max_lin_acc", 1000.0)
+        self.max_lin_vel = rospy.get_param("~max_lin_vel", 1000.0) # Not used
+        self.max_ang_acc = rospy.get_param("~max_ang_acc", 1000.0)
+        self.max_ang_vel = rospy.get_param("~max_ang_vel", 1000.0) # Not used
 
         # Specified body joint tf frame name to follow
         self.tf_body_joint_frame_name = rospy.get_param("~tf_followed_body_joint_frame_name", "JOINT_WRIST_LEFT").lower() 
@@ -150,12 +150,12 @@ class BodySingleJointFollower():
         self.F_ang_z_external = 0. 
 
         # To store the control wrench as payload 
-        self.F_lin_x_control = rospy.get_param("F_lin_x_control", 0.0)
-        self.F_lin_y_control = rospy.get_param("F_lin_y_control", 0.0)
-        self.F_lin_z_control = rospy.get_param("F_lin_z_control", 0.0)
-        self.F_ang_x_control = rospy.get_param("F_ang_x_control", 0.0)
-        self.F_ang_y_control = rospy.get_param("F_ang_y_control", 0.0)
-        self.F_ang_z_control = rospy.get_param("F_ang_z_control", 0.0)        
+        self.F_lin_x_control = rospy.get_param("~F_lin_x_control", 0.0)
+        self.F_lin_y_control = rospy.get_param("~F_lin_y_control", 0.0)
+        self.F_lin_z_control = rospy.get_param("~F_lin_z_control", 0.0)
+        self.F_ang_x_control = rospy.get_param("~F_ang_x_control", 0.0)
+        self.F_ang_y_control = rospy.get_param("~F_ang_y_control", 0.0)
+        self.F_ang_z_control = rospy.get_param("~F_ang_z_control", 0.0)        
 
 
     def followJoint(self, event=None):
