@@ -28,16 +28,16 @@ D_ang_x: 10.0
 D_ang_y: 10.0
 D_ang_z: 10.0
 
-K_admittance_lin_x: 1.0
-K_admittance_lin_y: 1.0
-K_admittance_lin_z: 1.0
-K_admittance_ang_x: 8.0
-K_admittance_ang_y: 8.0
-K_admittance_ang_z: 8.0
+K_admittance_lin_x: 0.2
+K_admittance_lin_y: 0.2
+K_admittance_lin_z: 0.2
+K_admittance_ang_x: 4.0
+K_admittance_ang_y: 4.0
+K_admittance_ang_z: 4.0
 
-M_lin_x: 2.0
-M_lin_y: 2.0
-M_lin_z: 2.0
+M_lin_x: 1.0
+M_lin_y: 1.0
+M_lin_z: 1.0
 M_ang_x: 1.0
 M_ang_y: 1.0
 M_ang_z: 1.0
