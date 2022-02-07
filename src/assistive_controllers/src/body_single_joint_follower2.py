@@ -274,7 +274,7 @@ class BodySingleJointFollower():
         qy_cur = self.T_base2ee.transform.rotation.y
         qz_cur = self.T_base2ee.transform.rotation.z
         q_base2ee = [qx_cur,qy_cur,qz_cur, qw_cur]
-        R_base2ee = tf.transformations.quaternion_matrix(q_base2ee)
+        self.R_base2ee = tf.transformations.quaternion_matrix(q_base2ee)
         # q_base2ee_inv = tf_conversions.transformations.quaternion_inverse(q_base2ee)
 
         # Quaternion orientation_error
@@ -284,7 +284,7 @@ class BodySingleJointFollower():
         # orientation_error = q_orientation_error[0:3].tolist()
 
         # Rotation orientation error
-        R_orientation_error = np.dot(R_base2ee.T, R_base2ee_goal)
+        R_orientation_error = np.dot(self.R_base2ee.T, R_base2ee_goal)
 
         # Euler XYZ
         # orientation_error = tf_conversions.transformations.euler_from_quaternion(q_orientation_error)
@@ -336,8 +336,9 @@ class BodySingleJointFollower():
 
         F_lin_external = np.array([self.F_lin_x_external,self.F_lin_y_external,self.F_lin_z_external])
         F_ang_external = np.array([self.F_ang_x_external,self.F_ang_y_external,self.F_ang_z_external])
-        F_lin_external = np.dot(R_base2armbase[:3,:3],F_lin_external)
-        F_ang_external = np.dot(R_base2armbase[:3,:3],F_ang_external)
+        F_lin_external = np.dot(R_base2armbase[:3,:3],F_lin_external) # Linear must be wrt mobile base
+        R_ee2armbase = np.dot(self.R_base2ee[:3,:3].T,R_base2armbase[:3,:3]) 
+        F_ang_external = np.dot(R_ee2armbase,F_ang_external) # Angular must be wrt end effector
 
         # Adding External Force and Desired Control Force
         F_lin_x = F_lin_x + (self.admittance_ratio * F_lin_external[0] + self.F_lin_x_control)
