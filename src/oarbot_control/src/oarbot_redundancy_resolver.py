@@ -268,6 +268,12 @@ class OarbotRedundancyResolver():
         # print(nu)
 
         constrained_r = np.linalg.norm(T_armbase2ee_in_armbase.p-self.control_ball_center_xyz)
+        
+        # For debug, publish the constrained r value
+        constrained_r_msg = std_msgs.msg.Float64()
+        constrained_r_msg.data = constrained_r
+        self.pub_constrained_r.publish(constrained_r_msg)
+
         arm_w, base_w = self.weighting(T_armbase2ee_in_armbase.p,nu,constrained_r)
 
         # testing
@@ -302,10 +308,6 @@ class OarbotRedundancyResolver():
 
         # et = time.perf_counter_ns()
         # print("duration:",(et-st)*1e-9)
-
-        constrained_r_msg = std_msgs.msg.Float64()
-        constrained_r_msg.data = constrained_r
-        self.pub_constrained_r.publish(constrained_r_msg)
 
         return arm_cmd,base_cmd
     
