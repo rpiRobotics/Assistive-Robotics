@@ -108,9 +108,9 @@ class BodySingleJointFollower():
 
         # Maximum accelaration and velocity
         self.max_lin_acc = rospy.get_param("~max_lin_acc", 1000.0)
-        self.max_lin_vel = rospy.get_param("~max_lin_vel", 1000.0) # Not used
+        self.max_lin_vel = rospy.get_param("~max_lin_vel", 1000.0)
         self.max_ang_acc = rospy.get_param("~max_ang_acc", 1000.0)
-        self.max_ang_vel = rospy.get_param("~max_ang_vel", 1000.0) # Not used
+        self.max_ang_vel = rospy.get_param("~max_ang_vel", 1000.0)
 
         # Specified body joint tf frame name to follow
         self.tf_body_joint_frame_name = rospy.get_param("~tf_followed_body_joint_frame_name", "JOINT_WRIST_LEFT").lower() 
@@ -397,12 +397,34 @@ class BodySingleJointFollower():
             a_ang *= (self.max_ang_acc / a_ang_norm) 
 
         # Time delay for acc to vel (V = V + a * delta_t)
-        Vx = self.Vx + (a_lin_x * self.expected_duration)
-        Vy = self.Vy + (a_lin_y * self.expected_duration)
-        Vz = self.Vz + (a_lin_z * self.expected_duration)
-        Wx = self.Wx + (a_ang_x * self.expected_duration)
-        Wy = self.Wy + (a_ang_y * self.expected_duration)
-        Wz = self.Wz + (a_ang_z * self.expected_duration)
+        v_lin_x = self.Vx + (a_lin[0] * self.expected_duration)
+        v_lin_y = self.Vy + (a_lin[1] * self.expected_duration)
+        v_lin_z = self.Vz + (a_lin[2] * self.expected_duration)
+        v_ang_x = self.Wx + (a_ang[0] * self.expected_duration)
+        v_ang_y = self.Wy + (a_ang[1] * self.expected_duration)
+        v_ang_z = self.Wz + (a_ang[2] * self.expected_duration)
+
+        # Limiting velocity
+        v_lin = np.array([v_lin_x, v_lin_y, v_lin_z])
+        v_lin_norm = np.linalg.norm(v_lin)
+        v_ang = np.array([v_ang_x, v_ang_y, v_ang_z])
+        v_ang_norm = np.linalg.norm(v_ang)
+    
+        if v_lin_norm > self.max_lin_vel:
+            rospy.logwarn("Follower generates high linear velocity!")
+            # Normalize the velocity
+            v_lin *= (self.max_lin_vel / v_lin_norm) 
+        if v_ang_norm > self.max_ang_vel:
+            rospy.logwarn("Follower generates high angular velocity!")
+            # Normalize the velocity
+            v_ang *= (self.max_ang_vel / v_ang_norm) 
+
+        Vx = v_lin[0]
+        Vy = v_lin[1]
+        Vz = v_lin[2]
+        Wx = v_ang[0]
+        Wy = v_ang[1]
+        Wz = v_ang[2]
 
         return Vx, Vy, Vz, Wx, Wy, Wz
 
