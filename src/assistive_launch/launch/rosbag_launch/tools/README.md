@@ -8,6 +8,11 @@
     with contributions from Abel Gabor 2019
     baquatelle@gmail.com
 
+My command: 
+
+    python rosbag2video.py --fps 29.995091915 -t /nuc/rgb/image_raw/compressed _2022-02-02-11-18-02.bag
+
+
 For use with **ROS2** bags, please refer to the [foxy](https://github.com/mlaiacker/rosbag2video/tree/foxy) branch.
 
 For use with **ROS1** bags, please proceed with the instructions below.
