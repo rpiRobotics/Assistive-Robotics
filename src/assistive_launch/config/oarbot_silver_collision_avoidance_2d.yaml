@@ -1,0 +1,44 @@
+number_of_robots: 2
+
+in_cmd_vel_topic_name: "cmd_vel_base" # subscribed
+out_cmd_vel_topic_name: "cmd_vel_base_safer" # published  
+
+tf_world_frame_id: "world_floor"
+tf_mobile_base_frame_id: "oarbot_silver_base"
+
+obs_dist_thres: 0.20 # meter
+obs_dist_hard_thres: 0.10 # meter
+
+all_tf_mobile_base_frame_ids: 
+  - "oarbot_blue_base"
+  - "oarbot_silver_base"
+
+all_mobile_base_frame_coords: # width for expansion in x axis, height for expansion in y axis wrt mobile base frame
+  # "oarbot_blue_base"
+  - - [ 0.32, 0.29]
+    - [-0.45, 0.29]
+    - [-0.45,-0.29]
+    - [ 0.32,-0.29]
+    - [ 0.37, 0.00]
+  # "oarbot_silver_base" 
+  - - [ 0.32, 0.29]
+    - [-0.45, 0.29]
+    - [-0.45,-0.29]
+    - [ 0.32,-0.29]
+    - [ 0.37, 0.00]
+
+workspace_polygon_coords: # each polygon corner is [x,y] wrt tf_world_frame_id
+  - [ 0.0, -1.0]
+  - [ 1.8, -1.0]
+  - [ 1.8,  3.3]
+  - [-1.2,  3.3]
+  - [-1.2,  3.0]
+  - [-1.5,  3.0]
+  - [-1.5,  1.2]
+  - [ 0.0,  1.2]
+
+viz_mobile_base_polygon_topic_name_prefix: "viz_oarbot_silver_base_frame"
+viz_mobile_base_obs_dist_thres_topic_name: "viz_oarbot_silver_base_obs_dist_thres"
+viz_mobile_base_obs_dist_hard_thres_topic_name: "viz_oarbot_silver_base_obs_dist_hard_thres"
+viz_workspace_polygon_topic_name: "viz_oarbot_silver_workspace_polygon"
+viz_out_rate: 10.0 # Hz

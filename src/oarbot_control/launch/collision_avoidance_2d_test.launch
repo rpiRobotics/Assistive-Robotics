@@ -1,0 +1,9 @@
+<launch>
+	<arg name="pkg_name" default="oarbot_control"/>
+	<arg name="node_name" default="collision_avoidance_2d"/>		
+	
+    <node name="$(arg node_name)" pkg="$(arg pkg_name)" type="$(arg node_name).py" output="screen">
+		<rosparam file="$(find assistive_launch)/config/oarbot_blue_collision_avoidance_2d.yaml"/>
+    </node>
+    
+</launch>
