@@ -73,8 +73,13 @@ class CollisionAvoidance2D():
         self.pub_viz_mobile_base_obs_dist_hard_thres = rospy.Publisher(self.viz_mobile_base_obs_dist_hard_thres_topic_name, geometry_msgs.msg.PolygonStamped, queue_size=2)
         self.pub_viz_workspace_polygon = rospy.Publisher(self.viz_workspace_polygon_topic_name, geometry_msgs.msg.PolygonStamped, queue_size=2)
 
+        # Shapely polygon objects allocations
         self.workspace_polygon = None
-        self.mobile_base_polygons = None# TODO
+        
+        self.mobile_base_polygons = []
+        for i in range(self.num_of_robots):
+            self.mobile_base_polygons.append(None)
+
         self.obs_dist_thres_polygon = None
         self.obs_dist_hard_thres_polygon = None
         
@@ -109,7 +114,7 @@ class CollisionAvoidance2D():
 
         self.pub_viz_workspace_polygon.publish(poly_msg)
 
-        r = shapely.geometry.LinearRing(self.all_mobile_base_frame_coords[self.index])
+        r = shapely.geometry.LinearRing(self.workspace_polygon_coords)
         self.workspace_polygon = shapely.geometry.Polygon(r)
 
     def create_mobile_base_frame_polygons(self):
@@ -123,7 +128,8 @@ class CollisionAvoidance2D():
 
             self.pubs_viz_mobile_base_polygon[i].publish(poly_msg)
 
-            # TODO: shapely polygons
+            r = shapely.geometry.LinearRing(self.all_mobile_base_frame_coords[i])
+            self.mobile_base_polygons[i] = shapely.geometry.Polygon(r)
             
 
     def create_obs_dist_thres(self):
