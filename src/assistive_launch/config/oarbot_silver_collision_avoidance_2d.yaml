@@ -41,4 +41,4 @@ viz_mobile_base_polygon_topic_name_prefix: "viz_oarbot_silver_robots_"
 viz_mobile_base_obs_dist_thres_topic_name: "viz_oarbot_silver_base_obs_dist_thres"
 viz_mobile_base_obs_dist_hard_thres_topic_name: "viz_oarbot_silver_base_obs_dist_hard_thres"
 viz_workspace_polygon_topic_name: "viz_oarbot_silver_workspace_polygon"
-viz_out_rate: 10.0 # Hz
+viz_out_rate: 110.0 # Hz
