@@ -23,6 +23,8 @@ import geometry_msgs.msg # for Twist and other visualization msgs
 
 import shapely
 import shapely.geometry
+from shapely.ops import nearest_points
+
 import numpy as np
 import math
 
@@ -115,6 +117,9 @@ class CollisionAvoidance2D():
 
             # Calculate the obstacles with shapely
             collision_polygons, collision_polygons_hard = self.calculate_obstacles()
+
+            # Calculate the safer cmd_vel
+            self.avoid_obstacles(collision_polygons, collision_polygons_hard)
             
             # Publish the safer cmd_vel
             # TODO
@@ -255,6 +260,188 @@ class CollisionAvoidance2D():
         self.Wy = msg.angular.y
         self.Wz = msg.angular.z
 
+    def calculate_obstacles(self):
+        # self.workspace_polygon 
+        # self.mobile_base_polygons[] 
+        # self.obs_dist_thres_polygon 
+        # self.obs_dist_hard_thres_polygon
+
+        collision_polygons = [] # list of detected collisions' shapely Polygon objects
+        collision_polygons_hard = [] # list of detected hard collisions' shapely Polygon objects
+
+        # Check if the robot is colliding with the workspace 
+        # (ie. is the robot obs thresh within the workspace_polygon)
+          
+        if not self.workspace_polygon.contains(self.obs_dist_thres_polygon):
+            # contains: no points of self.obs_dist_thres_polygon lie in the exterior of self.workspace_polygon 
+            # and at least one point of the interior of self.obs_dist_thres_polygon lies in the interior of self.workspace_polygon.
+            
+            # ie. Find the polygon at the exterior of the workspace_polygon
+            collision_polygon = self.obs_dist_thres_polygon.difference(self.workspace_polygon)
+
+            # if this collision polygon is also at the interior of the obs_dist_hard_thres_polygon, we need a special treat!
+            if not self.workspace_polygon.contains(self.obs_dist_hard_thres_polygon):
+                # ie. Find the polygon at the exterior of the workspace_polygon
+                collision_polygon = self.obs_dist_hard_thres_polygon.difference(self.workspace_polygon)
+
+                if collision_polygon.geom_type == 'MultiPolygon':
+                    for obj in collision_polygon:
+                        if obj.geom_type == 'Polygon':
+                            collision_polygons_hard.append(obj.convex_hull)
+                elif collision_polygon.geom_type == 'Polygon':
+                    collision_polygons_hard.append(collision_polygon.convex_hull)
+            
+                # rospy.logwarn("Hard threshold for workspace is triggered")
+                # rospy.logwarn(str(collision_polygon.geom_type))    
+            else:
+                if collision_polygon.geom_type == 'MultiPolygon':
+                    for obj in collision_polygon:
+                        if obj.geom_type == 'Polygon':
+                            collision_polygons.append(obj.convex_hull)
+                elif collision_polygon.geom_type == 'Polygon':
+                    collision_polygons.append(collision_polygon.convex_hull)
+
+                # rospy.logwarn("Soft threshold for workspace is triggered")
+                # rospy.logwarn(str(collision_polygon.geom_type))    
+
+        # Check if the robot is colliding with any of the other robots
+        for i in range(self.num_of_robots):      
+            if i != self.index:
+                rospy.logwarn(str(self.mobile_base_polygons[i].overlaps(self.obs_dist_thres_polygon)))      
+                if self.mobile_base_polygons[i].overlaps(self.obs_dist_thres_polygon):
+                    # within: if self.mobile_base_polygons[i]'s boundary and interior intersect only with the interior of the self.obs_dist_thres_polygon (not its boundary or exterior).
+                    # (intersects: they have any boundary or interior point in common)
+                    # overlaps: the geometries have more than one but not all points in common, have the same dimension, and the intersection of the interiors of the geometries has the same dimension as the geometries themselves
+
+                    # Find the polygon at the interior of the self.obs_dist_thres_polygon
+                    collision_polygon = self.obs_dist_thres_polygon.intersection(self.mobile_base_polygons[i])
+
+                    # if this collision polygon is also at the interior of the obs_dist_hard_thres_polygon, we need s special treat!
+                    if self.mobile_base_polygons[i].overlaps(self.obs_dist_hard_thres_polygon):
+                        # ie. Find the polygon at the exterior of the workspace_polygon
+                        collision_polygon = self.obs_dist_hard_thres_polygon.intersection(self.mobile_base_polygons[i])
+
+                        if collision_polygon.geom_type == 'MultiPolygon':
+                            for obj in collision_polygon:
+                                if obj.geom_type == 'Polygon':
+                                    collision_polygons_hard.append(obj.convex_hull)
+                        elif collision_polygon.geom_type == 'Polygon':
+                            collision_polygons_hard.append(collision_polygon.convex_hull)
+                        
+                        # rospy.logwarn("Hard threshold for hitting other robots is triggered")
+                        # rospy.logwarn(str(collision_polygon.geom_type))   
+                    else:
+                        if collision_polygon.geom_type == 'MultiPolygon':
+                            for obj in collision_polygon:
+                                if obj.geom_type == 'Polygon':
+                                    collision_polygons.append(obj.convex_hull)
+                        elif collision_polygon.geom_type == 'Polygon':
+                            collision_polygons.append(collision_polygon.convex_hull)
+
+                        # rospy.logwarn("Soft threshold for hitting other robots is triggered")
+                        # rospy.logwarn(str(collision_polygon.geom_type))   
+
+        return collision_polygons, collision_polygons_hard
+
+    def avoid_obstacles(self, collision_polygons, collision_polygons_hard):
+        # Note that collision_polygons or/and collision_polygons_hard are lists
+        # and include shapely Polygon objects
+        forces = []
+        torques = []
+
+        # Closest points to the obstacles on the robot mobile base frame polygon
+        for polygon in collision_polygons:
+            nearest_pts = nearest_points(self.mobile_base_polygons[self.index], polygon)
+            pt_on_self = np.array(nearest_pts[0]) # closest point on the robot # array([x, y])
+            pt_on_obj =  np.array(nearest_pts[1]) # closest point on the obstacle object # array([x, y])
+            dist = self.mobile_base_polygons[self.index].distance(polygon) # distance between the obstacle object and the robot # float
+            unit_vect = (pt_on_self - pt_on_obj) / dist # unit vector from obstacle object to the robot # array([x, y]) 
+
+            # factor is btw [0,1]; 
+            # 0: distance is too far away (away from the specified obs_dist_thres), 
+            # 1: distance is too close (closer than the specified obs_dist_hard_thres)
+            factor = 1.0 - (  (dist - self.obs_dist_hard_thres) / (self.obs_dist_thres - self.obs_dist_hard_thres) ) # linearly changing factor
+
+            # Calculate the linear repulsive "force" caused by the obstacle acting on the robot multiplied by its factor
+            force = factor * unit_vect
+            forces.append(force)
+
+            # Calculate repulsive "torque" caused by the obstacle acting on the robot multiplied by its factor
+            # Similar to the normalization of the force norm btw. 0 to 1, with the hard and soft threshold values, 
+            # we also need to scale the maximum possible torque btw 0 to 1.
+            # We can achieve that finding the possible max and min distances that a torque can be applied to the origin of the robot.
+            # Shapely has distance(for min) and hausdorff_distance(for max) values.
+            pt_center = shapely.geometry.Point(0,0) # assumed to be the origin of the robot and inside polygon of the robot
+            min_dist = pt_center.distance(self.mobile_base_polygons[self.index])
+            max_dist = pt_center.hausdorff_distance(self.mobile_base_polygons[self.index])
+            app_dist = pt_center.distance(pt_on_self) # point of application of the force/torque distance to the pt_center
+            unit_vect_torque = pt_on_self / app_dist
+
+            factor_torque = (app_dist - min_dist) / (max_dist - min_dist)
+            
+            r = factor_torque * unit_vect_torque
+            torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
+            torques.append(torque)
+
+        for polygon in collision_polygons_hard: 
+            # TODO: if necessary, make the factors greater under here for extra repulsive effect!
+            hard_factor = 100.0
+
+            nearest_pts = nearest_points(self.mobile_base_polygons[self.index], polygon)
+            pt_on_self = np.array(nearest_pts[0]) # closest point on the robot # array([x, y])
+            pt_on_obj =  np.array(nearest_pts[1]) # closest point on the obstacle object # array([x, y])
+            dist = self.mobile_base_polygons[self.index].distance(polygon) # distance between the obstacle object and the robot # float
+            unit_vect = (pt_on_self - pt_on_obj) / dist # unit vector from obstacle object to the robot # array([x, y]) 
+
+            # factor is btw [0,1]; 
+            # 0: distance is too far away (away from the specified obs_dist_thres), 
+            # 1: distance is too close (closer than the specified obs_dist_hard_thres)
+            factor = 1.0 - (  (dist - self.obs_dist_hard_thres) / (self.obs_dist_thres - self.obs_dist_hard_thres) ) # linearly changing factor
+
+            # Calculate the linear repulsive "force" caused by the obstacle acting on the robot multiplied by its factor
+            force = hard_factor * factor * unit_vect 
+            forces.append(force)       
+
+            # Calculate repulsive "torque" caused by the obstacle acting on the robot multiplied by its factor
+            # Similar to the normalization of the force norm btw. 0 to 1, with the hard and soft threshold values, 
+            # we also need to scale the maximum possible torque btw 0 to 1.
+            # We can achieve that finding the possible max and min distances that a torque can be applied to the origin of the robot.
+            # Shapely has distance(for min) and hausdorff_distance(for max) values.
+            pt_center = shapely.geometry.Point(0,0) # assumed to be the origin of the robot and inside polygon of the robot
+            min_dist = pt_center.distance(self.mobile_base_polygons[self.index])
+            max_dist = pt_center.hausdorff_distance(self.mobile_base_polygons[self.index])
+            app_dist = pt_center.distance(pt_on_self) # point of application of the force/torque distance to the pt_center
+            unit_vect_torque = pt_on_self / app_dist
+
+            factor_torque = (app_dist - min_dist) / (max_dist - min_dist)
+            
+            r = factor_torque * unit_vect_torque
+            torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
+            torques.append(torque)
+
+        forces = np.array(forces)
+        torques = np.array(torques)
+
+        force_sum = np.sum(forces,axis=0) # summation of all factored force vectors with norms btw 0-1. # array([x, y])
+        torque_sum = np.sum(torques,axis=0) # summation of all factored torques with norms btw 0-1. (scalar bcs. all torques are in 2D and creates a vector around z axis)
+
+        if len(forces) > 0:
+            force_avr = force_sum / len(forces)
+        else:
+            force_avr = force_sum
+
+        if len(torques) > 0:
+            torque_avr = torque_sum / len(torques)
+        else:
+            torque_avr = torque_sum
+
+        
+
+
+
+
+
+
     # UTIL functions below:
     def get_2d_pose_from_tf(self,tf):
         x = tf.transform.translation.x
@@ -292,64 +479,8 @@ class CollisionAvoidance2D():
      
         return roll_x, pitch_y, yaw_z # in radians
 
-    def calculate_obstacles(self):
-        # self.workspace_polygon 
-        # self.mobile_base_polygons[] 
-        # self.obs_dist_thres_polygon 
-        # self.obs_dist_hard_thres_polygon
 
-        collision_polygons = [] # list of detected collisions' shapely Polygon or MultiPolygon objects
-        collision_polygons_hard = [] # list of detected hard collisions' shapely Polygon or MultiPolygon objects
-
-        # Check if the robot is colliding with the workspace 
-        # (ie. is the robot obs thresh within the workspace_polygon)
-          
-        if not self.workspace_polygon.contains(self.obs_dist_thres_polygon):
-            # contains: no points of self.obs_dist_thres_polygon lie in the exterior of self.workspace_polygon 
-            # and at least one point of the interior of self.obs_dist_thres_polygon lies in the interior of self.workspace_polygon.
-            
-            # ie. Find the polygon at the exterior of the workspace_polygon
-            collision_polygon = self.obs_dist_thres_polygon.difference(self.workspace_polygon)
-            # collision_polygon_centeroid_point =  collision_polygon.centroid
-
-            # if this collision polygon is also at the interior of the obs_dist_hard_thres_polygon, we need a special treat!
-            if not self.workspace_polygon.contains(self.obs_dist_hard_thres_polygon):
-                # ie. Find the polygon at the exterior of the workspace_polygon
-                collision_polygon = self.obs_dist_hard_thres_polygon.difference(self.workspace_polygon)
-                collision_polygons_hard.append(collision_polygon)
-                # rospy.logwarn("Hard threshold for workspace is triggered")
-                # rospy.logwarn(str(collision_polygon.geom_type))    
-            else:
-                collision_polygons.append(collision_polygon)
-                # rospy.logwarn("Soft threshold for workspace is triggered")
-                # rospy.logwarn(str(collision_polygon.geom_type))    
-
-        # Check if the robot is colliding with any of the other robots
-        for i in range(self.num_of_robots):      
-            if i != self.index:
-                rospy.logwarn(str(self.mobile_base_polygons[i].overlaps(self.obs_dist_thres_polygon)))      
-                if self.mobile_base_polygons[i].overlaps(self.obs_dist_thres_polygon):
-                    # within: if self.mobile_base_polygons[i]'s boundary and interior intersect only with the interior of the self.obs_dist_thres_polygon (not its boundary or exterior).
-                    # (intersects: they have any boundary or interior point in common)
-                    # overlaps: the geometries have more than one but not all points in common, have the same dimension, and the intersection of the interiors of the geometries has the same dimension as the geometries themselves
-
-                    # Find the polygon at the interior of the self.obs_dist_thres_polygon
-                    collision_polygon = self.obs_dist_thres_polygon.intersection(self.mobile_base_polygons[i])
-
-                    # if this collision polygon is also at the interior of the obs_dist_hard_thres_polygon, we need s special treat!
-                    if self.mobile_base_polygons[i].overlaps(self.obs_dist_hard_thres_polygon):
-                        # ie. Find the polygon at the exterior of the workspace_polygon
-                        collision_polygon = self.obs_dist_hard_thres_polygon.intersection(self.mobile_base_polygons[i])
-                        collision_polygons_hard.append(collision_polygon)
-                        rospy.logwarn("Hard threshold for hitting other robots is triggered")
-                        rospy.logwarn(str(collision_polygon.geom_type))   
-                    else:
-                        collision_polygons.append(collision_polygon)
-                        rospy.logwarn("Soft threshold for hitting other robots is triggered")
-                        rospy.logwarn(str(collision_polygon.geom_type))   
-
-        return collision_polygons, collision_polygons_hard
-        # self.avoid_others(directions_to_avoid, avoiding_weights)
+    
 
 
         
