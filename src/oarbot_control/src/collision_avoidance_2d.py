@@ -291,7 +291,7 @@ class CollisionAvoidance2D():
                 elif collision_polygon.geom_type == 'Polygon':
                     collision_polygons_hard.append(collision_polygon.convex_hull)
             
-                rospy.logwarn("Hard threshold for workspace is triggered")
+                # rospy.logwarn("Hard threshold for workspace is triggered")
                 # rospy.logwarn(str(collision_polygon.geom_type))    
             else:
                 if collision_polygon.geom_type == 'MultiPolygon':
@@ -301,7 +301,7 @@ class CollisionAvoidance2D():
                 elif collision_polygon.geom_type == 'Polygon':
                     collision_polygons.append(collision_polygon.convex_hull)
 
-                rospy.logwarn("Soft threshold for workspace is triggered")
+                # rospy.logwarn("Soft threshold for workspace is triggered")
                 # rospy.logwarn(str(collision_polygon.geom_type))    
 
         # Check if the robot is colliding with any of the other robots
@@ -328,7 +328,7 @@ class CollisionAvoidance2D():
                         elif collision_polygon.geom_type == 'Polygon':
                             collision_polygons_hard.append(collision_polygon.convex_hull)
                         
-                        rospy.logwarn("Hard threshold for hitting other robots is triggered")
+                        # rospy.logwarn("Hard threshold for hitting other robots is triggered")
                         # rospy.logwarn(str(collision_polygon.geom_type))   
                     else:
                         if collision_polygon.geom_type == 'MultiPolygon':
@@ -338,7 +338,7 @@ class CollisionAvoidance2D():
                         elif collision_polygon.geom_type == 'Polygon':
                             collision_polygons.append(collision_polygon.convex_hull)
 
-                        rospy.logwarn("Soft threshold for hitting other robots is triggered")
+                        # rospy.logwarn("Soft threshold for hitting other robots is triggered")
                         # rospy.logwarn(str(collision_polygon.geom_type))   
 
         return collision_polygons, collision_polygons_hard
