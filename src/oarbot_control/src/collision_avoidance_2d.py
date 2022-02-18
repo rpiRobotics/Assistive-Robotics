@@ -366,33 +366,36 @@ class CollisionAvoidance2D():
             pt_on_self = np.array(nearest_pts[0]) # closest point on the robot # array([x, y])
             pt_on_obj =  np.array(nearest_pts[1]) # closest point on the obstacle object # array([x, y])
             dist = self.mobile_base_polygons[self.index].distance(polygon) # distance between the obstacle object and the robot # float
-            unit_vect = (pt_on_self - pt_on_obj) / dist # unit vector from obstacle object to the robot # array([x, y]) 
+            if dist > 0.0:
+                unit_vect = (pt_on_self - pt_on_obj) / dist # unit vector from obstacle object to the robot # array([x, y]) 
 
-            # factor is btw [0,1]; 
-            # 0: distance is too far away (away from the specified obs_dist_thres), 
-            # 1: distance is too close (closer than the specified obs_dist_hard_thres)
-            factor = 1.0 - (  (dist - self.obs_dist_hard_thres) / (self.obs_dist_thres - self.obs_dist_hard_thres) ) # linearly changing factor
+                # factor is btw [0,1]; 
+                # 0: distance is too far away (away from the specified obs_dist_thres), 
+                # 1: distance is too close (closer than the specified obs_dist_hard_thres)
+                factor = 1.0 - (  (dist - self.obs_dist_hard_thres) / (self.obs_dist_thres - self.obs_dist_hard_thres) ) # linearly changing factor
 
-            # Calculate the linear repulsive "force" caused by the obstacle acting on the robot multiplied by its factor
-            force = factor * unit_vect
-            forces.append(force)
+                # Calculate the linear repulsive "force" caused by the obstacle acting on the robot multiplied by its factor
+                force = factor * unit_vect
+                forces.append(force)
 
-            # Calculate repulsive "torque" caused by the obstacle acting on the robot multiplied by its factor
-            # Similar to the normalization of the force norm btw. 0 to 1, with the hard and soft threshold values, 
-            # we also need to scale the maximum possible torque btw 0 to 1.
-            # We can achieve that finding the possible max and min distances that a torque can be applied to the origin of the robot.
-            # Shapely has distance(for min) and hausdorff_distance(for max) values.
-            pt_center = shapely.geometry.Point(0,0) # assumed to be the origin of the robot and inside polygon of the robot
-            min_dist = pt_center.distance(self.mobile_base_polygons[self.index])
-            max_dist = pt_center.hausdorff_distance(self.mobile_base_polygons[self.index])
-            app_dist = pt_center.distance(nearest_pts[0]) # point of application of the force/torque distance to the pt_center
-            unit_vect_torque = pt_on_self / app_dist
+                # Calculate repulsive "torque" caused by the obstacle acting on the robot multiplied by its factor
+                # Similar to the normalization of the force norm btw. 0 to 1, with the hard and soft threshold values, 
+                # we also need to scale the maximum possible torque btw 0 to 1.
+                # We can achieve that finding the possible max and min distances that a torque can be applied to the origin of the robot.
+                # Shapely has distance(for min) and hausdorff_distance(for max) values.
+                pt_center = shapely.geometry.Point(0,0) # assumed to be the origin of the robot and inside polygon of the robot
+                min_dist = pt_center.distance(self.mobile_base_polygons[self.index])
+                max_dist = pt_center.hausdorff_distance(self.mobile_base_polygons[self.index])
+                app_dist = pt_center.distance(nearest_pts[0]) # point of application of the force/torque distance to the pt_center
+                unit_vect_torque = pt_on_self / app_dist
 
-            factor_torque = (app_dist - min_dist) / (max_dist - min_dist)
-            
-            r = factor_torque * unit_vect_torque
-            torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
-            torques.append(torque)
+                factor_torque = (app_dist - min_dist) / (max_dist - min_dist)
+                
+                r = factor_torque * unit_vect_torque
+                torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
+                torques.append(torque)
+            else:
+                rospy.logwarn("Soft threshold Obstacle collided with the robot!!")
 
         forces = np.array(forces)
         torques = np.array(torques)
@@ -432,33 +435,36 @@ class CollisionAvoidance2D():
             pt_on_self = np.array(nearest_pts[0]) # closest point on the robot # array([x, y])
             pt_on_obj =  np.array(nearest_pts[1]) # closest point on the obstacle object # array([x, y])
             dist = self.mobile_base_polygons[self.index].distance(polygon) # distance between the obstacle object and the robot # float
-            unit_vect = (pt_on_self - pt_on_obj) / dist # unit vector from obstacle object to the robot # array([x, y]) 
+            if dist > 0.0:
+                unit_vect = (pt_on_self - pt_on_obj) / dist # unit vector from obstacle object to the robot # array([x, y]) 
 
-            # factor is btw [0,1]; 
-            # 0: distance is too far away (away from the specified obs_dist_thres), 
-            # 1: distance is too close (closer than the specified obs_dist_hard_thres)
-            factor = 1.0 - (  (dist - self.obs_dist_hard_thres) / (self.obs_dist_thres - self.obs_dist_hard_thres) ) # linearly changing factor
+                # factor is btw [0,1]; 
+                # 0: distance is too far away (away from the specified obs_dist_thres), 
+                # 1: distance is too close (closer than the specified obs_dist_hard_thres)
+                factor = 1.0 - (  (dist - self.obs_dist_hard_thres) / (self.obs_dist_thres - self.obs_dist_hard_thres) ) # linearly changing factor
 
-            # Calculate the linear repulsive "force" caused by the obstacle acting on the robot multiplied by its factor
-            force = factor * unit_vect 
-            forces.append(force)       
+                # Calculate the linear repulsive "force" caused by the obstacle acting on the robot multiplied by its factor
+                force = factor * unit_vect 
+                forces.append(force)       
 
-            # Calculate repulsive "torque" caused by the obstacle acting on the robot multiplied by its factor
-            # Similar to the normalization of the force norm btw. 0 to 1, with the hard and soft threshold values, 
-            # we also need to scale the maximum possible torque btw 0 to 1.
-            # We can achieve that finding the possible max and min distances that a torque can be applied to the origin of the robot.
-            # Shapely has distance(for min) and hausdorff_distance(for max) values.
-            pt_center = shapely.geometry.Point(0,0) # assumed to be the origin of the robot and inside polygon of the robot
-            min_dist = pt_center.distance(self.mobile_base_polygons[self.index])
-            max_dist = pt_center.hausdorff_distance(self.mobile_base_polygons[self.index])
-            app_dist = pt_center.distance(nearest_pts[0]) # point of application of the force/torque distance to the pt_center
-            unit_vect_torque = pt_on_self / app_dist
+                # Calculate repulsive "torque" caused by the obstacle acting on the robot multiplied by its factor
+                # Similar to the normalization of the force norm btw. 0 to 1, with the hard and soft threshold values, 
+                # we also need to scale the maximum possible torque btw 0 to 1.
+                # We can achieve that finding the possible max and min distances that a torque can be applied to the origin of the robot.
+                # Shapely has distance(for min) and hausdorff_distance(for max) values.
+                pt_center = shapely.geometry.Point(0,0) # assumed to be the origin of the robot and inside polygon of the robot
+                min_dist = pt_center.distance(self.mobile_base_polygons[self.index])
+                max_dist = pt_center.hausdorff_distance(self.mobile_base_polygons[self.index])
+                app_dist = pt_center.distance(nearest_pts[0]) # point of application of the force/torque distance to the pt_center
+                unit_vect_torque = pt_on_self / app_dist
 
-            factor_torque = (app_dist - min_dist) / (max_dist - min_dist)
-            
-            r = factor_torque * unit_vect_torque
-            torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
-            torques.append(torque)
+                factor_torque = (app_dist - min_dist) / (max_dist - min_dist)
+                
+                r = factor_torque * unit_vect_torque
+                torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
+                torques.append(torque)
+            else:
+                rospy.logwarn("Obstacle collided with the robot!!")
 
         forces = np.array(forces)
         torques = np.array(torques)
@@ -493,7 +499,7 @@ class CollisionAvoidance2D():
         # self.Wz = W[0]
 
         # filtering the velocities
-        filter_coeff = 1.0
+        filter_coeff = 1.0 # 1: NO filtering
         self.Vx_modified = (1-filter_coeff) * self.Vx_modified + filter_coeff * V[0]
         self.Vy_modified = (1-filter_coeff) * self.Vy_modified + filter_coeff * V[1]
         self.Wz_modified = (1-filter_coeff) * self.Wz_modified + filter_coeff * W[0]
