@@ -493,12 +493,19 @@ class CollisionAvoidance2D():
         # self.Wz = W[0]
 
         # filtering the velocities
-        self.Vx_modified += 0.05 * (V[0] - self.Vx_modified)
-        self.Vy_modified += 0.05 * (V[1] - self.Vy_modified)
-        self.Wz_modified += 0.05 * (W[0] - self.Wz_modified)
+        filter_coeff = 1.0
+        self.Vx_modified = (1-filter_coeff) * self.Vx_modified + filter_coeff * V[0]
+        self.Vy_modified = (1-filter_coeff) * self.Vy_modified + filter_coeff * V[1]
+        self.Wz_modified = (1-filter_coeff) * self.Wz_modified + filter_coeff * W[0]
     
     def publishVelCmd(self):
         vel_msg = geometry_msgs.msg.Twist()
+        # vel_msg.linear.x  = self.Vx
+        # vel_msg.linear.y  = self.Vy
+        # vel_msg.linear.z  = self.Vz
+        # vel_msg.angular.x = self.Wx
+        # vel_msg.angular.y = self.Wy
+        # vel_msg.angular.z = self.Wz
         vel_msg.linear.x  = self.Vx_modified
         vel_msg.linear.y  = self.Vy_modified
         vel_msg.linear.z  = self.Vz_modified
