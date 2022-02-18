@@ -482,11 +482,11 @@ class CollisionAvoidance2D():
 
         factor_v = min(max(force_avr_norm, 0.0), 1.0) # btw 0 to 1, 1 eliminates all velocity towards a directions, 0 does not eliminate anything
         if (force_avr_norm > 0) and (np.dot(V,force_avr) < 0.0):
-            V = V - (1.0+factor_v**4) * ((np.dot(V,force_avr) * force_avr) / force_avr_norm**2)
+            V = V - (1.0+ 0.5*factor_v**4) * ((np.dot(V,force_avr) * force_avr) / force_avr_norm**2)
       
         factor_w = min(max(torque_avr_norm, 0.0), 1.0) # btw 0 to 1, 1 eliminates all velocity towards a directions, 0 does not eliminate anything
         if (torque_avr_norm > 0) and (np.dot(W,torque_avr) < 0.0):
-            W = W - (1.0+factor_w**4) * ((np.dot(W,torque_avr) * torque_avr) / torque_avr_norm**2)
+            W = W - (1.0+ 0.5*factor_w**4) * ((np.dot(W,torque_avr) * torque_avr) / torque_avr_norm**2)
 
         # self.Vx = V[0]
         # self.Vy = V[1]
