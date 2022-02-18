@@ -416,14 +416,15 @@ class CollisionAvoidance2D():
         force_avr_norm = np.linalg.norm(force_avr)
         torque_avr_norm = np.linalg.norm(torque_avr)
         # rospy.logwarn('force_avr_norm: '+ str(force_avr_norm) + ", torque_avr_norm:" + str(torque_avr_norm) )
+        n = 0.3
 
         factor_v = min(max(force_avr_norm, 0.0), 1.0) # btw 0 to 1, 1 eliminates all velocity towards a directions, 0 does not eliminate anything
         if (force_avr_norm > 0) and (np.dot(V,force_avr) < 0.0):
-            V = V - factor_v * ((np.dot(V,force_avr) * force_avr) / force_avr_norm**2)
+            V = V - (factor_v)**n * ((np.dot(V,force_avr) * force_avr) / force_avr_norm**2)
       
         factor_w = min(max(torque_avr_norm, 0.0), 1.0) # btw 0 to 1, 1 eliminates all velocity towards a directions, 0 does not eliminate anything
         if (torque_avr_norm > 0) and (np.dot(W,torque_avr) < 0.0):
-            W = W - factor_w * ((np.dot(W,torque_avr) * torque_avr) / torque_avr_norm**2)
+            W = W - (factor_w)**n * ((np.dot(W,torque_avr) * torque_avr) / torque_avr_norm**2)
 
 
         # After the soft threshold obstacles are treated, if there is a hard threshold obstacle, we need to create a repulsive velocity out of it.
