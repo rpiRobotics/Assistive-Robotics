@@ -122,7 +122,7 @@ class CollisionAvoidance2D():
             self.avoid_obstacles(collision_polygons, collision_polygons_hard)
             
             # Publish the safer cmd_vel
-            # TODO
+            self.publishVelCmd()
             
         else:
             # Publish zero velocities ?
@@ -291,7 +291,7 @@ class CollisionAvoidance2D():
                 elif collision_polygon.geom_type == 'Polygon':
                     collision_polygons_hard.append(collision_polygon.convex_hull)
             
-                # rospy.logwarn("Hard threshold for workspace is triggered")
+                rospy.logwarn("Hard threshold for workspace is triggered")
                 # rospy.logwarn(str(collision_polygon.geom_type))    
             else:
                 if collision_polygon.geom_type == 'MultiPolygon':
@@ -301,13 +301,13 @@ class CollisionAvoidance2D():
                 elif collision_polygon.geom_type == 'Polygon':
                     collision_polygons.append(collision_polygon.convex_hull)
 
-                # rospy.logwarn("Soft threshold for workspace is triggered")
+                rospy.logwarn("Soft threshold for workspace is triggered")
                 # rospy.logwarn(str(collision_polygon.geom_type))    
 
         # Check if the robot is colliding with any of the other robots
         for i in range(self.num_of_robots):      
             if i != self.index:
-                rospy.logwarn(str(self.mobile_base_polygons[i].overlaps(self.obs_dist_thres_polygon)))      
+                # rospy.logwarn(str(self.mobile_base_polygons[i].overlaps(self.obs_dist_thres_polygon)))      
                 if self.mobile_base_polygons[i].overlaps(self.obs_dist_thres_polygon):
                     # within: if self.mobile_base_polygons[i]'s boundary and interior intersect only with the interior of the self.obs_dist_thres_polygon (not its boundary or exterior).
                     # (intersects: they have any boundary or interior point in common)
@@ -328,7 +328,7 @@ class CollisionAvoidance2D():
                         elif collision_polygon.geom_type == 'Polygon':
                             collision_polygons_hard.append(collision_polygon.convex_hull)
                         
-                        # rospy.logwarn("Hard threshold for hitting other robots is triggered")
+                        rospy.logwarn("Hard threshold for hitting other robots is triggered")
                         # rospy.logwarn(str(collision_polygon.geom_type))   
                     else:
                         if collision_polygon.geom_type == 'MultiPolygon':
@@ -338,7 +338,7 @@ class CollisionAvoidance2D():
                         elif collision_polygon.geom_type == 'Polygon':
                             collision_polygons.append(collision_polygon.convex_hull)
 
-                        # rospy.logwarn("Soft threshold for hitting other robots is triggered")
+                        rospy.logwarn("Soft threshold for hitting other robots is triggered")
                         # rospy.logwarn(str(collision_polygon.geom_type))   
 
         return collision_polygons, collision_polygons_hard
@@ -374,7 +374,7 @@ class CollisionAvoidance2D():
             pt_center = shapely.geometry.Point(0,0) # assumed to be the origin of the robot and inside polygon of the robot
             min_dist = pt_center.distance(self.mobile_base_polygons[self.index])
             max_dist = pt_center.hausdorff_distance(self.mobile_base_polygons[self.index])
-            app_dist = pt_center.distance(pt_on_self) # point of application of the force/torque distance to the pt_center
+            app_dist = pt_center.distance(nearest_pts[0]) # point of application of the force/torque distance to the pt_center
             unit_vect_torque = pt_on_self / app_dist
 
             factor_torque = (app_dist - min_dist) / (max_dist - min_dist)
@@ -410,7 +410,7 @@ class CollisionAvoidance2D():
             pt_center = shapely.geometry.Point(0,0) # assumed to be the origin of the robot and inside polygon of the robot
             min_dist = pt_center.distance(self.mobile_base_polygons[self.index])
             max_dist = pt_center.hausdorff_distance(self.mobile_base_polygons[self.index])
-            app_dist = pt_center.distance(pt_on_self) # point of application of the force/torque distance to the pt_center
+            app_dist = pt_center.distance(nearest_pts[0]) # point of application of the force/torque distance to the pt_center
             unit_vect_torque = pt_on_self / app_dist
 
             factor_torque = (app_dist - min_dist) / (max_dist - min_dist)
@@ -426,20 +426,43 @@ class CollisionAvoidance2D():
         torque_sum = np.sum(torques,axis=0) # summation of all factored torques with norms btw 0-1. (scalar bcs. all torques are in 2D and creates a vector around z axis)
 
         if len(forces) > 0:
-            force_avr = force_sum / len(forces)
+            force_avr = force_sum / len(forces)  # array([x, y])
         else:
-            force_avr = force_sum
+            force_avr = force_sum  # array([x, y])
 
         if len(torques) > 0:
-            torque_avr = torque_sum / len(torques)
+            torque_avr = torque_sum / len(torques) # scalar float
         else:
-            torque_avr = torque_sum
+            torque_avr = torque_sum # scalar float
 
-        
+        force_avr_norm = np.linalg.norm(force_avr)
+        torque_avr_norm = np.linalg.norm(torque_avr)
 
+        factor_v = min(max(force_avr_norm, 0.0), 1.0) # btw 0 to 1, 1 eliminates all velocity towards a directions, 0 does not eliminate anything
+        factor_w = min(max(torque_avr_norm, 0.0), 1.0) # btw 0 to 1, 1 eliminates all velocity towards a directions, 0 does not eliminate anything
 
+        V = np.array([self.Vx,self.Vy])
+        W = np.array([self.Wz])
 
+        if (force_avr_norm > 0) and (np.dot(V,force_avr) < 0.0):
+            V = V - factor_v * ((np.dot(V,force_avr) * force_avr) / force_avr_norm**2)
+        if (torque_avr_norm > 0) and (np.dot(W,torque_avr) < 0.0):
+            W = W - factor_w * ((np.dot(W,torque_avr) * torque_avr) / torque_avr_norm**2)
 
+        self.Vx = V[0]
+        self.Vy = V[1]
+        self.Wz = W[0]
+
+    
+    def publishVelCmd(self):
+        vel_msg = geometry_msgs.msg.Twist()
+        vel_msg.linear.x = self.Vx
+        vel_msg.linear.y = self.Vy
+        vel_msg.linear.z = self.Vz
+        vel_msg.angular.x = self.Wx
+        vel_msg.angular.y = self.Wy
+        vel_msg.angular.z = self.Wz
+        self.pub_cmd_vel.publish(vel_msg)
 
 
     # UTIL functions below:

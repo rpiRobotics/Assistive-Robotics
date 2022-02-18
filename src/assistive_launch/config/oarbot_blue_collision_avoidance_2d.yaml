@@ -1,7 +1,7 @@
 number_of_robots: 2
 
 in_cmd_vel_topic_name: "cmd_vel_base" # subscribed
-out_cmd_vel_topic_name: "cmd_vel_base_safer" # published  
+out_cmd_vel_topic_name: "cmd_vel_base_safer" # "turtle1/cmd_vel" #"cmd_vel_base_safer" # published  
 
 tf_world_frame_id: "world_floor"
 tf_mobile_base_frame_id: "oarbot_blue_base"
