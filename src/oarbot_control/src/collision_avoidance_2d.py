@@ -416,7 +416,7 @@ class CollisionAvoidance2D():
         force_avr_norm = np.linalg.norm(force_avr)
         torque_avr_norm = np.linalg.norm(torque_avr)
         # rospy.logwarn('force_avr_norm: '+ str(force_avr_norm) + ", torque_avr_norm:" + str(torque_avr_norm) )
-        n = 0.3
+        n = 0.1
 
         factor_v = min(max(force_avr_norm, 0.0), 1.0) # btw 0 to 1, 1 eliminates all velocity towards a directions, 0 does not eliminate anything
         if (force_avr_norm > 0) and (np.dot(V,force_avr) < 0.0):
