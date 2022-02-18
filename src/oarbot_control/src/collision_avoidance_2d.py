@@ -46,6 +46,14 @@ class CollisionAvoidance2D():
         self.Wy = 0.0
         self.Wz = 0.0
 
+        # To store the velocities for filtering
+        self.Vx_modified = 0.0
+        self.Vy_modified = 0.0
+        self.Vz_modified = 0.0
+        self.Wx_modified = 0.0
+        self.Wy_modified = 0.0
+        self.Wz_modified = 0.0
+
         # Subscribed topic names
         self.in_cmd_vel_topic_name = rospy.get_param("~in_cmd_vel_topic_name")
         # Subscribers
@@ -479,20 +487,24 @@ class CollisionAvoidance2D():
         factor_w = min(max(torque_avr_norm, 0.0), 1.0) # btw 0 to 1, 1 eliminates all velocity towards a directions, 0 does not eliminate anything
         if (torque_avr_norm > 0) and (np.dot(W,torque_avr) < 0.0):
             W = W - (1.0+factor_w**4) * ((np.dot(W,torque_avr) * torque_avr) / torque_avr_norm**2)
-        
-        self.Vx = V[0]
-        self.Vy = V[1]
-        self.Wz = W[0]
 
+        # self.Vx = V[0]
+        # self.Vy = V[1]
+        # self.Wz = W[0]
+
+        # filtering the velocities
+        self.Vx_modified += 0.05 * (V[0] - self.Vx_modified)
+        self.Vy_modified += 0.05 * (V[1] - self.Vy_modified)
+        self.Wz_modified += 0.05 * (W[0] - self.Wz_modified)
     
     def publishVelCmd(self):
         vel_msg = geometry_msgs.msg.Twist()
-        vel_msg.linear.x = self.Vx
-        vel_msg.linear.y = self.Vy
-        vel_msg.linear.z = self.Vz
-        vel_msg.angular.x = self.Wx
-        vel_msg.angular.y = self.Wy
-        vel_msg.angular.z = self.Wz
+        vel_msg.linear.x  = self.Vx_modified
+        vel_msg.linear.y  = self.Vy_modified
+        vel_msg.linear.z  = self.Vz_modified
+        vel_msg.angular.x = self.Wx_modified
+        vel_msg.angular.y = self.Wy_modified
+        vel_msg.angular.z = self.Wz_modified
         self.pub_cmd_vel.publish(vel_msg)
 
 
