@@ -346,6 +346,9 @@ class CollisionAvoidance2D():
     def avoid_obstacles(self, collision_polygons, collision_polygons_hard):
         # Note that collision_polygons or/and collision_polygons_hard are lists
         # and include shapely Polygon objects
+        V = np.array([self.Vx,self.Vy])
+        W = np.array([self.Wz])
+
         forces = []
         torques = []
 
@@ -383,10 +386,40 @@ class CollisionAvoidance2D():
             torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
             torques.append(torque)
 
-        for polygon in collision_polygons_hard: 
-            # TODO: if necessary, make the factors greater under here for extra repulsive effect!
-            hard_factor = 100.0
+        forces = np.array(forces)
+        torques = np.array(torques)
 
+        force_sum = np.sum(forces,axis=0) # summation of all factored force vectors with norms btw 0-1. # array([x, y])
+        torque_sum = np.sum(torques,axis=0) # summation of all factored torques with norms btw 0-1. (scalar bcs. all torques are in 2D and creates a vector around z axis)
+
+        if len(forces) > 0:
+            force_avr = force_sum / len(forces)  # array([x, y])
+        else:
+            force_avr = force_sum  # array([x, y])
+
+        if len(torques) > 0:
+            torque_avr = torque_sum / len(torques) # scalar float
+        else:
+            torque_avr = torque_sum # scalar float
+
+        force_avr_norm = np.linalg.norm(force_avr)
+        torque_avr_norm = np.linalg.norm(torque_avr)
+        # rospy.logwarn('force_avr_norm: '+ str(force_avr_norm) + ", torque_avr_norm:" + str(torque_avr_norm) )
+
+        factor_v = min(max(force_avr_norm, 0.0), 1.0) # btw 0 to 1, 1 eliminates all velocity towards a directions, 0 does not eliminate anything
+        if (force_avr_norm > 0) and (np.dot(V,force_avr) < 0.0):
+            V = V - factor_v * ((np.dot(V,force_avr) * force_avr) / force_avr_norm**2)
+      
+        factor_w = min(max(torque_avr_norm, 0.0), 1.0) # btw 0 to 1, 1 eliminates all velocity towards a directions, 0 does not eliminate anything
+        if (torque_avr_norm > 0) and (np.dot(W,torque_avr) < 0.0):
+            W = W - factor_w * ((np.dot(W,torque_avr) * torque_avr) / torque_avr_norm**2)
+
+
+        # After the soft threshold obstacles are treated, if there is a hard threshold obstacle, we need to create a repulsive velocity out of it.
+        forces = []
+        torques = []
+
+        for polygon in collision_polygons_hard: 
             nearest_pts = nearest_points(self.mobile_base_polygons[self.index], polygon)
             pt_on_self = np.array(nearest_pts[0]) # closest point on the robot # array([x, y])
             pt_on_obj =  np.array(nearest_pts[1]) # closest point on the obstacle object # array([x, y])
@@ -399,7 +432,7 @@ class CollisionAvoidance2D():
             factor = 1.0 - (  (dist - self.obs_dist_hard_thres) / (self.obs_dist_thres - self.obs_dist_hard_thres) ) # linearly changing factor
 
             # Calculate the linear repulsive "force" caused by the obstacle acting on the robot multiplied by its factor
-            force = hard_factor * factor * unit_vect 
+            force = factor * unit_vect 
             forces.append(force)       
 
             # Calculate repulsive "torque" caused by the obstacle acting on the robot multiplied by its factor
@@ -437,18 +470,16 @@ class CollisionAvoidance2D():
 
         force_avr_norm = np.linalg.norm(force_avr)
         torque_avr_norm = np.linalg.norm(torque_avr)
+        # rospy.logwarn('force_avr_norm: '+ str(force_avr_norm) + ", torque_avr_norm:" + str(torque_avr_norm) )
 
         factor_v = min(max(force_avr_norm, 0.0), 1.0) # btw 0 to 1, 1 eliminates all velocity towards a directions, 0 does not eliminate anything
-        factor_w = min(max(torque_avr_norm, 0.0), 1.0) # btw 0 to 1, 1 eliminates all velocity towards a directions, 0 does not eliminate anything
-
-        V = np.array([self.Vx,self.Vy])
-        W = np.array([self.Wz])
-
         if (force_avr_norm > 0) and (np.dot(V,force_avr) < 0.0):
-            V = V - factor_v * ((np.dot(V,force_avr) * force_avr) / force_avr_norm**2)
+            V = V - (1.0+factor_v) * ((np.dot(V,force_avr) * force_avr) / force_avr_norm**2)
+      
+        factor_w = min(max(torque_avr_norm, 0.0), 1.0) # btw 0 to 1, 1 eliminates all velocity towards a directions, 0 does not eliminate anything
         if (torque_avr_norm > 0) and (np.dot(W,torque_avr) < 0.0):
-            W = W - factor_w * ((np.dot(W,torque_avr) * torque_avr) / torque_avr_norm**2)
-
+            W = W - (1.0+factor_w) * ((np.dot(W,torque_avr) * torque_avr) / torque_avr_norm**2)
+        
         self.Vx = V[0]
         self.Vy = V[1]
         self.Wz = W[0]

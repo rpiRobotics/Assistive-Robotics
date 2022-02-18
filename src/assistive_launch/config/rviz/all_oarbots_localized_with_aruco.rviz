@@ -58,7 +58,7 @@ Visualization Manager:
       Value: true
     - Alpha: 1
       Class: rviz/Polygon
-      Color: 252; 233; 79
+      Color: 252; 175; 62
       Enabled: true
       Name: Polygon Workspace Oarbot_Silver
       Topic: /oarbot_silver/viz_oarbot_silver_workspace_polygon
@@ -89,13 +89,81 @@ Visualization Manager:
           Value: false
         cage_rgb_camera_link:
           Value: true
+        j2n6s300_left_body_joint_ankle_left:
+          Value: false
+        j2n6s300_left_body_joint_ankle_right:
+          Value: false
+        j2n6s300_left_body_joint_clavicle_left:
+          Value: false
+        j2n6s300_left_body_joint_clavicle_right:
+          Value: false
+        j2n6s300_left_body_joint_ear_left:
+          Value: false
+        j2n6s300_left_body_joint_ear_right:
+          Value: false
+        j2n6s300_left_body_joint_elbow_left:
+          Value: false
+        j2n6s300_left_body_joint_elbow_right:
+          Value: false
+        j2n6s300_left_body_joint_eye_left:
+          Value: false
+        j2n6s300_left_body_joint_eye_right:
+          Value: false
+        j2n6s300_left_body_joint_foot_left:
+          Value: false
+        j2n6s300_left_body_joint_foot_right:
+          Value: false
+        j2n6s300_left_body_joint_hand_left:
+          Value: false
+        j2n6s300_left_body_joint_hand_right:
+          Value: false
+        j2n6s300_left_body_joint_handtip_left:
+          Value: false
+        j2n6s300_left_body_joint_handtip_right:
+          Value: false
+        j2n6s300_left_body_joint_head:
+          Value: true
+        j2n6s300_left_body_joint_hip_left:
+          Value: false
+        j2n6s300_left_body_joint_hip_right:
+          Value: false
+        j2n6s300_left_body_joint_knee_left:
+          Value: false
+        j2n6s300_left_body_joint_knee_right:
+          Value: false
+        j2n6s300_left_body_joint_neck:
+          Value: false
+        j2n6s300_left_body_joint_nose:
+          Value: false
+        j2n6s300_left_body_joint_pelvis:
+          Value: false
+        j2n6s300_left_body_joint_shoulder_left:
+          Value: false
+        j2n6s300_left_body_joint_shoulder_right:
+          Value: false
+        j2n6s300_left_body_joint_spine_chest:
+          Value: false
+        j2n6s300_left_body_joint_spine_navel:
+          Value: false
+        j2n6s300_left_body_joint_thumb_left:
+          Value: false
+        j2n6s300_left_body_joint_thumb_right:
+          Value: false
+        j2n6s300_left_body_joint_wrist_left:
+          Value: false
+        j2n6s300_left_body_joint_wrist_right:
+          Value: false
         j2n6s300_left_camera_base:
           Value: true
         j2n6s300_left_camera_body:
           Value: false
         j2n6s300_left_camera_visor:
           Value: false
+        j2n6s300_left_depth_camera_link:
+          Value: false
         j2n6s300_left_end_effector:
+          Value: false
+        j2n6s300_left_imu_link:
           Value: false
         j2n6s300_left_link_1:
           Value: false
@@ -122,6 +190,8 @@ Visualization Manager:
         j2n6s300_left_link_finger_tip_2:
           Value: false
         j2n6s300_left_link_finger_tip_3:
+          Value: false
+        j2n6s300_left_rgb_camera_link:
           Value: false
         j2n6s300_right_body_joint_ankle_left:
           Value: false
@@ -361,6 +431,75 @@ Visualization Manager:
                                         {}
                                       j2n6s300_left_camera_visor:
                                         {}
+                                      j2n6s300_left_depth_camera_link:
+                                        j2n6s300_left_body_joint_ankle_left:
+                                          {}
+                                        j2n6s300_left_body_joint_ankle_right:
+                                          {}
+                                        j2n6s300_left_body_joint_clavicle_left:
+                                          {}
+                                        j2n6s300_left_body_joint_clavicle_right:
+                                          {}
+                                        j2n6s300_left_body_joint_ear_left:
+                                          {}
+                                        j2n6s300_left_body_joint_ear_right:
+                                          {}
+                                        j2n6s300_left_body_joint_elbow_left:
+                                          {}
+                                        j2n6s300_left_body_joint_elbow_right:
+                                          {}
+                                        j2n6s300_left_body_joint_eye_left:
+                                          {}
+                                        j2n6s300_left_body_joint_eye_right:
+                                          {}
+                                        j2n6s300_left_body_joint_foot_left:
+                                          {}
+                                        j2n6s300_left_body_joint_foot_right:
+                                          {}
+                                        j2n6s300_left_body_joint_hand_left:
+                                          {}
+                                        j2n6s300_left_body_joint_hand_right:
+                                          {}
+                                        j2n6s300_left_body_joint_handtip_left:
+                                          {}
+                                        j2n6s300_left_body_joint_handtip_right:
+                                          {}
+                                        j2n6s300_left_body_joint_head:
+                                          {}
+                                        j2n6s300_left_body_joint_hip_left:
+                                          {}
+                                        j2n6s300_left_body_joint_hip_right:
+                                          {}
+                                        j2n6s300_left_body_joint_knee_left:
+                                          {}
+                                        j2n6s300_left_body_joint_knee_right:
+                                          {}
+                                        j2n6s300_left_body_joint_neck:
+                                          {}
+                                        j2n6s300_left_body_joint_nose:
+                                          {}
+                                        j2n6s300_left_body_joint_pelvis:
+                                          {}
+                                        j2n6s300_left_body_joint_shoulder_left:
+                                          {}
+                                        j2n6s300_left_body_joint_shoulder_right:
+                                          {}
+                                        j2n6s300_left_body_joint_spine_chest:
+                                          {}
+                                        j2n6s300_left_body_joint_spine_navel:
+                                          {}
+                                        j2n6s300_left_body_joint_thumb_left:
+                                          {}
+                                        j2n6s300_left_body_joint_thumb_right:
+                                          {}
+                                        j2n6s300_left_body_joint_wrist_left:
+                                          {}
+                                        j2n6s300_left_body_joint_wrist_right:
+                                          {}
+                                        j2n6s300_left_imu_link:
+                                          {}
+                                        j2n6s300_left_rgb_camera_link:
+                                          {}
                                   j2n6s300_left_link_finger_1:
                                     j2n6s300_left_link_finger_tip_1:
                                       {}
@@ -662,7 +801,7 @@ Visualization Manager:
       Decay Time: 0
       Depth Map Topic: /oarbot_blue/depth/image_rect_raw
       Depth Map Transport Hint: raw
-      Enabled: false
+      Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
@@ -679,7 +818,7 @@ Visualization Manager:
       Topic Filter: true
       Use Fixed Frame: true
       Use rainbow: true
-      Value: false
+      Value: true
     - Alpha: 1
       Auto Size:
         Auto Size Factor: 1
@@ -699,7 +838,7 @@ Visualization Manager:
       Decay Time: 0
       Depth Map Topic: /oarbot_silver/depth/image_rect_raw
       Depth Map Transport Hint: raw
-      Enabled: false
+      Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
@@ -716,7 +855,7 @@ Visualization Manager:
       Topic Filter: true
       Use Fixed Frame: true
       Use rainbow: true
-      Value: false
+      Value: true
     - Class: rviz/Marker
       Enabled: true
       Marker Topic: /oarbot_silver/constraint_marker
@@ -809,25 +948,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 6.544443130493164
+      Distance: 5.896592140197754
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.7237676382064819
-        Y: 2.094420909881592
-        Z: 1.4690204858779907
+        X: 0.395563542842865
+        Y: 1.7488652467727661
+        Z: 1.2512410879135132
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7097973227500916
+      Pitch: 0.7597984671592712
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.8735439777374268
+      Yaw: 0.7435481548309326
     Saved: ~
 Window Geometry:
   Displays:
