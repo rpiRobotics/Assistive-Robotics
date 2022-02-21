@@ -24,6 +24,7 @@ import geometry_msgs.msg # for Twist and other visualization msgs
 import shapely
 import shapely.geometry
 from shapely.ops import nearest_points
+from shapely.ops import triangulate
 
 import numpy as np
 import math
@@ -135,9 +136,7 @@ class CollisionAvoidance2D():
         else:
             # Publish zero velocities ?
             pass
-
     
-
     def get_TFs(self):
         for i in range(self.num_of_robots):
             try:
@@ -295,19 +294,48 @@ class CollisionAvoidance2D():
                 if collision_polygon.geom_type == 'MultiPolygon':
                     for obj in collision_polygon:
                         if obj.geom_type == 'Polygon':
-                            collision_polygons_hard.append(obj.convex_hull)
+                            if not self.is_convex_polygon(list(obj.exterior.coords)[:-1]):
+                                # rospy.logerr("Hard threshold non-convex obstacle for workspace is triggered!!")
+                                for obj_partial in triangulate(obj):
+                                    if obj.contains(obj_partial):
+                                        collision_polygons_hard.append(obj_partial)
+                            else:
+                                collision_polygons_hard.append(obj)
+                            
+
                 elif collision_polygon.geom_type == 'Polygon':
-                    collision_polygons_hard.append(collision_polygon.convex_hull)
+                    if not self.is_convex_polygon(list(collision_polygon.exterior.coords)[:-1]):
+                        # rospy.logerr("Hard threshold non-convex obstacle for workspace is triggered!!")
+                        for obj_partial in triangulate(collision_polygon):
+                            if collision_polygon.contains(obj_partial):
+                                collision_polygons_hard.append(obj_partial)
+                    else:
+                        collision_polygons_hard.append(collision_polygon)
+                    
             
                 # rospy.logwarn("Hard threshold for workspace is triggered")
                 # rospy.logwarn(str(collision_polygon.geom_type))    
+
             else:
                 if collision_polygon.geom_type == 'MultiPolygon':
                     for obj in collision_polygon:
                         if obj.geom_type == 'Polygon':
-                            collision_polygons.append(obj.convex_hull)
+                            if not self.is_convex_polygon(list(obj.exterior.coords)[:-1]):
+                                # rospy.logerr("Soft threshold non-convex obstacle!!")
+                                for obj_partial in triangulate(obj):
+                                    if obj.contains(obj_partial):
+                                        collision_polygons.append(obj_partial)
+                            else:
+                                collision_polygons.append(obj)
+
                 elif collision_polygon.geom_type == 'Polygon':
-                    collision_polygons.append(collision_polygon.convex_hull)
+                    if not self.is_convex_polygon(list(collision_polygon.exterior.coords)[:-1]):
+                        # rospy.logerr("Soft threshold non-convex obstacle for workspace is triggered!!")
+                        for obj_partial in triangulate(collision_polygon):
+                            if collision_polygon.contains(obj_partial):
+                                collision_polygons.append(obj_partial)
+                    else:
+                        collision_polygons.append(collision_polygon)
 
                 # rospy.logwarn("Soft threshold for workspace is triggered")
                 # rospy.logwarn(str(collision_polygon.geom_type))    
@@ -332,19 +360,48 @@ class CollisionAvoidance2D():
                         if collision_polygon.geom_type == 'MultiPolygon':
                             for obj in collision_polygon:
                                 if obj.geom_type == 'Polygon':
-                                    collision_polygons_hard.append(obj.convex_hull)
+                                    if not self.is_convex_polygon(list(obj.exterior.coords)[:-1]):
+                                        # rospy.logerr("Hard threshold non-convex obstacle for hitting other robots is triggered!!")
+                                        for obj_partial in triangulate(obj):
+                                            if obj.contains(obj_partial):
+                                                collision_polygons_hard.append(obj_partial)
+                                    else:
+                                        collision_polygons_hard.append(obj)
+
                         elif collision_polygon.geom_type == 'Polygon':
-                            collision_polygons_hard.append(collision_polygon.convex_hull)
+                            if not self.is_convex_polygon(list(collision_polygon.exterior.coords)[:-1]):
+                                # rospy.logerr("Hard threshold non-convex obstacle for hitting other robots is triggered!!")
+                                for obj_partial in triangulate(collision_polygon):
+                                    if collision_polygon.contains(obj_partial):
+                                        collision_polygons_hard.append(obj_partial)
+                            else:
+                                collision_polygons_hard.append(collision_polygon)
+
                         
                         # rospy.logwarn("Hard threshold for hitting other robots is triggered")
                         # rospy.logwarn(str(collision_polygon.geom_type))   
+
                     else:
                         if collision_polygon.geom_type == 'MultiPolygon':
                             for obj in collision_polygon:
                                 if obj.geom_type == 'Polygon':
-                                    collision_polygons.append(obj.convex_hull)
+                                    if not self.is_convex_polygon(list(obj.exterior.coords)[:-1]):
+                                        # rospy.logerr("Soft threshold non-convex obstacle for hitting other robots is triggered!!")
+                                        for obj_partial in triangulate(obj):
+                                            if obj.contains(obj_partial):
+                                                collision_polygons.append(obj_partial)
+                                    else:
+                                        collision_polygons.append(obj)
+
                         elif collision_polygon.geom_type == 'Polygon':
-                            collision_polygons.append(collision_polygon.convex_hull)
+                            if not self.is_convex_polygon(list(collision_polygon.exterior.coords)[:-1]):
+                                # rospy.logerr("Soft threshold non-convex obstacle for hitting other robots is triggered!!")
+                                for obj_partial in triangulate(collision_polygon):
+                                    if collision_polygon.contains(obj_partial):
+                                        collision_polygons.append(obj_partial)
+                            else:
+                                collision_polygons.append(collision_polygon)
+
 
                         # rospy.logwarn("Soft threshold for hitting other robots is triggered")
                         # rospy.logwarn(str(collision_polygon.geom_type))   
@@ -384,14 +441,15 @@ class CollisionAvoidance2D():
                 # We can achieve that finding the possible max and min distances that a torque can be applied to the origin of the robot.
                 # Shapely has distance(for min) and hausdorff_distance(for max) values.
                 pt_center = shapely.geometry.Point(0,0) # assumed to be the origin of the robot and inside polygon of the robot
-                min_dist = pt_center.distance(self.mobile_base_polygons[self.index])
-                max_dist = pt_center.hausdorff_distance(self.mobile_base_polygons[self.index])
+                # min_dist = pt_center.distance(self.mobile_base_polygons[self.index])
+                # max_dist = pt_center.hausdorff_distance(self.mobile_base_polygons[self.index])
                 app_dist = pt_center.distance(nearest_pts[0]) # point of application of the force/torque distance to the pt_center
                 unit_vect_torque = pt_on_self / app_dist
 
-                factor_torque = (app_dist - min_dist) / (max_dist - min_dist)
+                # factor_torque = (app_dist - min_dist) / (max_dist - min_dist)
                 
-                r = factor_torque * unit_vect_torque
+                # r = factor_torque * unit_vect_torque
+                r = unit_vect_torque
                 torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
                 torques.append(torque)
             else:
@@ -454,14 +512,15 @@ class CollisionAvoidance2D():
                 # We can achieve that finding the possible max and min distances that a torque can be applied to the origin of the robot.
                 # Shapely has distance(for min) and hausdorff_distance(for max) values.
                 pt_center = shapely.geometry.Point(0,0) # assumed to be the origin of the robot and inside polygon of the robot
-                min_dist = pt_center.distance(self.mobile_base_polygons[self.index])
-                max_dist = pt_center.hausdorff_distance(self.mobile_base_polygons[self.index])
+                # min_dist = pt_center.distance(self.mobile_base_polygons[self.index])
+                # max_dist = pt_center.hausdorff_distance(self.mobile_base_polygons[self.index])
                 app_dist = pt_center.distance(nearest_pts[0]) # point of application of the force/torque distance to the pt_center
                 unit_vect_torque = pt_on_self / app_dist
 
-                factor_torque = (app_dist - min_dist) / (max_dist - min_dist)
+                # factor_torque = (app_dist - min_dist) / (max_dist - min_dist)
                 
-                r = factor_torque * unit_vect_torque
+                # r = factor_torque * unit_vect_torque
+                r = unit_vect_torque
                 torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
                 torques.append(torque)
             else:
@@ -558,6 +617,70 @@ class CollisionAvoidance2D():
         yaw_z = math.atan2(t3, t4)
      
         return roll_x, pitch_y, yaw_z # in radians
+
+    
+
+    def is_convex_polygon(self,polygon):
+        # retrieved from
+        # https://stackoverflow.com/questions/471962/how-do-i-efficiently-determine-if-a-polygon-is-convex-non-convex-or-complex/45372025#45372025
+
+        TWO_PI = 2 * math.pi
+        """Return True if the polynomial defined by the sequence of 2D
+        points is 'strictly convex': points are valid, side lengths non-
+        zero, interior angles are strictly between zero and a straight
+        angle, and the polygon does not intersect itself.
+
+        NOTES:  1.  Algorithm: the signed changes of the direction angles
+                    from one side to the next side must be all positive or
+                    all negative, and their sum must equal plus-or-minus
+                    one full turn (2 pi radians). Also check for too few,
+                    invalid, or repeated points.
+                2.  No check is explicitly done for zero internal angles
+                    (180 degree direction-change angle) as this is covered
+                    in other ways, including the `n < 3` check.
+        """
+        try:  # needed for any bad points or direction changes
+            # Check for too few points
+            if len(polygon) < 3:
+                # rospy.logwarn("Here1")
+                return False
+            # Get starting information
+            old_x, old_y = polygon[-2]
+            new_x, new_y = polygon[-1]
+            new_direction = math.atan2(new_y - old_y, new_x - old_x)
+            angle_sum = 0.0
+            # Check each point (the side ending there, its angle) and accum. angles
+            for ndx, newpoint in enumerate(polygon):
+                # Update point coordinates and side directions, check side length
+                old_x, old_y, old_direction = new_x, new_y, new_direction
+                new_x, new_y = newpoint
+                new_direction = math.atan2(new_y - old_y, new_x - old_x)
+                if old_x == new_x and old_y == new_y:
+                    # rospy.logwarn("Here2")
+                    return False  # repeated consecutive points
+
+                # Calculate & check the normalized direction-change angle
+                angle = new_direction - old_direction
+                if angle <= -math.pi:
+                    angle += TWO_PI  # make it in half-open interval (-Pi, Pi]
+                elif angle > math.pi:
+                    angle -= TWO_PI
+                if ndx == 0:  # if first time through loop, initialize orientation
+                    if angle == 0.0:
+                        # rospy.logwarn("Here3")
+                        return False
+                    orientation = 1.0 if angle > 0.0 else -1.0
+                else:  # if other time through loop, check orientation is stable
+                    if orientation * angle <= 0.0:  # not both pos. or both neg.
+                        # rospy.logwarn("Here4")
+                        return False
+                # Accumulate the direction-change angle
+                angle_sum += angle
+            # Check that the total number of full turns is plus-or-minus 1
+            return abs(round(angle_sum / TWO_PI)) == 1
+        except: #(ArithmeticError, TypeError, ValueError):
+            # rospy.logwarn("Here5")
+            return False  # any exception means not a proper convex polygon
 
 
     
