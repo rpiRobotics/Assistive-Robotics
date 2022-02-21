@@ -500,7 +500,7 @@ class CollisionAvoidance2D():
                 # factor is btw [0,1]; 
                 # 0: distance is too far away (away from the specified obs_dist_thres), 
                 # 1: distance is too close (closer than the specified obs_dist_hard_thres)
-                factor = 1.0 - (  (dist - self.obs_dist_hard_thres) / (self.obs_dist_thres - self.obs_dist_hard_thres) ) # linearly changing factor
+                factor = 1.0 - (  dist / self.obs_dist_hard_thres )**2 # quadratically changing factor
 
                 # Calculate the linear repulsive "force" caused by the obstacle acting on the robot multiplied by its factor
                 force = factor * unit_vect 
@@ -548,11 +548,11 @@ class CollisionAvoidance2D():
 
         factor_v = min(max(force_avr_norm, 0.0), 1.0) # btw 0 to 1, 1 eliminates all velocity towards a directions, 0 does not eliminate anything
         if (force_avr_norm > 0) and (np.dot(V,force_avr) < 0.0):
-            V = V - (1.0+ 0.5*factor_v**4) * ((np.dot(V,force_avr) * force_avr) / force_avr_norm**2)
+            V = V - (1.0+ factor_v**2) * ((np.dot(V,force_avr) * force_avr) / force_avr_norm**2)
       
         factor_w = min(max(torque_avr_norm, 0.0), 1.0) # btw 0 to 1, 1 eliminates all velocity towards a directions, 0 does not eliminate anything
         if (torque_avr_norm > 0) and (np.dot(W,torque_avr) < 0.0):
-            W = W - (1.0+ 0.5*factor_w**4) * ((np.dot(W,torque_avr) * torque_avr) / torque_avr_norm**2)
+            W = W - (1.0+ factor_w**2) * ((np.dot(W,torque_avr) * torque_avr) / torque_avr_norm**2)
 
         # self.Vx = V[0]
         # self.Vy = V[1]
