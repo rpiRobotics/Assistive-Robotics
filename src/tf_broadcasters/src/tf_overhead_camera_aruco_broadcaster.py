@@ -136,8 +136,11 @@ class ArucoRobots2Floor():
             publisher = rospy.Publisher(topic_name, geometry_msgs.msg.PoseWithCovarianceStamped, queue_size=2)
             self.pubs_PoseWithCovarianceStamped.append(publisher)
 
+        rospy.loginfo("Here")
         # Create covariance vector with size 36 = 6x6 for (x, y, z, rotation about X axis, rotation about Y axis, rotation about Z axis), # Assumed to be the same for all robots!
         self.covariance_diagonal = rospy.get_param('~pose_covariance_diagonal',[1.,1.,1.,1.,1.,1.]) # TODO, need to measure them!
+
+        rospy.loginfo("self.covariance_diagonal: " + str(self.covariance_diagonal))
         self.covariance = np.zeros(36)
         self.covariance[0] =  self.covariance_diagonal[0] # x
         self.covariance[7] =  self.covariance_diagonal[1] # y
@@ -147,6 +150,7 @@ class ArucoRobots2Floor():
         self.covariance[35] =  self.covariance_diagonal[5] # rot z
         self.covariance = list(self.covariance) # convert to list of 36 floats
         
+        rospy.loginfo("self.covariance: " + str(self.covariance))
 
         # Initialization of undistortion maps for efficient undistortions
         self.map1 = None 
