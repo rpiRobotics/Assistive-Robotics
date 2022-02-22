@@ -123,6 +123,18 @@ class ArucoRobots2Floor():
         self.aruco_types = list(self.df["aruco_type"].unique())
         rospy.loginfo("User aruco types on robots: " + str(self.aruco_types))
 
+        # Initialization of undistortion maps for efficient undistortions
+        self.map1 = None 
+        self.map2 = None 
+        # Initialization of Image width and height
+        self.width = None
+        self.height = None
+
+        self.tf_rgb_camera_frame_id = rospy.get_param ("~tf_rgb_camera_frame_id", "cage_rgb_camera_link")
+        self.tf_world_floor_frame_id = rospy.get_param("~tf_world_floor_frame_id", "world_floor")
+        self.robot_bases_tf_prefix = rospy.get_param("~robot_bases_tf_prefix", "")
+        self.robot_bases_tf_postfix = rospy.get_param("~robot_bases_tf_postfix", "_base")
+
         # get all robot names to be potentially published for their poses from "place" names
         self.robot_names = list(self.df["place"])
         rospy.loginfo("Robot names: " + str(self.robot_names))
@@ -151,18 +163,6 @@ class ArucoRobots2Floor():
         self.covariance = list(self.covariance) # convert to list of 36 floats
         
         rospy.loginfo("self.covariance: " + str(self.covariance))
-
-        # Initialization of undistortion maps for efficient undistortions
-        self.map1 = None 
-        self.map2 = None 
-        # Initialization of Image width and height
-        self.width = None
-        self.height = None
-
-        self.tf_rgb_camera_frame_id = rospy.get_param ("~tf_rgb_camera_frame_id", "cage_rgb_camera_link")
-        self.tf_world_floor_frame_id = rospy.get_param("~tf_world_floor_frame_id", "world_floor")
-        self.robot_bases_tf_prefix = rospy.get_param("~robot_bases_tf_prefix", "")
-        self.robot_bases_tf_postfix = rospy.get_param("~robot_bases_tf_postfix", "_base")
 
         self.bridge = CvBridge() # To convert ROS images to openCV imgs.
         self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster for robots and world frame
