@@ -5,13 +5,13 @@
 
     <arg name="record_cameras" default="true" />
 
-    <!-- <node pkg="rosbag" type="record" name="rosbag_record_cam"
+    <node pkg="rosbag" type="record" name="rosbag_record_cam"
         args="record -o /home/nuc/rosbag_records/ /nuc/rgb/image_raw/compressed"
-        if="$(arg record_cameras)" /> -->
+        if="$(arg record_cameras)" />
 
 
-    <node pkg="rosbag" type="record" name="rosbag_record_pose"
-        args="record -o /home/nuc/rosbag_records/ /nuc/Pose_oarbot_silver_base /nuc/Pose_oarbot_blue_base " />
+    <!-- <node pkg="rosbag" type="record" name="rosbag_record_pose"
+        args="record -o /home/nuc/rosbag_records/ /nuc/Pose_oarbot_silver_base /nuc/Pose_oarbot_blue_base " /> -->
 
 </group>
 </launch>
