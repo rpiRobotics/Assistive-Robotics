@@ -132,6 +132,7 @@ class ArucoRobots2Floor():
         for i in range(self.num_of_robots):
             rospy.loginfo("i: " + str(i))
             topic_name = 'Pose_'+ self.robot_bases_tf_prefix + self.robot_names[i] + self.robot_bases_tf_postfix
+            rospy.loginfo("topic name: " + str(topic_name))
             publisher = rospy.Publisher(topic_name, geometry_msgs.msg.PoseWithCovarianceStamped, queue_size=2)
             self.pubs_PoseWithCovarianceStamped.append(publisher)
 
