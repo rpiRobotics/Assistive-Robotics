@@ -125,10 +125,12 @@ class ArucoRobots2Floor():
 
         # get all robot names to be potentially published for their poses from "place" names
         self.robot_names = list(self.df["place"])
+        rospy.loginfo("Robot names: " + str(self.robot_names))
         self.num_of_robots = len(self.robot_names)
         # create robot pose publishers
         self.pubs_PoseWithCovarianceStamped = []
         for i in range(self.num_of_robots):
+            rospy.loginfo("i: " + str(i))
             topic_name = 'Pose_'+ self.robot_bases_tf_prefix + self.robot_names[i] + self.robot_bases_tf_postfix
             publisher = rospy.Publisher(topic_name, geometry_msgs.msg.PoseWithCovarianceStamped, queue_size=2)
             self.pubs_PoseWithCovarianceStamped.append(publisher)
