@@ -34,6 +34,7 @@ Publishes to:
     - NONE
 Broadcasts to:
     - tf2
+    - TODO for PoseWithCovarianceStamped msgs
 """
 
 import rospy
@@ -121,6 +122,28 @@ class ArucoRobots2Floor():
         # get aruco dictionary types on the robots as a list
         self.aruco_types = list(self.df["aruco_type"].unique())
         rospy.loginfo("User aruco types on robots: " + str(self.aruco_types))
+
+        # get all robot names to be potentially published for their poses from "place" names
+        self.robot_names = list(self.df["place"])
+        self.num_of_robots = len(self.robot_names)
+        # create robot pose publishers
+        self.pubs_PoseWithCovarianceStamped = []
+        for i in range(self.num_of_robots):
+            topic_name = 'Pose_'+ self.robot_bases_tf_prefix + self.robot_names[i] + self.robot_bases_tf_postfix
+            publisher = rospy.Publisher(topic_name, geometry_msgs.msg.PoseWithCovarianceStamped, queue_size=2)
+            self.pubs_PoseWithCovarianceStamped.append(publisher)
+
+        # Create covariance vector with size 36 = 6x6 for (x, y, z, rotation about X axis, rotation about Y axis, rotation about Z axis), # Assumed to be the same for all robots!
+        self.covariance_diagonal = rospy.get_param('~pose_covariance_diagonal',[1.,1.,1.,1.,1.,1.]) # TODO, need to measure them!
+        self.covariance = np.zeros(36)
+        self.covariance[0] =  self.covariance_diagonal[0] # x
+        self.covariance[7] =  self.covariance_diagonal[1] # y
+        self.covariance[14] =  self.covariance_diagonal[2] # z
+        self.covariance[21] =  self.covariance_diagonal[3] # rot x
+        self.covariance[28] =  self.covariance_diagonal[4] # rot y
+        self.covariance[35] =  self.covariance_diagonal[5] # rot z
+        self.covariance = list(self.covariance) # convert to list of 36 floats
+        
 
         # Initialization of undistortion maps for efficient undistortions
         self.map1 = None 
@@ -415,6 +438,26 @@ class ArucoRobots2Floor():
                 t.transform.rotation.w = q[3]
 
                 self.tf_broadcaster.sendTransform(t)
+
+                # Also publish the PoseWithCovarianceStamped msgs
+                # Create the PoseWithCovarianceStamped msg
+                pose_msg = geometry_msgs.msg.PoseWithCovarianceStamped()
+                pose_msg.header = t.header
+
+                pose_msg.pose.pose.position.x = t.transform.translation.x
+                pose_msg.pose.pose.position.y = t.transform.translation.y
+                pose_msg.pose.pose.position.z = t.transform.translation.z
+
+                pose_msg.pose.pose.orientation.x = t.transform.rotation.x
+                pose_msg.pose.pose.orientation.y = t.transform.rotation.y
+                pose_msg.pose.pose.orientation.z = t.transform.rotation.z
+                pose_msg.pose.pose.orientation.w = t.transform.rotation.w
+
+                pose_msg.pose.covariance = self.covariance
+
+                pub_index = self.robot_names.index(place)
+                self.pubs_PoseWithCovarianceStamped[pub_index].publish(pose_msg)
+
 
             # rospy.logwarn("-- 006 --- %s seconds ---" % (time.time() - start_time))
             # rospy.logwarn("--------------- ALL --- %s seconds ---" % (time.time() - start_time0))
