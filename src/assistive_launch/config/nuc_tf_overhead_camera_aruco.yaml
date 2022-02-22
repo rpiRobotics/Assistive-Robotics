@@ -19,4 +19,4 @@ tf_world_floor_frame_id: 'world_floor'
 robot_bases_tf_prefix: '' # should end with "_", eg. 'robots_'
 robot_bases_tf_postfix: '_base' # should start with "_", eg. '_base'
 
-pose_covariance_diagonal: [1.,1.,1.,1.,1.,1.] # [x,y,z,rotx,roty,rotz]
+pose_covariance_diagonal: [.001,.001,.001,.0005,.0005,.0005] # [x,y,z,rotx,roty,rotz]
