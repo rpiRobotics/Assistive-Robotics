@@ -36,6 +36,7 @@ SCRIPTS=(
     echo 1234 | sudo -S apt install -y ros-melodic-spacenav-node;
     echo 1234 | sudo -S apt install -y ros-melodic-twist-mux;
     echo 1234 | sudo -S apt install -y ros-melodic-moveit*;
+    echo 1234 | sudo -S apt install -y ros-melodic-robot-localization
     echo 1234 | sudo -S apt install -y python-cvxopt; # TODO
     echo 1234 | sudo -S apt install -y python3-pip;
     echo 1234 | sudo -S apt install -y python-pip;
@@ -96,6 +97,7 @@ SCRIPTS=(
     echo 1234 | sudo -S apt install -y software-properties-common;
     echo 1234 | sudo -S apt install -y ros-melodic-twist-mux;
     echo 1234 | sudo -S apt install -y ros-melodic-moveit*;
+    echo 1234 | sudo -S apt install -y ros-melodic-robot-localization
     echo 1234 | sudo -S apt install -y python-cvxopt; # TODO
     echo 1234 | sudo -S apt install -y python3-pip;
     echo 1234 | sudo -S apt install -y python-pip;
@@ -153,6 +155,7 @@ SCRIPTS=(
     echo 1234 | sudo -S apt install -y software-properties-common;
     echo 1234 | sudo -S apt install -y ros-melodic-twist-mux;
     echo 1234 | sudo -S apt install -y ros-melodic-moveit*;
+    echo 1234 | sudo -S apt install -y ros-melodic-robot-localization
     echo 1234 | sudo -S apt install -y python-cvxopt; # TODO
     echo 1234 | sudo -S apt install -y python3-pip;
     echo 1234 | sudo -S apt install -y python-pip;
