@@ -161,6 +161,8 @@ class ArucoRobots2Floor():
         
         # rospy.loginfo("self.covariance: " + str(self.covariance))
 
+        self.tf_broadcast_enable = rospy.get_param("~tf_broadcast_enable", False)
+
         self.bridge = CvBridge() # To convert ROS images to openCV imgs.
         self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster for robots and world frame
         self.tf_broadcaster_static = tf2_ros.StaticTransformBroadcaster() # Create a static tf broadcster for rbg camera and the world frame
@@ -441,7 +443,8 @@ class ArucoRobots2Floor():
                 t.transform.rotation.z = q[2]
                 t.transform.rotation.w = q[3]
 
-                self.tf_broadcaster.sendTransform(t)
+                if self.tf_broadcast_enable:
+                    self.tf_broadcaster.sendTransform(t)
 
                 # Also publish the PoseWithCovarianceStamped msgs
                 # Create the PoseWithCovarianceStamped msg
