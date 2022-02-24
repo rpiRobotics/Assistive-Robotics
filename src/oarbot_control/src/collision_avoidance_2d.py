@@ -111,6 +111,8 @@ class CollisionAvoidance2D():
         self.obs_dist_thres_polygon = None
         self.obs_dist_hard_thres_polygon = None
         
+        self.enable_collision_avoidance = rospy.get_param("~enable_collision_avoidance", True) 
+
         # Publish rate debuggers/visualizers
         self.viz_out_rate = rospy.get_param("~viz_out_rate", 100.0) 
 
@@ -118,24 +120,36 @@ class CollisionAvoidance2D():
         rospy.Timer(rospy.Duration(1.00/self.viz_out_rate), self.run)
 
     def run(self, event=None):
-        self.TFs_are_ready = self.get_TFs()
+        if self.enable_collision_avoidance:
+            self.TFs_are_ready = self.get_TFs()
 
-        if self.TFs_are_ready:
-            # Calculate shapely polygons and publish the visualizers
-            self.publish_visualizers()
+            if self.TFs_are_ready:
+                # Calculate shapely polygons and publish the visualizers
+                self.publish_visualizers()
 
-            # Calculate the obstacles with shapely
-            collision_polygons, collision_polygons_hard = self.calculate_obstacles()
+                # Calculate the obstacles with shapely
+                collision_polygons, collision_polygons_hard = self.calculate_obstacles()
 
-            # Calculate the safer cmd_vel
-            self.avoid_obstacles(collision_polygons, collision_polygons_hard)
-            
-            # Publish the safer cmd_vel
-            self.publishVelCmd()
-            
+                # Calculate the safer cmd_vel
+                self.avoid_obstacles(collision_polygons, collision_polygons_hard)
+                
+                # Publish the safer cmd_vel
+                self.publishVelCmd()
+                
+            else:
+                # Publish zero velocities ?
+                pass
         else:
-            # Publish zero velocities ?
-            pass
+            # directly publish the input velocity as the output
+            self.Vx_modified = self.Vx
+            self.Vy_modified = self.Vy
+            self.Vz_modified = self.Vz
+            self.Wx_modified = self.Wx
+            self.Wy_modified = self.Wy
+            self.Wz_modified = self.Wz
+
+            self.publishVelCmd()
+
     
     def get_TFs(self):
         for i in range(self.num_of_robots):
