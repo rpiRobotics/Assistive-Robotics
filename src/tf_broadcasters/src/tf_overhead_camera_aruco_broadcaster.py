@@ -137,22 +137,19 @@ class ArucoRobots2Floor():
 
         # get all robot names to be potentially published for their poses from "place" names
         self.robot_names = list(self.df["place"])
-        rospy.loginfo("Robot names: " + str(self.robot_names))
+        # rospy.loginfo("Robot names: " + str(self.robot_names))
         self.num_of_robots = len(self.robot_names)
         # create robot pose publishers
         self.pubs_PoseWithCovarianceStamped = []
         for i in range(self.num_of_robots):
-            rospy.loginfo("i: " + str(i))
             topic_name = 'Pose_'+ self.robot_bases_tf_prefix + self.robot_names[i] + self.robot_bases_tf_postfix
-            rospy.loginfo("topic name: " + str(topic_name))
             publisher = rospy.Publisher(topic_name, geometry_msgs.msg.PoseWithCovarianceStamped, queue_size=2)
             self.pubs_PoseWithCovarianceStamped.append(publisher)
 
-        rospy.loginfo("Here")
         # Create covariance vector with size 36 = 6x6 for (x, y, z, rotation about X axis, rotation about Y axis, rotation about Z axis), # Assumed to be the same for all robots!
-        self.covariance_diagonal = rospy.get_param('~pose_covariance_diagonal',[1.,1.,1.,1.,1.,1.]) # TODO, need to measure them!
+        self.covariance_diagonal = rospy.get_param('~pose_covariance_diagonal',[1.,1.,1.,1.,1.,1.]) 
 
-        rospy.loginfo("self.covariance_diagonal: " + str(self.covariance_diagonal))
+        # rospy.loginfo("self.covariance_diagonal: " + str(self.covariance_diagonal))
         self.covariance = np.zeros(36)
         self.covariance[0] =  self.covariance_diagonal[0] # x
         self.covariance[7] =  self.covariance_diagonal[1] # y
@@ -162,7 +159,7 @@ class ArucoRobots2Floor():
         self.covariance[35] =  self.covariance_diagonal[5] # rot z
         self.covariance = list(self.covariance) # convert to list of 36 floats
         
-        rospy.loginfo("self.covariance: " + str(self.covariance))
+        # rospy.loginfo("self.covariance: " + str(self.covariance))
 
         self.bridge = CvBridge() # To convert ROS images to openCV imgs.
         self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster for robots and world frame
@@ -262,7 +259,7 @@ class ArucoRobots2Floor():
                 sys.exit(0)
 
             # load the ArUCo dictionary, grab the ArUCo parameters, and detect the markers
-            rospy.loginfo("[INFO] detecting '{}' tags...".format(aruco_type))
+            # rospy.loginfo("[INFO] detecting '{}' tags...".format(aruco_type))
             arucoDict = cv2.aruco.Dictionary_get(ARUCO_DICT[aruco_type])
             arucoParams = cv2.aruco.DetectorParameters_create()
             (corners, ids, rejected) = cv2.aruco.detectMarkers(gray, arucoDict, parameters=arucoParams)
@@ -303,7 +300,7 @@ class ArucoRobots2Floor():
             # print(ys_all)
             # print(zs_all)
 
-        rospy.loginfo("Num of detected Tags: " + str(len(corners_all)))
+        # rospy.loginfo("Num of detected Tags: " + str(len(corners_all)))
 
         # rospy.logwarn("-- 003 --- %s seconds ---" % (time.time() - start_time))
         # start_time = time.time()

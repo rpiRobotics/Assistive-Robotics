@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 import rospy
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist, TwistWithCovarianceStamped
 from assistive_msgs.msg import MotorCmd
 import math
+import numpy as np
+
 class OarbotControl_FwdKin():
     def __init__(self):
         rospy.init_node('oarbot_ctrl_fwd_kin', anonymous=True)
@@ -19,7 +21,20 @@ class OarbotControl_FwdKin():
         self.y_vel_scale = rospy.get_param("~y_vel_scaling")
         self.th_vel_scale = rospy.get_param("~th_vel_scaling")
 
-        self.vel_pub = rospy.Publisher(self.vel_feedback_name, Twist, queue_size=1)
+        self.covariance_diagonal = rospy.get_param("~twist_covariance_diagonal", [1.0e-8, 1.0e-8, 1.0e-8, 0., 0., 25.0e-10]) # [x_dot,y_dot,z_dot,rotx_dot,roty_dot,rotz_dot]
+        self.covariance = np.zeros(36)
+        self.covariance[0] =  self.covariance_diagonal[0] # x
+        self.covariance[7] =  self.covariance_diagonal[1] # y
+        self.covariance[14] =  self.covariance_diagonal[2] # z
+        self.covariance[21] =  self.covariance_diagonal[3] # rot x
+        self.covariance[28] =  self.covariance_diagonal[4] # rot y
+        self.covariance[35] =  self.covariance_diagonal[5] # rot z
+        self.covariance = list(self.covariance) # convert to list of 36 floats
+
+        self.tf_mobile_base_frame_id = rospy.get_param("~tf_mobile_base_frame_id", "oarbot_blue_base")
+
+
+        self.vel_pub = rospy.Publisher(self.vel_feedback_name, TwistWithCovarianceStamped, queue_size=2)
         rospy.Subscriber(self.motor_feedback_topic_name, MotorCmd, self.motor_feedback_callback, queue_size=1)
 
     def motor_feedback_callback(self, msg):
@@ -47,7 +62,16 @@ class OarbotControl_FwdKin():
         vel_feedback.linear.y /= self.y_vel_scale
         vel_feedback.angular.z /= self.th_vel_scale
 
-        self.vel_pub.publish(vel_feedback)
+        # publish the twist with a stamped covariance
+        vel_feedback_covariance_stamped = TwistWithCovarianceStamped()
+
+        vel_feedback_covariance_stamped.header.stamp = rospy.Time.now()
+        vel_feedback_covariance_stamped.header.frame_id = self.tf_mobile_base_frame_id
+
+        vel_feedback_covariance_stamped.twist.twist = vel_feedback
+        vel_feedback_covariance_stamped.twist.covariance = self.covariance
+
+        self.vel_pub.publish(vel_feedback_covariance_stamped)
 
     def forward_kin_skid_steer(self,msg):    
         # rospy.loginfo("I am in skid steer")
@@ -68,7 +92,16 @@ class OarbotControl_FwdKin():
         vel_feedback.linear.y /= self.y_vel_scale
         vel_feedback.angular.z /= self.th_vel_scale
 
-        self.vel_pub.publish(vel_feedback)
+        # publish the twist with a stamped covariance
+        vel_feedback_covariance_stamped = TwistWithCovarianceStamped()
+
+        vel_feedback_covariance_stamped.header.stamp = rospy.Time.now()
+        vel_feedback_covariance_stamped.header.frame_id = self.tf_mobile_base_frame_id
+
+        vel_feedback_covariance_stamped.twist.twist = vel_feedback
+        vel_feedback_covariance_stamped.twist.covariance = self.covariance
+
+        self.vel_pub.publish(vel_feedback_covariance_stamped)
 
 if __name__ == "__main__":
     oarbotControl_FwdKin = OarbotControl_FwdKin()
