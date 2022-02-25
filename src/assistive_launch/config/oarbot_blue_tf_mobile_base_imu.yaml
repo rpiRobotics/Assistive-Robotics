@@ -10,6 +10,6 @@ mobile_base2imu_pose:
     z: 0.0
     w: 1.0
   position: # in meters
-    x: 0.25
-    y: 0.10
-    z: 0.15
+    x: 0.0
+    y: 0.1378
+    z: 0.2585
