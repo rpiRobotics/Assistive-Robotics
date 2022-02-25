@@ -1,4 +1,4 @@
-enable_collision_avoidance: false
+enable_collision_avoidance: true
 
 number_of_robots: 2
 
