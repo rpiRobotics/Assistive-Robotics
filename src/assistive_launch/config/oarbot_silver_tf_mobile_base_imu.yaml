@@ -1,0 +1,15 @@
+z_height_topic_name: 'TODO'
+is_fixed_z: True
+tf_mobile_base_frame_id: 'oarbot_silver_base'
+tf_imu_frame_id: 'oarbot_silver_imu_sensor'
+
+mobile_base2imu_pose:
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  position: # in meters
+    x: 0.25
+    y: 0.10
+    z: 0.15
