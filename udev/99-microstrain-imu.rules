@@ -1,0 +1,1 @@
+KERNEL=="ttyACM*", ATTRS{idVendor}=="0483", SYMLINK+="sensor_microstrain_imu_0"
