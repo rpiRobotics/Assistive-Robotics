@@ -17,7 +17,10 @@
         <node name="oarbot_redundancy_resolver" pkg="oarbot_control" type="oarbot_redundancy_resolver.py" output="screen">
             <rosparam file="$(find assistive_launch)/config/oarbot_silver_redundancy_resolver.yaml"/>
         </node>
+    </group>
 
+    <!-- Launch Oarbot Collision Avoider -->
+    <group ns="oarbot_silver">
         <node name="collision_avoidance_2d" pkg="oarbot_control" type="collision_avoidance_2d.py" output="screen">
 		    <rosparam file="$(find assistive_launch)/config/oarbot_silver_collision_avoidance_2d.yaml"/>
         </node>

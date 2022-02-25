@@ -1,0 +1,131 @@
+# Standalone example params file for GX3, GX4, GX/CX5, RQ1 series devices
+# Note: Feature support is device-dependent and some of the following settings may have no affect on your device.
+# Please consult your device's documentation for supported features
+
+# ****************************************************************** 
+# NOTE: This file is formatted to work with ROS and will not work if specified as the params_file argument in ROS2.
+#       If you want to override parameters for ROS2, start with https://github.com/LORD-MicroStrain/microstrain_inertial/blob/ros2/microstrain_inertial_driver/config/empty.yml
+# ****************************************************************** 
+
+# ****************************************************************** 
+# General Settings 
+# ****************************************************************** 
+
+# port is the main port that the device will communicate over. For all devices except the GQy, this is the only available port.
+port        : "/dev/ttyACM0"
+baudrate    : 115200
+debug       : False
+diagnostics : False
+
+# Frame IDs used in the different messages. By default these are set to arbitrary strings as not to interfere with other ROS services.
+# For more information on common frame IDs, check out: https://www.ros.org/reps/rep-0105.html
+#
+# filter_frame_id and filter_child_frame_id are specifically useful as the node will also publish a transform to the /tf topic
+# that contains the transform between these two frames. Many ROS tools such as RViz will use the /tf topic to display things like robot position.
+imu_frame_id          : "sensor"
+filter_frame_id       : "oarbot_blue_imu_sensor" # "sensor_wgs84"
+filter_child_frame_id : "sensor"
+
+# Waits for a configurable amount of time until the device exists
+# If poll_max_tries is set to -1 we will poll forever until the device exists
+poll_port      : False
+poll_rate_hz   : 1.0
+poll_max_tries : 60
+
+# Controls if the driver outputs data with-respect-to ENU frame
+#      false - position, velocity, and orientation are WRT the NED frame (native device frame)
+#      true  - position, velocity, and orientation are WRT the ENU frame
+use_enu_frame : True
+
+# Controls if the driver-defined setup is sent to the device
+#      false - The driver will ignore the settings below and use the device's current settings
+#      true  - Overwrite the current device settings with those listed below
+device_setup : True
+
+# Controls if the driver-defined settings are saved
+#      false - Do not save the settings
+#      true  - Save the settings in the device's non-volatile memory
+save_settings : False
+
+# Controls if the driver uses the device generated timestamp (if available) for timestamping messages
+#      false - Use PC received time for timestamping
+#      true  - Use device generated timestamp
+use_device_timestamp : False
+
+# Controls if the driver creates a raw binary file
+#      false - Do not create the file
+#      true  - Create the file
+#
+#      Notes: 1) The filename will have the following format -
+#                model_number "_" serial_number "_" datetime (year_month_day_hour_minute_sec) ".bin"
+#                example: "3DM-GX5-45_6251.00001_20_12_01_01_01_01.bin"
+#             2) This file is useful for getting support from the manufacturer
+raw_file_enable : False
+
+
+# The directory to store the raw data file (no trailing '/')
+raw_file_directory : "/home/your_name"
+
+
+# ****************************************************************** 
+# IMU Settings 
+# ****************************************************************** 
+
+publish_imu   : True
+imu_data_rate : 100
+
+# Static IMU message covariance values (the device does not generate these) 
+# Since internally these are std::vector we need to use the rosparam tags 
+imu_orientation_cov : [0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01]
+imu_linear_cov      : [0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01]
+imu_angular_cov     : [0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01]
+
+
+# ****************************************************************** 
+# Kalman Filter Settings (only applicable for devices with a Kalman Filter) 
+# ****************************************************************** 
+
+publish_filter   : True
+filter_data_rate : 30
+
+# Sensor2vehicle frame transformation selector
+#     0 = None, 1 = Euler Angles, 2 - matrix, 3 - quaternion
+#     Notes: These are different ways of setting the same parameter in the device.
+#            The different options are provided as a convenience.
+#            Support for matrix and quaternion options is firmware version dependent (Quaternion not currently supported on GQ7)
+#            Quaternion order is [i, j, k, w]
+filter_sensor2vehicle_frame_selector : 1
+
+filter_sensor2vehicle_frame_transformation_euler      : [0.0, 0.0, 1.57]
+filter_sensor2vehicle_frame_transformation_matrix     : [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+filter_sensor2vehicle_frame_transformation_quaternion : [0.0, 0.0, 0.0, 1.0]
+
+  # Controls if the Kalman filter is reset after the settings are configured
+filter_reset_after_config : True
+
+# Controls if the Kalman filter will auto-init or requires manual initialization
+filter_auto_init : True
+
+# (All, except -10, and -15 products) Declination Source 1 = None, 2 = magnetic model, 3 = manual 
+filter_declination_source : 2
+filter_declination        : 0.23
+
+# (All, except GQ7, -10, and -15 products) Heading Source 0 = None, 1 = magnetic, 2 = GNSS velocity (note: see manual for limitations)  
+filter_heading_source : 1
+
+# (GX5 and previous,-45 models only) Dynamics Mode 1 = Portable (default), 2 = Automotive, 3 = Airborne (<2Gs), 4 = Airborne High G (<4Gs) 
+filter_dynamics_mode : 1
+
+# ZUPT control 
+filter_angular_zupt_topic  : "/moving_ang"
+filter_angular_zupt        : False
+
+# (GQ7 full support, GX5-45 limited support) Adaptive filter settings
+#      Adaptive level: 0 - off, 1 - Conservative, 2 = Moderate (default), 3 = agressive
+#      Time limit: Max duration of measurement rejection prior to recovery, in milliseconds - default = 15000 
+filter_adaptive_level         : 2
+filter_adaptive_time_limit_ms : 15000
+
+
+
+
