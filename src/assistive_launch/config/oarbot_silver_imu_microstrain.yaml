@@ -12,7 +12,7 @@
 # ****************************************************************** 
 
 # port is the main port that the device will communicate over. For all devices except the GQy, this is the only available port.
-port        : "/dev/ttyACM0"
+port        : "pci-0000:00:14.0-usb-0:1.5:1.0" # "/dev/ttyACM0"
 baudrate    : 115200
 debug       : False
 diagnostics : False
