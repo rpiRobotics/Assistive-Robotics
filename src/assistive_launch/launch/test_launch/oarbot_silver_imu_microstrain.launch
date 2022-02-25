@@ -1,5 +1,5 @@
 <launch>
   <node name="imu_driver" pkg="microstrain_inertial_driver" type="microstrain_inertial_driver_node" output="screen">
-    <rosparam command="load" file="$(find assistive_launch)/config/oarbot_silver_imu_microstrain.yml"  />
+    <rosparam command="load" file="$(find assistive_launch)/config/oarbot_silver_imu_microstrain.yaml"  />
   </node>
 </launch>
