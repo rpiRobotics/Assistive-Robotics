@@ -366,7 +366,7 @@ class SWARMGUI(QtWidgets.QMainWindow):
             led=LEDIndicator(i)
             #led.setDisabled(True)
             
-            self.Robotlayout.addWidget(led,6,i)
+            self.Robotlayout.addWidget(led,7,i)
             self.Leds.append(led)
             led.led_change(True)
     
@@ -419,6 +419,7 @@ class SWARMGUI(QtWidgets.QMainWindow):
             self.layouts_finger_control.append(layout_finger_control_object)
 
             button_class_object5= obstacle_avoidance_button(self.obstacle_avoidance_service_address, buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
+            self.Robotlayout.addWidget(button_class_object5.button,6,i)
             self.buttons_collision_avoidance.append(button_class_object5)
 
         """
