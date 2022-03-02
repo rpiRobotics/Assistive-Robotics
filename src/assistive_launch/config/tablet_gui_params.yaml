@@ -33,6 +33,10 @@ arm_fingers_action_address:
   - '/oarbot_silver/j2n6s300_left_driver/fingers_action/finger_positions' # For oarbot silver, left
   - '/oarbot_blue/j2n6s300_right_driver/fingers_action/finger_positions' # For oarbot blue, right
 
+obstacle_avoidance_service_address:
+  - '/oarbot_silver/TODO'
+  - '/oarbot_blue/TODO'
+
 arm_fingers_max_turn: 
   - 6800 # or 7300 # This value is mapped btw 0-100%
   - 6800 # or 7300 # This value is mapped btw 0-100%

@@ -116,6 +116,44 @@ class arm_home_button:
         except:
             rospy.logerr("Assistive GUI: Somethingh went wrong while sending arm home command")
 
+class obstacle_avoidance_button:
+    def __init__(self, service_address, sizex,sizey,text):
+        self.text=text +"\nDisable Collision Avoidance"
+
+        self.button=QPushButton()
+        self.button.setFixedSize(sizex,sizey)
+        self.button.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
+        self.button.setFont(QFont('Ubuntu',13))
+        self.button.setText(self.text)
+        self.disabled = False
+        self.button.pressed.connect(self.button_pressed)
+        
+
+        self.service_address = service_address
+        
+    def button_pressed(self):
+        rospy.logerr("Assistive GUI: Obstacle Avoidance Button pressed")
+        self.disabled = not(self.disabled)
+        if(self.disabled):
+            try:
+                # TODO: Send command to disable the collision avoidance
+                # self.client = actionlib.SimpleActionClient(self.action_address, kinova_msgs.msg.ArmJointAnglesAction)
+
+                self.button.setStyleSheet('QPushButton {background-color: orange; color: white;}')
+            except:
+                rospy.logerr("Assistive GUI: Somethingh went wrong with obstacle avoidance button")
+
+        else:
+            try:
+                # TODO: Send command to enable the collision avoidance
+                # self.client = actionlib.SimpleActionClient(self.action_address, kinova_msgs.msg.ArmJointAnglesAction)
+
+                self.button.setStyleSheet('QPushButton {background-color: white; color: black;}')
+            except:
+                rospy.logerr("Assistive GUI: Somethingh went wrong with obstacle avoidance button")
+
+        
+
 class finger_control:
     def __init__(self, action_address, fingers_max_turn, sizex,sizey,text):
         # create QVBox layout as container
@@ -236,6 +274,7 @@ class SWARMGUI(QtWidgets.QMainWindow):
         self.buttons=[]
         self.buttons_arm_home=[]
         self.layouts_finger_control=[]
+        self.buttons_collision_avoidance=[]
         self.labels=[]
         self.setObjectName('MyPlugin')
         self.synced_control_enabled=False
@@ -290,6 +329,7 @@ class SWARMGUI(QtWidgets.QMainWindow):
             self.base_only_open_loop_command_topics=rospy.get_param('base_only_open_loop_command_topics')
             self.arm_joint_angles_action_address=rospy.get_param('arm_joint_angles_action_address')
             self.arm_fingers_action_address=rospy.get_param('arm_fingers_action_address')
+            self.obstacle_avoidance_service_address = rospy.get_param('obstacle_avoidance_service_address')
 
             self.arm_joint_angles_home=rospy.get_param('arm_joint_angles_home')
             self.arm_fingers_max_turn=rospy.get_param('arm_fingers_max_turn')
@@ -377,6 +417,9 @@ class SWARMGUI(QtWidgets.QMainWindow):
             layout_finger_control_object = finger_control(self.arm_fingers_action_address[i],self.arm_fingers_max_turn[i],buttonwidth//self.number_of_bots,heightnew//8,self.arm_types[i])
             self.Robotlayout.addLayout(layout_finger_control_object.layout,5,i)
             self.layouts_finger_control.append(layout_finger_control_object)
+
+            button_class_object5= obstacle_avoidance_button(self.obstacle_avoidance_service_address, buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
+            self.buttons_collision_avoidance.append(button_class_object5)
 
         """
         self.robot1led=LEDIndicator()
