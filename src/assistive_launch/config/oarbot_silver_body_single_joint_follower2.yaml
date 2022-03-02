@@ -11,7 +11,7 @@ pub_rate: 110.0 # It is a must to be 100 Hz for Kinova arm (If higher kinova can
 wrench_external_topic_name: 'j2n6s300_left_driver/out/tool_wrench_filtered'
 wrench_control_topic_name: 'j2n6s300_left_driver/tool_wrench_control'
 
-enable_body_joint_following: false
+enable_body_joint_following: true
 enable_admittance: true
 
 position_err_thres: 0.005 # meter # 0.5cm
