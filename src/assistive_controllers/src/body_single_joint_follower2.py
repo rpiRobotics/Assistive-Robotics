@@ -142,9 +142,18 @@ class BodySingleJointFollower():
         self.tfBuffer = tf2_ros.Buffer()
         self.tfListener = tf2_ros.TransformListener(self.tfBuffer)
 
+        self.T_base2ee = None
+        self.T_ee2joint = None
+        self.T_base2joint = None
+        self.T_base2armbase = None
+
         self.is_ok_tf_common = False
         self.is_ok_tf_body_follower = False
         self.is_ok_tf_admittance = False
+
+        self.T_ee2joint_desired = None
+        self.T_base2ee_desired = None
+        self.T_base2joint_desired = None
 
         # TF2 broadcaster (for showing purposes)
         self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
