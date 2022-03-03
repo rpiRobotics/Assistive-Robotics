@@ -281,7 +281,7 @@ class reset_desired_body_pose_button:
         rospy.wait_for_service(self.service_address, timeout=1.)
         try:
             # Create the connection to the service. 
-            service = rospy.ServiceProxy(self.service_address, SetBool)
+            service = rospy.ServiceProxy(self.service_address, Trigger)
             # Create an object of the type of Service Request.
             req = TriggerRequest()
             # Now send the request through the connection
@@ -566,13 +566,13 @@ class SWARMGUI(QtWidgets.QMainWindow):
             self.Robotlayout.addWidget(button_class_object5.button,6,i)
             self.buttons_collision_avoidance.append(button_class_object5)
 
-            button_class_object6= body_joint_following_button(self.body_joint_following_service_address[i], buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
-            self.Robotlayout.addWidget(button_class_object6.button,7,i)
-            self.buttons_body_joint_following.append(button_class_object6)
-
             button_class_object7= reset_desired_body_pose_button(self.reset_desired_body_pose_service_address[i], buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
-            self.Robotlayout.addWidget(button_class_object7.button,8,i)
+            self.Robotlayout.addWidget(button_class_object7.button,7,i)
             self.buttons_reset_desired_body_pose.append(button_class_object7)
+
+            button_class_object6= body_joint_following_button(self.body_joint_following_service_address[i], buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
+            self.Robotlayout.addWidget(button_class_object6.button,8,i)
+            self.buttons_body_joint_following.append(button_class_object6)
 
             button_class_object8= admittance_button(self.admittance_service_address[i], buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
             self.Robotlayout.addWidget(button_class_object8.button,9,i)
