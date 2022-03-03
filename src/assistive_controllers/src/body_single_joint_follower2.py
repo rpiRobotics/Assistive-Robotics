@@ -38,10 +38,12 @@ import tf_conversions
 #  tf_conversions.transformations.euler_from_quaternion(Q_eg)
 import tf.transformations 
 
+import threading
 
 
 class BodySingleJointFollower():
     def __init__(self):
+        self.service_lock = threading.Lock()
         rospy.init_node('body_single_joint_follower', anonymous=True)
         self.is_following_started = False
 
@@ -57,9 +59,9 @@ class BodySingleJointFollower():
 
         # Publisher
         if self.robot_cartesian_cmd_vel_msg_type == "geometry_msgs.msg.Twist":
-            self.pub_pose_vel_cmd = rospy.Publisher(self.robot_cartesian_cmd_vel_topic_name, geometry_msgs.msg.Twist, queue_size=2)
+            self.pub_pose_vel_cmd = rospy.Publisher(self.robot_cartesian_cmd_vel_topic_name, geometry_msgs.msg.Twist, queue_size=1)
         elif self.robot_cartesian_cmd_vel_msg_type == "kinova_msgs.msg.PoseVelocity":
-            self.pub_pose_vel_cmd = rospy.Publisher(self.robot_cartesian_cmd_vel_topic_name, kinova_msgs.msg.PoseVelocity, queue_size=2)
+            self.pub_pose_vel_cmd = rospy.Publisher(self.robot_cartesian_cmd_vel_topic_name, kinova_msgs.msg.PoseVelocity, queue_size=1)
 
 
         # Topic name to subscribe
@@ -242,55 +244,56 @@ class BodySingleJointFollower():
 
 
     def followJoint(self, event=None):
-        # Find the transform between the specified joint and the end effector
-        self.is_ok_tf_common = self.look_tfs_for_common()
-        self.is_ok_tf_body_follower = self.look_tfs_for_common()
-        self.is_ok_tf_admittance = self.look_tfs_for_admittance()
+        with self.service_lock:
+            # Find the transform between the specified joint and the end effector
+            self.is_ok_tf_common = self.look_tfs_for_common()
+            self.is_ok_tf_body_follower = self.look_tfs_for_common()
+            self.is_ok_tf_admittance = self.look_tfs_for_admittance()
 
-        if not self.is_ok_tf_common:
-            # Do not command the robot since the transformation could not found
-            self.Vx = 0.0
-            self.Vy = 0.0
-            self.Vz = 0.0
-            self.Wx = 0.0
-            self.Wy = 0.0
-            self.Wz = 0.0
-            self.publishPoseVelCmd(self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz)
-            rospy.logerr("HERE I AM")
-
-        else:
-            # rospy.logwarn("here1") 
-            if self.is_ok_tf_body_follower and not self.is_following_started:
-                rospy.logerr("HERE I AM2")
-                # Save the current Pose as the desired pose btw end effector and the joint to be followed
-                self.reset_desired_pose()
-                rospy.logerr("HERE I AM3")
-            
-            if self.is_ok_tf_body_follower and self.enable_body_joint_following:
-                rospy.logerr("HERE I AM4")
-                self.is_following_started = True
-                # Calculate the error btw the desired and the current pose
-                position_error, orientation_error = self.poseErrorCalculator()
-                rospy.logerr("HERE I AM5")
-            else:
-                rospy.logerr("HERE I AM6")
-                position_error = [0.0,0.0,0.0]
-                orientation_error = [0.0,0.0,0.0]
-
-            # rospy.logwarn("position_error: " + "{:.3f}".format(position_error[0]) + ", {:.3f}".format(position_error[1]) + ", {:.3f}".format(position_error[2])  )
-            # rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
-
-            # With control law specify the command
-            rospy.logerr("HERE I AM7")
-            self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz = self.controlLaw(position_error, orientation_error)
-            # rospy.logwarn("control law result : Vx, Vy, Vz, Wx, Wy, Wz = "+ str([self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz]))
-            rospy.logerr("HERE I AM8")
-
-            if self.enable_body_joint_following or self.enable_admittance:
-                rospy.logerr("HERE I AM9")
-                # Publish the command to move the end effector to the body joint
+            if not self.is_ok_tf_common:
+                # Do not command the robot since the transformation could not found
+                self.Vx = 0.0
+                self.Vy = 0.0
+                self.Vz = 0.0
+                self.Wx = 0.0
+                self.Wy = 0.0
+                self.Wz = 0.0
                 self.publishPoseVelCmd(self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz)
-                rospy.logerr("HERE I AM10")
+                rospy.logerr("HERE I AM")
+
+            else:
+                # rospy.logwarn("here1") 
+                if self.is_ok_tf_body_follower and not self.is_following_started:
+                    rospy.logerr("HERE I AM2")
+                    # Save the current Pose as the desired pose btw end effector and the joint to be followed
+                    self.reset_desired_pose()
+                    rospy.logerr("HERE I AM3")
+                
+                if self.is_ok_tf_body_follower and self.enable_body_joint_following:
+                    rospy.logerr("HERE I AM4")
+                    self.is_following_started = True
+                    # Calculate the error btw the desired and the current pose
+                    position_error, orientation_error = self.poseErrorCalculator()
+                    rospy.logerr("HERE I AM5")
+                else:
+                    rospy.logerr("HERE I AM6")
+                    position_error = [0.0,0.0,0.0]
+                    orientation_error = [0.0,0.0,0.0]
+
+                # rospy.logwarn("position_error: " + "{:.3f}".format(position_error[0]) + ", {:.3f}".format(position_error[1]) + ", {:.3f}".format(position_error[2])  )
+                # rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
+
+                # With control law specify the command
+                rospy.logerr("HERE I AM7")
+                self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz = self.controlLaw(position_error, orientation_error)
+                # rospy.logwarn("control law result : Vx, Vy, Vz, Wx, Wy, Wz = "+ str([self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz]))
+                rospy.logerr("HERE I AM8")
+
+                if self.enable_body_joint_following or self.enable_admittance:
+                    rospy.logerr("HERE I AM9")
+                    # Publish the command to move the end effector to the body joint
+                    self.publishPoseVelCmd(self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz)
+                    rospy.logerr("HERE I AM10")
 
     def look_tfs_for_common(self):
         try:
@@ -592,34 +595,37 @@ class BodySingleJointFollower():
 
 
     def srv_toggle_body_joint_following_cb(self,req):
-        assert isinstance(req, SetBoolRequest)
+        with self.service_lock:
+            assert isinstance(req, SetBoolRequest)
 
-        if req.data:
-            self.enable_body_joint_following = True
-            rospy.logerr("Enable body following")
-        else:
-            self.enable_body_joint_following = False
-            rospy.logerr("Disable body following")
+            if req.data:
+                self.enable_body_joint_following = True
+                rospy.logerr("Enable body following")
+            else:
+                self.enable_body_joint_following = False
+                rospy.logerr("Disable body following")
 
-        return SetBoolResponse(True, "The body_joint_following is now set to: {}".format(self.enable_body_joint_following))
+            return SetBoolResponse(True, "The body_joint_following is now set to: {}".format(self.enable_body_joint_following))
 
 
     def srv_toggle_admittance_cb(self,req):
-        assert isinstance(req, SetBoolRequest)
+        with self.service_lock:
+            assert isinstance(req, SetBoolRequest)
 
-        if req.data:
-            self.enable_admittance = True
-        else:
-            self.enable_admittance = False
+            if req.data:
+                self.enable_admittance = True
+            else:
+                self.enable_admittance = False
 
-        return SetBoolResponse(True, "The admittance is now set to: {}".format(self.enable_admittance))
+            return SetBoolResponse(True, "The admittance is now set to: {}".format(self.enable_admittance))
 
     def srv_reset_desired_pose_cb(self,req):
-        assert isinstance(req, TriggerRequest)
+        with self.service_lock:
+            assert isinstance(req, TriggerRequest)
 
-        self.reset_desired_pose()
+            self.reset_desired_pose()
 
-        return TriggerResponse(success=True, message="The desired body poses are reset!")
+            return TriggerResponse(success=True, message="The desired body poses are reset!")
 
     def reset_desired_pose(self):
         # Save the current Pose as the desired pose btw end effector and the joint to be followed
