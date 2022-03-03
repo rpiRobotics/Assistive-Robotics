@@ -259,15 +259,15 @@ class BodySingleJointFollower():
                 self.Wy = 0.0
                 self.Wz = 0.0
                 self.publishPoseVelCmd(self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz)
-                rospy.logerr("HERE I AM")
+                # rospy.logerr("HERE I AM")
 
             else:
                 # rospy.logwarn("here1") 
                 if self.is_ok_tf_body_follower and not self.is_following_started:
-                    rospy.logerr("HERE I AM2")
+                    # rospy.logerr("HERE I AM2")
                     # Save the current Pose as the desired pose btw end effector and the joint to be followed
                     self.reset_desired_pose()
-                    rospy.logerr("HERE I AM3")
+                    # rospy.logerr("HERE I AM3")
                 
                 if self.is_ok_tf_body_follower and self.enable_body_joint_following:
                     rospy.logerr("HERE I AM4")
@@ -284,16 +284,16 @@ class BodySingleJointFollower():
                 # rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
 
                 # With control law specify the command
-                rospy.logerr("HERE I AM7")
+                # rospy.logerr("HERE I AM7")
                 self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz = self.controlLaw(position_error, orientation_error)
                 # rospy.logwarn("control law result : Vx, Vy, Vz, Wx, Wy, Wz = "+ str([self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz]))
-                rospy.logerr("HERE I AM8")
+                # rospy.logerr("HERE I AM8")
 
                 if self.enable_body_joint_following or self.enable_admittance:
-                    rospy.logerr("HERE I AM9")
+                    # rospy.logerr("HERE I AM9")
                     # Publish the command to move the end effector to the body joint
                     self.publishPoseVelCmd(self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz)
-                    rospy.logerr("HERE I AM10")
+                    # rospy.logerr("HERE I AM10")
 
     def look_tfs_for_common(self):
         try:
