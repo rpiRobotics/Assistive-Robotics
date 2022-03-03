@@ -258,7 +258,7 @@ class BodySingleJointFollower():
             self.publishPoseVelCmd(self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz)
 
         else:
-            rospy.logwarn("here1") 
+            # rospy.logwarn("here1") 
             if self.is_ok_tf_body_follower and not self.is_following_started:
                 # Save the current Pose as the desired pose btw end effector and the joint to be followed
                 self.reset_desired_pose()
@@ -615,7 +615,7 @@ class BodySingleJointFollower():
         self.T_ee2joint_desired = self.T_ee2joint # in ee frame
         self.T_base2ee_desired = self.T_base2ee # in base frame
         self.T_base2joint_desired = self.T_base2joint # in base frame
-        rospy.logwarn("Resetting desired body poses..")
+        # rospy.logwarn("Resetting desired body poses..")
 
 
 
