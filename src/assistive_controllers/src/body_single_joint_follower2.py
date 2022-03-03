@@ -300,7 +300,7 @@ class BodySingleJointFollower():
             return True
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
-            rospy.logwarn('TFs_common: Waiting to find the transformation from %s to %s' 
+            rospy.logerr('TFs_common: Waiting to find the transformation from %s to %s' 
                             % (self.tf_robot_base_frame_name, self.tf_end_effector_frame_name)) 
             return False
 
@@ -314,7 +314,7 @@ class BodySingleJointFollower():
             return True
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
-            rospy.logwarn('TFs_body_follower: Waiting to find the transformations') 
+            rospy.logerr('TFs_body_follower: Waiting to find the transformations') 
             return False
 
 
@@ -326,7 +326,7 @@ class BodySingleJointFollower():
             return True
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
-            rospy.logwarn('TFs_admittance: Waiting to find the transformations') 
+            rospy.logerr('TFs_admittance: Waiting to find the transformations') 
             return False
 
 
@@ -596,8 +596,10 @@ class BodySingleJointFollower():
 
         if req.data:
             self.enable_body_joint_following = True
+            rospy.logerr("Enable body following")
         else:
             self.enable_body_joint_following = False
+            rospy.logerr("Disable body following")
 
         return SetBoolResponse(True, "The body_joint_following is now set to: {}".format(self.enable_body_joint_following))
 
