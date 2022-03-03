@@ -178,14 +178,15 @@ class BodySingleJointFollower():
     def followJoint(self, event=None):
         # Find the transform between the specified joint and the end effector
         try:
+            rospy.logwarn("here1") 
             # returns type geometry_msgs.msg.TransformStamped
             self.T_base2ee = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, self.tf_end_effector_frame_name,  rospy.Time()) # in base frame 
 
-            if self.enable_body_joint_following:
-                self.T_ee2joint = self.tfBuffer.lookup_transform(self.tf_end_effector_frame_name, self.tf_body_joint_frame_name, rospy.Time()) # in ee frame     
-                self.T_base2joint = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, self.tf_body_joint_frame_name,  rospy.Time()) # in base frame 
-            if self.enable_admittance:
-                self.T_base2armbase = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, self.tf_arm_base_frame_name,  rospy.Time()) # in base frame 
+            # if self.enable_body_joint_following:
+            self.T_ee2joint = self.tfBuffer.lookup_transform(self.tf_end_effector_frame_name, self.tf_body_joint_frame_name, rospy.Time()) # in ee frame     
+            self.T_base2joint = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, self.tf_body_joint_frame_name,  rospy.Time()) # in base frame 
+            # if self.enable_admittance:
+            self.T_base2armbase = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, self.tf_arm_base_frame_name,  rospy.Time()) # in base frame 
 
             if not self.is_following_started:
                 # Save the current Pose as the desired pose btw end effector and the joint to be followed
@@ -199,12 +200,12 @@ class BodySingleJointFollower():
                 position_error = [0.0,0.0,0.0]
                 orientation_error = [0.0,0.0,0.0]
 
-            # rospy.logwarn("position_error: " + "{:.3f}".format(position_error[0]) + ", {:.3f}".format(position_error[1]) + ", {:.3f}".format(position_error[2])  )
-            # rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
+            rospy.logwarn("position_error: " + "{:.3f}".format(position_error[0]) + ", {:.3f}".format(position_error[1]) + ", {:.3f}".format(position_error[2])  )
+            rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
 
             # With control law specify the command
             self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz = self.controlLaw(position_error, orientation_error)
-            # rospy.logwarn("control law result : Vx, Vy, Vz, Wx, Wy, Wz = "+ str([Vx, Vy, Vz, Wx, Wy, Wz]))
+            rospy.logwarn("control law result : Vx, Vy, Vz, Wx, Wy, Wz = "+ str([Vx, Vy, Vz, Wx, Wy, Wz]))
 
             if self.enable_body_joint_following or self.enable_admittance:
                 # Publish the command to move the end effector to the body joint
