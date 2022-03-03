@@ -628,12 +628,12 @@ class BodySingleJointFollower():
             return TriggerResponse(success=True, message="The desired body poses are reset!")
 
     def reset_desired_pose(self):
-        with self.service_lock:
-            # Save the current Pose as the desired pose btw end effector and the joint to be followed
-            self.T_ee2joint_desired = self.T_ee2joint # in ee frame
-            self.T_base2ee_desired = self.T_base2ee # in base frame
-            self.T_base2joint_desired = self.T_base2joint # in base frame
-            # rospy.logwarn("Resetting desired body poses..")
+        # with self.service_lock:
+        # Save the current Pose as the desired pose btw end effector and the joint to be followed
+        self.T_ee2joint_desired = self.T_ee2joint # in ee frame
+        self.T_base2ee_desired = self.T_base2ee # in base frame
+        self.T_base2joint_desired = self.T_base2joint # in base frame
+        # rospy.logwarn("Resetting desired body poses..")
 
 
 
