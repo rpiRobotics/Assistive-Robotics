@@ -37,6 +37,18 @@ obstacle_avoidance_service_address:
   - '/oarbot_silver/toggle_collision_avoidance'
   - '/oarbot_blue/toggle_collision_avoidance'
 
+body_joint_following_service_address:
+  - '/oarbot_silver/toggle_body_joint_following'
+  - '/oarbot_blue/toggle_body_joint_following'
+
+admittance_service_address:
+  - '/oarbot_silver/toggle_admittance'
+  - '/oarbot_blue/toggle_admittance'
+
+reset_desired_body_pose_service_address: 
+  - "/oarbot_silver/reset_desired_body_pose"
+  - "/oarbot_blue/reset_desired_body_pose"
+
 arm_fingers_max_turn: 
   - 6800 # or 7300 # This value is mapped btw 0-100%
   - 6800 # or 7300 # This value is mapped btw 0-100%

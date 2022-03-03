@@ -24,6 +24,7 @@ import rosnode
 
 from std_msgs.msg import Bool, Int32
 from std_srvs.srv import SetBool, SetBoolRequest, SetBoolResponse
+from std_srvs.srv import Trigger, TriggerRequest, TriggerResponse
 
 from geometry_msgs.msg import Pose2D, Twist, PoseStamped
 from led_indicator import LEDIndicator
@@ -167,6 +168,126 @@ class obstacle_avoidance_button:
         except rospy.ServiceException:
             rospy.logerr("Service call failed")
             self.disabled = not(self.disabled)
+
+class admittance_button:
+    def __init__(self, service_address, sizex,sizey,text):
+        self.text=text +"\nEnable Admittance Control"
+
+        self.button=QPushButton()
+        self.button.setFixedSize(sizex,sizey)
+        self.button.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
+        self.button.setFont(QFont('Ubuntu',13))
+        self.button.setText(self.text)
+        self.enabled = False
+        self.button.pressed.connect(self.button_pressed)
+        
+        self.service_address = service_address
+        
+    def button_pressed(self):
+        rospy.logerr("Assistive GUI: Admittance Control Button pressed")
+
+        self.enabled = not(self.enabled)
+
+        # wait for this sevice to be running
+        rospy.wait_for_service(self.service_address, timeout=1.)
+        try:
+            # Create the connection to the service. 
+            service = rospy.ServiceProxy(self.service_address, SetBool)
+            # Create an object of the type of Service Request.
+            req = SetBoolRequest()
+
+            if self.enabled:
+                req.data = True
+            else:
+                req.data = False
+            # Now send the request through the connection
+            result = service(req)
+        
+            if result:
+                if(self.enabled):
+                    self.button.setStyleSheet('QPushButton {background-color: orange; color: white;}')
+                else:
+                    self.button.setStyleSheet('QPushButton {background-color: white; color: black;}')
+            else:
+                self.enabled = not(self.enabled)
+            
+        except rospy.ServiceException:
+            rospy.logerr("Service call failed")
+            self.enabled = not(self.enabled)
+
+class body_joint_following_button:
+    def __init__(self, service_address, sizex,sizey,text):
+        self.text=text +"\nEnable Body Joint Following"
+
+        self.button=QPushButton()
+        self.button.setFixedSize(sizex,sizey)
+        self.button.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
+        self.button.setFont(QFont('Ubuntu',13))
+        self.button.setText(self.text)
+        self.enabled = False
+        self.button.pressed.connect(self.button_pressed)
+        
+        self.service_address = service_address
+        
+    def button_pressed(self):
+        rospy.logerr("Assistive GUI: Body Joint Following Button pressed")
+
+        self.enabled = not(self.enabled)
+
+        # wait for this sevice to be running
+        rospy.wait_for_service(self.service_address, timeout=1.)
+        try:
+            # Create the connection to the service. 
+            service = rospy.ServiceProxy(self.service_address, SetBool)
+            # Create an object of the type of Service Request.
+            req = SetBoolRequest()
+
+            if self.enabled:
+                req.data = True
+            else:
+                req.data = False
+            # Now send the request through the connection
+            result = service(req)
+        
+            if result:
+                if(self.enabled):
+                    self.button.setStyleSheet('QPushButton {background-color: orange; color: white;}')
+                else:
+                    self.button.setStyleSheet('QPushButton {background-color: white; color: black;}')
+            else:
+                self.enabled = not(self.enabled)
+            
+        except rospy.ServiceException:
+            rospy.logerr("Service call failed")
+            self.enabled = not(self.enabled)
+
+class reset_desired_body_pose_button:
+    def __init__(self, service_address, sizex,sizey,text):
+        self.text=text +"\nReset Desired Body Pose"
+
+        self.button=QPushButton()
+        self.button.setFixedSize(sizex,sizey)
+        self.button.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
+        self.button.setFont(QFont('Ubuntu',13))
+        self.button.setText(self.text)
+        self.button.pressed.connect(self.button_clicked)
+        
+        self.service_address = service_address
+        
+    def button_clicked(self):
+        rospy.logerr("Assistive GUI: Reset Desired Body Pose Button pressed")
+
+        # wait for this sevice to be running
+        rospy.wait_for_service(self.service_address, timeout=1.)
+        try:
+            # Create the connection to the service. 
+            service = rospy.ServiceProxy(self.service_address, SetBool)
+            # Create an object of the type of Service Request.
+            req = TriggerRequest()
+            # Now send the request through the connection
+            result = service(req)            
+        except rospy.ServiceException:
+            rospy.logerr("Service call failed")
         
 
 class finger_control:
@@ -289,7 +410,12 @@ class SWARMGUI(QtWidgets.QMainWindow):
         self.buttons=[]
         self.buttons_arm_home=[]
         self.layouts_finger_control=[]
+        
         self.buttons_collision_avoidance=[]
+        self.buttons_admittance=[]
+        self.buttons_body_joint_following=[]
+        self.buttons_reset_desired_body_pose=[]
+
         self.labels=[]
         self.setObjectName('MyPlugin')
         self.synced_control_enabled=False
@@ -345,6 +471,9 @@ class SWARMGUI(QtWidgets.QMainWindow):
             self.arm_joint_angles_action_address=rospy.get_param('arm_joint_angles_action_address')
             self.arm_fingers_action_address=rospy.get_param('arm_fingers_action_address')
             self.obstacle_avoidance_service_address = rospy.get_param('obstacle_avoidance_service_address')
+            self.admittance_service_address = rospy.get_param('admittance_service_address')
+            self.body_joint_following_service_address = rospy.get_param('body_joint_following_service_address')
+            self.reset_desired_body_pose_service_address = rospy.get_param('reset_desired_body_pose_service_address')
 
             self.arm_joint_angles_home=rospy.get_param('arm_joint_angles_home')
             self.arm_fingers_max_turn=rospy.get_param('arm_fingers_max_turn')
@@ -381,7 +510,7 @@ class SWARMGUI(QtWidgets.QMainWindow):
             led=LEDIndicator(i)
             #led.setDisabled(True)
             
-            self.Robotlayout.addWidget(led,7,i)
+            self.Robotlayout.addWidget(led,10,i)
             self.Leds.append(led)
             led.led_change(True)
     
@@ -436,6 +565,18 @@ class SWARMGUI(QtWidgets.QMainWindow):
             button_class_object5= obstacle_avoidance_button(self.obstacle_avoidance_service_address[i], buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
             self.Robotlayout.addWidget(button_class_object5.button,6,i)
             self.buttons_collision_avoidance.append(button_class_object5)
+
+            button_class_object6= body_joint_following_button(self.body_joint_following_service_address[i], buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
+            self.Robotlayout.addWidget(button_class_object6.button,7,i)
+            self.buttons_body_joint_following.append(button_class_object6)
+
+            button_class_object7= reset_desired_body_pose_button(self.reset_desired_body_pose_service_address[i], buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
+            self.Robotlayout.addWidget(button_class_object7.button,8,i)
+            self.buttons_reset_desired_body_pose.append(button_class_object7)
+
+            button_class_object8= admittance_button(self.admittance_service_address[i], buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
+            self.Robotlayout.addWidget(button_class_object8.button,9,i)
+            self.buttons_admittance.append(button_class_object8)
 
         """
         self.robot1led=LEDIndicator()

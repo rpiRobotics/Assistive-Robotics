@@ -30,6 +30,9 @@ import geometry_msgs.msg
 
 import kinova_msgs.msg
 
+from std_srvs.srv import SetBool, SetBoolRequest, SetBoolResponse
+from std_srvs.srv import Trigger, TriggerRequest, TriggerResponse
+
 # # Because of transformations
 import tf_conversions
 #  tf_conversions.transformations.euler_from_quaternion(Q_eg)
@@ -68,6 +71,17 @@ class BodySingleJointFollower():
 
         self.enable_body_joint_following = rospy.get_param("~enable_body_joint_following", True)
         self.enable_admittance = rospy.get_param("~enable_admittance", True)
+        self.toggle_body_joint_following_service_name = rospy.get_param("~toggle_body_joint_following_service_name")
+        self.toggle_admittance_service_name = rospy.get_param("~toggle_admittance_service_name")
+        # Service to toggle the body joint following (enable/disable)
+        self.srv_toggle_body_joint_following = rospy.Service(self.toggle_body_joint_following_service_name, SetBool, self.srv_toggle_body_joint_following_cb)
+        # Service to toggle the admittance control (enable/disable)
+        self.srv_toggle_admittance = rospy.Service(self.toggle_admittance_service_name, SetBool, self.srv_toggle_admittance_cb)
+
+
+        self.reset_desired_body_pose_service_name = rospy.get_param("~reset_desired_body_pose_service_name")
+        # Service to reset the desired body poses
+        self.srv_reset_desired_pose = rospy.Service(self.reset_desired_body_pose_service_name, Trigger, self.srv_reset_desired_pose_cb)
 
         # Control Law Parameters and Gains
         # Error deadzone 
@@ -173,36 +187,28 @@ class BodySingleJointFollower():
             if self.enable_admittance:
                 self.T_base2armbase = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, self.tf_arm_base_frame_name,  rospy.Time()) # in base frame 
 
-            if self.is_following_started:
-                if self.enable_body_joint_following:
-                    # Calculate the error btw the desired and the current pose
-                    position_error, orientation_error = self.poseErrorCalculator()
-                else:
-                    position_error = [0.0,0.0,0.0]
-                    orientation_error = [0.0,0.0,0.0]
+            if not self.is_following_started:
+                # Save the current Pose as the desired pose btw end effector and the joint to be followed
+                self.reset_desired_pose()
+            
+            if self.enable_body_joint_following:
+                self.is_following_started = True
+                # Calculate the error btw the desired and the current pose
+                position_error, orientation_error = self.poseErrorCalculator()
+            else:
+                position_error = [0.0,0.0,0.0]
+                orientation_error = [0.0,0.0,0.0]
 
-                # rospy.logwarn("position_error: " + "{:.3f}".format(position_error[0]) + ", {:.3f}".format(position_error[1]) + ", {:.3f}".format(position_error[2])  )
-                # rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
+            # rospy.logwarn("position_error: " + "{:.3f}".format(position_error[0]) + ", {:.3f}".format(position_error[1]) + ", {:.3f}".format(position_error[2])  )
+            # rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
 
-                # With control law specify the command
-                self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz = self.controlLaw(position_error, orientation_error)
-                # rospy.logwarn("control law result : Vx, Vy, Vz, Wx, Wy, Wz = "+ str([Vx, Vy, Vz, Wx, Wy, Wz]))
+            # With control law specify the command
+            self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz = self.controlLaw(position_error, orientation_error)
+            # rospy.logwarn("control law result : Vx, Vy, Vz, Wx, Wy, Wz = "+ str([Vx, Vy, Vz, Wx, Wy, Wz]))
 
+            if self.enable_body_joint_following or self.enable_admittance:
                 # Publish the command to move the end effector to the body joint
                 self.publishPoseVelCmd(self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz)
-
-            else:
-                # Wait for user input to start the following 
-                # For now wait 15 seconds and then start following
-                if (rospy.Time.now().to_sec() - self.initial_time) >= 5.0:
-                    self.is_following_started = True
-                    rospy.logwarn_once("FOLLOWING SHOULD START NOW")
-
-                if self.enable_body_joint_following:
-                    # Save the current Pose as the desired pose btw end effector and the joint to be followed
-                    self.T_ee2joint_desired = self.T_ee2joint # in ee frame
-                    self.T_base2ee_desired = self.T_base2ee # in base frame
-                    self.T_base2joint_desired = self.T_base2joint # in base frame
         
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
@@ -472,6 +478,44 @@ class BodySingleJointFollower():
         self.F_ang_x_control = wrench_stamped_msg.wrench.torque.x
         self.F_ang_y_control = wrench_stamped_msg.wrench.torque.y
         self.F_ang_z_control = wrench_stamped_msg.wrench.torque.z
+
+
+    def srv_toggle_body_joint_following_cb(self,req):
+        assert isinstance(req, SetBoolRequest)
+
+        if req.data:
+            self.enable_body_joint_following = True
+        else:
+            self.enable_body_joint_following = False
+
+        return SetBoolResponse(True, "The body_joint_following is now set to: {}".format(self.enable_body_joint_following))
+
+
+    def srv_toggle_admittance_cb(self,req):
+        assert isinstance(req, SetBoolRequest)
+
+        if req.data:
+            self.enable_admittance = True
+        else:
+            self.enable_admittance = False
+
+        return SetBoolResponse(True, "The admittance is now set to: {}".format(self.enable_admittance))
+
+    def srv_reset_desired_pose_cb(self,req):
+        assert isinstance(req, TriggerRequest)
+
+        self.reset_desired_pose()
+
+        return TriggerResponse(success=True, message="The desired body poses are reset!")
+
+    def reset_desired_pose(self):
+        # Save the current Pose as the desired pose btw end effector and the joint to be followed
+        self.T_ee2joint_desired = self.T_ee2joint # in ee frame
+        self.T_base2ee_desired = self.T_base2ee # in base frame
+        self.T_base2joint_desired = self.T_base2joint # in base frame
+        rospy.logwarn("Resetting desired body poses..")
+
+
 
 
 if __name__ == '__main__':
