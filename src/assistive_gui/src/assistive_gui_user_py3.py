@@ -166,6 +166,7 @@ class obstacle_avoidance_button:
             
         except rospy.ServiceException:
             rospy.logerr("Service call failed")
+            self.disabled = not(self.disabled)
         
 
 class finger_control:
@@ -432,7 +433,7 @@ class SWARMGUI(QtWidgets.QMainWindow):
             self.Robotlayout.addLayout(layout_finger_control_object.layout,5,i)
             self.layouts_finger_control.append(layout_finger_control_object)
 
-            button_class_object5= obstacle_avoidance_button(self.obstacle_avoidance_service_address, buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
+            button_class_object5= obstacle_avoidance_button(self.obstacle_avoidance_service_address[i], buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
             self.Robotlayout.addWidget(button_class_object5.button,6,i)
             self.buttons_collision_avoidance.append(button_class_object5)
 
