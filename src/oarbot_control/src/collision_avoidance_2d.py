@@ -21,6 +21,8 @@ import tf2_ros
 
 import geometry_msgs.msg # for Twist and other visualization msgs
 
+from std_srvs.srv import SetBool, SetBoolRequest, SetBoolResponse
+
 import shapely
 import shapely.geometry
 from shapely.ops import nearest_points
@@ -112,6 +114,10 @@ class CollisionAvoidance2D():
         self.obs_dist_hard_thres_polygon = None
         
         self.enable_collision_avoidance = rospy.get_param("~enable_collision_avoidance", True) 
+        self.toggle_collision_avoidance_service_name = rospy.get_param("~toggle_collision_avoidance_service_name") 
+
+        # Service to toggle the collision avoidance (enable/disable)
+        self.srv_toggle_collision_avoidance = rospy.Service(self.toggle_collision_avoidance_service_name, SetBool, self.srv_toggle_collision_avoidance_cb)
 
         # Publish rate debuggers/visualizers
         self.viz_out_rate = rospy.get_param("~viz_out_rate", 100.0) 
@@ -593,6 +599,17 @@ class CollisionAvoidance2D():
         vel_msg.angular.y = self.Wy_modified
         vel_msg.angular.z = self.Wz_modified
         self.pub_cmd_vel.publish(vel_msg)
+
+    def srv_toggle_collision_avoidance_cb(self,req):
+        assert isinstance(req, SetBoolRequest)
+
+        if req.data:
+            self.enable_collision_avoidance = True
+        else:
+            self.enable_collision_avoidance = False
+
+        return SetBoolResponse(True, "The collision_avoidance is now set to: {}".format(self.enable_collision_avoidance))
+
 
 
     # UTIL functions below:

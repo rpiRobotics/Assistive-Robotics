@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 import os
-import rospy
-import rospkg
+import sys
 import collections
 import time
-import sys
 import subprocess
-import numpy as np
+import threading
+import signal
+
 from qt_gui.plugin import Plugin
 #from python_qt_binding import loadUi
 from python_qt_binding.QtWidgets import QWidget, QDialog
@@ -15,13 +15,19 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5 import QtWidgets, uic
+
+import numpy as np
+
+import rospy
+import rospkg
+import rosnode
+
 from std_msgs.msg import Bool, Int32
-import threading
+from std_srvs.srv import SetBool, SetBoolRequest, SetBoolResponse
+
 from geometry_msgs.msg import Pose2D, Twist, PoseStamped
 from led_indicator import LEDIndicator
-import rosnode
-import signal
-import std_msgs.msg
+
 from assistive_msgs.msg import FrameTwist
 
 import actionlib
@@ -128,30 +134,38 @@ class obstacle_avoidance_button:
         self.disabled = False
         self.button.pressed.connect(self.button_pressed)
         
-
         self.service_address = service_address
         
     def button_pressed(self):
         rospy.logerr("Assistive GUI: Obstacle Avoidance Button pressed")
+
         self.disabled = not(self.disabled)
-        if(self.disabled):
-            try:
-                # TODO: Send command to disable the collision avoidance
-                # self.client = actionlib.SimpleActionClient(self.action_address, kinova_msgs.msg.ArmJointAnglesAction)
 
-                self.button.setStyleSheet('QPushButton {background-color: orange; color: white;}')
-            except:
-                rospy.logerr("Assistive GUI: Somethingh went wrong with obstacle avoidance button")
+        # wait for this sevice to be running
+        rospy.wait_for_service(self.service_address, timeout=1.)
+        try:
+            # Create the connection to the service. 
+            service = rospy.ServiceProxy(self.service_address, SetBool)
+            # Create an object of the type of Service Request.
+            req = SetBoolRequest()
 
-        else:
-            try:
-                # TODO: Send command to enable the collision avoidance
-                # self.client = actionlib.SimpleActionClient(self.action_address, kinova_msgs.msg.ArmJointAnglesAction)
-
-                self.button.setStyleSheet('QPushButton {background-color: white; color: black;}')
-            except:
-                rospy.logerr("Assistive GUI: Somethingh went wrong with obstacle avoidance button")
-
+            if self.disabled:
+                req.data = False
+            else:
+                req.data = True
+            # Now send the request through the connection
+            result = service(req)
+        
+            if result:
+                if(self.disabled):
+                    self.button.setStyleSheet('QPushButton {background-color: orange; color: white;}')
+                else:
+                    self.button.setStyleSheet('QPushButton {background-color: white; color: black;}')
+            else:
+                self.disabled = not(self.disabled)
+            
+        except rospy.ServiceException:
+            rospy.logerr("Service call failed")
         
 
 class finger_control:

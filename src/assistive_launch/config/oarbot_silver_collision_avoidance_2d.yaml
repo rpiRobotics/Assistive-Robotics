@@ -1,4 +1,5 @@
 enable_collision_avoidance: true
+toggle_collision_avoidance_service_name: "toggle_collision_avoidance"
 
 number_of_robots: 2
 
