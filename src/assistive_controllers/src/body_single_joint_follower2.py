@@ -270,11 +270,14 @@ class BodySingleJointFollower():
                     # rospy.logerr("HERE I AM3")
                 
                 if self.is_ok_tf_body_follower and self.enable_body_joint_following:
-                    rospy.logerr("HERE I AM4")
-                    # Calculate the error btw the desired and the current pose
-                    position_error, orientation_error = self.poseErrorCalculator()
-                    rospy.logerr("HERE I AM5")
-                    self.is_following_started = True
+                    
+                    if not self.is_following_started:
+                        self.is_following_started = True
+                        rospy.logerr("HERE I AM4")
+                    else:
+                        # Calculate the error btw the desired and the current pose
+                        position_error, orientation_error = self.poseErrorCalculator()
+                        rospy.logerr("HERE I AM5")
                 else:
                     rospy.logerr("HERE I AM6")
                     position_error = [0.0,0.0,0.0]
