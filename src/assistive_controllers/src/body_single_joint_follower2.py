@@ -256,6 +256,7 @@ class BodySingleJointFollower():
             self.Wy = 0.0
             self.Wz = 0.0
             self.publishPoseVelCmd(self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz)
+            rospy.logerr("HERE I AM")
 
         else:
             # rospy.logwarn("here1") 
