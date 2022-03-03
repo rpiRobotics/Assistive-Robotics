@@ -271,10 +271,10 @@ class BodySingleJointFollower():
                 
                 if self.is_ok_tf_body_follower and self.enable_body_joint_following:
                     rospy.logerr("HERE I AM4")
-                    self.is_following_started = True
                     # Calculate the error btw the desired and the current pose
                     position_error, orientation_error = self.poseErrorCalculator()
                     rospy.logerr("HERE I AM5")
+                    self.is_following_started = True
                 else:
                     rospy.logerr("HERE I AM6")
                     position_error = [0.0,0.0,0.0]
@@ -628,11 +628,12 @@ class BodySingleJointFollower():
             return TriggerResponse(success=True, message="The desired body poses are reset!")
 
     def reset_desired_pose(self):
-        # Save the current Pose as the desired pose btw end effector and the joint to be followed
-        self.T_ee2joint_desired = self.T_ee2joint # in ee frame
-        self.T_base2ee_desired = self.T_base2ee # in base frame
-        self.T_base2joint_desired = self.T_base2joint # in base frame
-        # rospy.logwarn("Resetting desired body poses..")
+        with self.service_lock:
+            # Save the current Pose as the desired pose btw end effector and the joint to be followed
+            self.T_ee2joint_desired = self.T_ee2joint # in ee frame
+            self.T_base2ee_desired = self.T_base2ee # in base frame
+            self.T_base2joint_desired = self.T_base2joint # in base frame
+            # rospy.logwarn("Resetting desired body poses..")
 
 
 
