@@ -602,6 +602,7 @@ class BodySingleJointFollower():
 
             if req.data:
                 self.enable_body_joint_following = True
+                self.is_following_started = True
                 rospy.loginfo("Enable body following")
             else:
                 self.enable_body_joint_following = False
@@ -616,7 +617,6 @@ class BodySingleJointFollower():
 
             if req.data:
                 self.enable_admittance = True
-                self.is_following_started = True
                 rospy.loginfo("Enable admittance control")
             else:
                 self.enable_admittance = False
