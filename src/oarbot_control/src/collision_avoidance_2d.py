@@ -122,6 +122,11 @@ class CollisionAvoidance2D():
         # Publish rate debuggers/visualizers
         self.viz_out_rate = rospy.get_param("~viz_out_rate", 100.0) 
 
+        # Set a timeout to wait for incoming msgs. If there is no incoming cmd msg more than this timeout
+        # the node will publish 0 velocities for safety.
+        self.cmd_wait_timeout = 3.0 * (1.00/self.viz_out_rate)
+        self.time_last_cmd_vel = 0.0
+
         # Start publishing
         rospy.Timer(rospy.Duration(1.00/self.viz_out_rate), self.run)
 
@@ -155,6 +160,17 @@ class CollisionAvoidance2D():
             self.Wz_modified = self.Wz
 
             self.publishVelCmd()
+
+        # Check for timeout for incoming msgs
+        if (rospy.Time.now().to_sec() - self.time_last_cmd_vel > self.cmd_wait_timeout):
+            # If the timeouts, reset the incoming vel cmd msg values to zero.
+            self.Vx = 0.0
+            self.Vy = 0.0
+            self.Vz = 0.0
+            self.Wx = 0.0
+            self.Wy = 0.0
+            self.Wz = 0.0
+
 
     
     def get_TFs(self):
@@ -280,6 +296,7 @@ class CollisionAvoidance2D():
         self.obs_dist_hard_thres_polygon = r
 
     def cmd_vel_callback(self,msg):
+        self.time_last_cmd_vel = rospy.Time.now().to_sec()
         self.Vx = msg.linear.x
         self.Vy = msg.linear.y
         self.Vz = msg.linear.z
