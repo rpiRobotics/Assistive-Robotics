@@ -287,9 +287,9 @@ class BodySingleJointFollower():
 
                 # With control law specify the command
                 rospy.logerr("HERE I AM7")
-                self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz = self.controlLaw(position_error, orientation_error)
+                # self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz = self.controlLaw(position_error, orientation_error)
                 # rospy.logwarn("control law result : Vx, Vy, Vz, Wx, Wy, Wz = "+ str([self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz]))
-                rospy.logerr("HERE I AM8")
+                # rospy.logerr("HERE I AM8")
 
                 if self.enable_body_joint_following or self.enable_admittance:
                     # rospy.logerr("HERE I AM9")
