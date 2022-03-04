@@ -18,8 +18,8 @@ toggle_admittance_service_name: "toggle_admittance"
 
 reset_desired_body_pose_service_name: "reset_desired_body_pose"
 
-position_err_thres: 0.005 # meter # 0.5cm
-orientation_err_thres: 0.015 # radian # 5 degrees = 0.09 radians 
+position_err_thres: 0.001 # 0.005 # meter # 0.5cm
+orientation_err_thres: 0.0075 # 0.015 # radian # 5 degrees = 0.09 radians 
 
 K_lin_x: 10.0 # K_lin_x: 0.0 # K_lin_x: 3.0
 K_lin_y: 10.0 # K_lin_y: 0.0 # K_lin_y: 3.0
@@ -57,8 +57,8 @@ F_ang_x_control: 0.0
 F_ang_y_control: 0.0
 F_ang_z_control: 0.0
 
-max_lin_acc: 1.5 # 0.6 # 1.5 # m/s^2
+max_lin_acc: 5.0 # 1.5 # 0.6 # 1.5 # m/s^2
 max_lin_vel: 0.5 # m/s 
 
-max_ang_acc: 1.5 # 0.8 # 1.5 # rad/s^2
+max_ang_acc: 5.0 # 1.5 # 0.8 # 1.5 # rad/s^2
 max_ang_vel: 1.5 # Rad/s 
