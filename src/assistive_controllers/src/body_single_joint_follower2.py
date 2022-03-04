@@ -43,7 +43,7 @@ import threading
 
 class BodySingleJointFollower():
     def __init__(self):
-        self.service_lock = threading.Lock()
+        # self.service_lock = threading.Lock()
         rospy.init_node('body_single_joint_follower', anonymous=True)
         self.is_following_started = False
 
@@ -270,10 +270,7 @@ class BodySingleJointFollower():
                     # rospy.logerr("HERE I AM3")
                 
                 if self.is_ok_tf_body_follower and self.enable_body_joint_following:
-                    if not self.is_following_started:
-                        # self.is_following_started = True
-                        rospy.logerr("HERE I AM4")
-                    else:
+                    if self.is_following_started:
                         # Calculate the error btw the desired and the current pose
                         position_error, orientation_error = self.poseErrorCalculator()
                         rospy.logerr("HERE I AM5")
@@ -289,7 +286,7 @@ class BodySingleJointFollower():
                 # rospy.logerr("HERE I AM7")
                 self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz = self.controlLaw(position_error, orientation_error)
                 # rospy.logwarn("control law result : Vx, Vy, Vz, Wx, Wy, Wz = "+ str([self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz]))
-                rospy.logerr("HERE I AM8")
+                # rospy.logerr("HERE I AM8")
 
                 if self.enable_body_joint_following or self.enable_admittance:
                     # rospy.logerr("HERE I AM9")
