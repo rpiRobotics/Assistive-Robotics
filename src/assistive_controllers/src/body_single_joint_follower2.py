@@ -43,7 +43,7 @@ import threading
 
 class BodySingleJointFollower():
     def __init__(self):
-        # self.service_lock = threading.Lock()
+        self.service_lock = threading.Lock()
         rospy.init_node('body_single_joint_follower', anonymous=True)
         self.is_following_started = False
 
@@ -271,7 +271,7 @@ class BodySingleJointFollower():
                 
                 if self.is_ok_tf_body_follower and self.enable_body_joint_following:
                     if not self.is_following_started:
-                        self.is_following_started = True
+                        # self.is_following_started = True
                         rospy.logerr("HERE I AM4")
                     else:
                         # Calculate the error btw the desired and the current pose
@@ -616,6 +616,7 @@ class BodySingleJointFollower():
 
             if req.data:
                 self.enable_admittance = True
+                self.is_following_started = True
                 rospy.loginfo("Enable admittance control")
             else:
                 self.enable_admittance = False
