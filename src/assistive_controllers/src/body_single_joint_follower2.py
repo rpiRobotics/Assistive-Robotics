@@ -275,7 +275,7 @@ class BodySingleJointFollower():
                         rospy.logerr("HERE I AM4")
                     else:
                         # Calculate the error btw the desired and the current pose
-                        position_error, orientation_error = self.poseErrorCalculator()
+                        # position_error, orientation_error = self.poseErrorCalculator()
                         rospy.logerr("HERE I AM5")
                 else:
                     # rospy.logerr("HERE I AM6")
