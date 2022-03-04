@@ -278,7 +278,7 @@ class BodySingleJointFollower():
                         position_error, orientation_error = self.poseErrorCalculator()
                         rospy.logerr("HERE I AM5")
                 else:
-                    rospy.logerr("HERE I AM6")
+                    # rospy.logerr("HERE I AM6")
                     position_error = [0.0,0.0,0.0]
                     orientation_error = [0.0,0.0,0.0]
 
