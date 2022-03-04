@@ -39,7 +39,7 @@ class CollisionAvoidance2D():
         # Published topic names 
         self.out_cmd_vel_topic_name = rospy.get_param("~out_cmd_vel_topic_name")
         # Publishers
-        self.pub_cmd_vel = rospy.Publisher(self.out_cmd_vel_topic_name, geometry_msgs.msg.Twist, queue_size=2)
+        self.pub_cmd_vel = rospy.Publisher(self.out_cmd_vel_topic_name, geometry_msgs.msg.Twist, queue_size=1)
 
         # To store the velocities
         self.Vx = 0.0

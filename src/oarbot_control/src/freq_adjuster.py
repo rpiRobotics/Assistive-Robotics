@@ -47,9 +47,9 @@ class FreqAdjuster():
 
         # Publishers
         if self.out_cmd_vel_topic_type == "geometry_msgs.msg.Twist":
-            self.pub_cmd_vel = rospy.Publisher(self.out_cmd_vel_topic_name, geometry_msgs.msg.Twist, queue_size=2)
+            self.pub_cmd_vel = rospy.Publisher(self.out_cmd_vel_topic_name, geometry_msgs.msg.Twist, queue_size=1)
         elif self.out_cmd_vel_topic_type == "kinova_msgs.msg.PoseVelocity":
-            self.pub_cmd_vel = rospy.Publisher(self.out_cmd_vel_topic_name, kinova_msgs.msg.PoseVelocity, queue_size=2)
+            self.pub_cmd_vel = rospy.Publisher(self.out_cmd_vel_topic_name, kinova_msgs.msg.PoseVelocity, queue_size=1)
 
         # Subscribed topic names
         self.in_cmd_vel_topic_name = rospy.get_param("~in_cmd_vel_topic_name", "/cmd_vel")
@@ -58,9 +58,9 @@ class FreqAdjuster():
         
         # Subscribers
         if self.in_cmd_vel_topic_type == "geometry_msgs.msg.Twist":
-            self.sub_cmd_vel = rospy.Subscriber(self.in_cmd_vel_topic_name, geometry_msgs.msg.Twist, self.geometry_msgs_Twist_callback, queue_size=None)
+            self.sub_cmd_vel = rospy.Subscriber(self.in_cmd_vel_topic_name, geometry_msgs.msg.Twist, self.geometry_msgs_Twist_callback, queue_size=1)
         elif self.in_cmd_vel_topic_type == "kinova_msgs.msg.PoseVelocity":
-            self.sub_cmd_vel = rospy.Subscriber(self.in_cmd_vel_topic_name, kinova_msgs.msg.PoseVelocity, self.kinova_msgs_PoseVelocity_callback, queue_size=None)
+            self.sub_cmd_vel = rospy.Subscriber(self.in_cmd_vel_topic_name, kinova_msgs.msg.PoseVelocity, self.kinova_msgs_PoseVelocity_callback, queue_size=1)
 
         self.Vx = None
         self.Vy = None

@@ -34,7 +34,7 @@ class OarbotControl_FwdKin():
         self.tf_mobile_base_frame_id = rospy.get_param("~tf_mobile_base_frame_id", "oarbot_blue_base")
 
 
-        self.vel_pub = rospy.Publisher(self.vel_feedback_name, TwistWithCovarianceStamped, queue_size=2)
+        self.vel_pub = rospy.Publisher(self.vel_feedback_name, TwistWithCovarianceStamped, queue_size=1)
         rospy.Subscriber(self.motor_feedback_topic_name, MotorCmd, self.motor_feedback_callback, queue_size=1)
 
     def motor_feedback_callback(self, msg):
