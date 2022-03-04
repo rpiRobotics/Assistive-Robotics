@@ -79,7 +79,7 @@ class BodySingleJointFollower():
 
         self.reset_desired_body_pose_service_name = rospy.get_param("~reset_desired_body_pose_service_name")
         # Service to reset the desired body poses
-        self.srv_reset_desired_pose = rospy.Service(self.reset_desired_body_pose_service_name, Trigger, self.srv_reset_desired_pose_cb)
+        self.srv_reset_desired_body_pose = rospy.Service(self.reset_desired_body_pose_service_name, Trigger, self.srv_reset_desired_body_pose_cb)
 
         # Control Law Parameters and Gains
         # Error deadzone 
@@ -147,6 +147,7 @@ class BodySingleJointFollower():
 
         self.is_ok_tf_common = False
         self.is_ok_tf_body_follower = False
+        self.is_ok_tf_body_follower_desired = False
         self.is_ok_tf_admittance = False
 
         self.T_ee2joint_desired = None
@@ -205,9 +206,9 @@ class BodySingleJointFollower():
         else:
             if not self.is_following_started:
                 # Save the current Pose as the desired pose btw end effector and the joint to be followed
-                self.reset_desired_pose()
+                self.is_ok_tf_body_follower_desired = self.reset_desired_body_pose()
             
-            if self.is_ok_tf_body_follower and self.enable_body_joint_following:
+            if self.is_ok_tf_body_follower and self.is_ok_tf_body_follower_desired and self.enable_body_joint_following:
                 # Calculate the error btw the desired and the current pose
                 position_error, orientation_error = self.poseErrorCalculator()
             else:
@@ -550,20 +551,23 @@ class BodySingleJointFollower():
 
         return SetBoolResponse(True, "The admittance is now set to: {}".format(self.enable_admittance))
 
-    def srv_reset_desired_pose_cb(self,req):
+    def srv_reset_desired_body_pose_cb(self,req):
         assert isinstance(req, TriggerRequest)
 
-        self.reset_desired_pose()
-        rospy.loginfo("Resetting desired body poses")
+        self.is_ok_tf_body_follower_desired = self.reset_desired_body_pose()
+        rospy.loginfo("Resetting desired body poses if possible")
 
         return TriggerResponse(success=True, message="The desired body poses are reset!")
 
-    def reset_desired_pose(self):
+    def reset_desired_body_pose(self):
         if self.is_ok_tf_common and self.is_ok_tf_body_follower:
             # Save the current Pose as the desired pose btw end effector and the joint to be followed
             self.T_ee2joint_desired = self.T_ee2joint # in ee frame
             self.T_base2ee_desired = self.T_base2ee # in base frame
             self.T_base2joint_desired = self.T_base2joint # in base frame
+            return True
+        else:
+            return False
 
 
 if __name__ == '__main__':
