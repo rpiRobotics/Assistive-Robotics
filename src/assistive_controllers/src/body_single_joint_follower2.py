@@ -43,7 +43,7 @@ import threading
 
 class BodySingleJointFollower():
     def __init__(self):
-        self.service_lock = threading.Lock()
+        # self.service_lock = threading.Lock()
         rospy.init_node('body_single_joint_follower', anonymous=True)
         self.is_following_started = False
 
@@ -244,10 +244,10 @@ class BodySingleJointFollower():
 
 
     def followJoint(self, event=None):
-        with self.service_lock:
+        # with self.service_lock:
             # Find the transform between the specified joint and the end effector
             self.is_ok_tf_common = self.look_tfs_for_common()
-            self.is_ok_tf_body_follower = self.look_tfs_for_common()
+            self.is_ok_tf_body_follower = self.look_tfs_for_body_follower()
             self.is_ok_tf_admittance = self.look_tfs_for_admittance()
 
             if not self.is_ok_tf_common:
@@ -270,7 +270,6 @@ class BodySingleJointFollower():
                     # rospy.logerr("HERE I AM3")
                 
                 if self.is_ok_tf_body_follower and self.enable_body_joint_following:
-                    
                     if not self.is_following_started:
                         self.is_following_started = True
                         rospy.logerr("HERE I AM4")
@@ -598,35 +597,38 @@ class BodySingleJointFollower():
 
 
     def srv_toggle_body_joint_following_cb(self,req):
-        with self.service_lock:
+        # with self.service_lock:
             assert isinstance(req, SetBoolRequest)
 
             if req.data:
                 self.enable_body_joint_following = True
-                rospy.logerr("Enable body following")
+                rospy.loginfo("Enable body following")
             else:
                 self.enable_body_joint_following = False
-                rospy.logerr("Disable body following")
+                rospy.loginfo("Disable body following")
 
             return SetBoolResponse(True, "The body_joint_following is now set to: {}".format(self.enable_body_joint_following))
 
 
     def srv_toggle_admittance_cb(self,req):
-        with self.service_lock:
+        # with self.service_lock:
             assert isinstance(req, SetBoolRequest)
 
             if req.data:
                 self.enable_admittance = True
+                rospy.loginfo("Enable admittance control")
             else:
                 self.enable_admittance = False
+                rospy.loginfo("Disable admittance control")
 
             return SetBoolResponse(True, "The admittance is now set to: {}".format(self.enable_admittance))
 
     def srv_reset_desired_pose_cb(self,req):
-        with self.service_lock:
+        # with self.service_lock:
             assert isinstance(req, TriggerRequest)
 
             self.reset_desired_pose()
+            rospy.loginfo("Resetting desired body poses")
 
             return TriggerResponse(success=True, message="The desired body poses are reset!")
 
