@@ -50,12 +50,12 @@
 
     <!-- Launch 2d Laser scanner -->
     <node name="laser_scanner_2d" pkg="hokuyo_ust_20ln" type="ust_20ln_node.py" output="screen">
-        <rosparam command="load" file="$(find assistive_launch)/config/oarbot_blue_2d_laser_scanner.yaml"  />
+        <rosparam command="load" file="$(find assistive_launch)/config/oarbot_blue_laser_scanner_2d.yaml"  />
     </node>
 
     <!-- Launch TF broadcaster btw Mobile Base and the IMU -->
-    <node name="tf_mobile_base_2d_laser_scanner_broadcaster" pkg="tf_broadcasters" type="tf_mobile_base_2d_laser_scanner_broadcaster.py" output="screen">
-        <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_mobile_base_2d_laser_scanner.yaml"/>
+    <node name="tf_mobile_base_laser_scanner_2d_broadcaster" pkg="tf_broadcasters" type="tf_mobile_base_laser_scanner_2d_broadcaster.py" output="screen">
+        <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_mobile_base_laser_scanner_2d.yaml"/>
     </node>
 
 </group>

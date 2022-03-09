@@ -1,9 +1,9 @@
 z_height_topic_name: 'TODO'
 is_fixed_z: True
 tf_mobile_base_frame_id: 'oarbot_blue_base'
-tf_2d_laser_scanner_frame_id: 'oarbot_blue_2d_laser_scanner_sensor'
+tf_laser_scanner_2d_frame_id: 'oarbot_blue_laser_scanner_2d_sensor'
 
-mobile_base22d_laser_scanner_pose:
+mobile_base2laser_scanner_2d_pose:
   orientation:
     x: 0.0
     y: 0.0
