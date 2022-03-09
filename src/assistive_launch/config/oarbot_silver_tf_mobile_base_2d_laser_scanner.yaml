@@ -10,6 +10,6 @@ mobile_base22d_laser_scanner_pose:
     z: 0.0
     w: 1.0
   position: # in meters
-    x: 0.15 # TODO
+    x: 0.267525
     y: 0.0
-    z: 0.26 # TODO
+    z: 0.2764
