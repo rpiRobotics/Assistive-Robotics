@@ -49,7 +49,7 @@
     </node>
 
 	<!-- Launch 2d Laser scanner -->
-    <node name="2d_laser_scanner" pkg="hokuyo_ust_20ln" type="ust_20ln_node.py" output="screen">
+    <node name="laser_scanner_2d" pkg="hokuyo_ust_20ln" type="ust_20ln_node.py" output="screen">
         <rosparam command="load" file="$(find assistive_launch)/config/oarbot_silver_2d_laser_scanner.yaml"  />
     </node>
 
