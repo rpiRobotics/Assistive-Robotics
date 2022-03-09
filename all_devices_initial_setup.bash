@@ -68,8 +68,8 @@ SCRIPTS=(
     cd /etc/udev/rules.d;
     echo 1234 | sudo wget https://raw.githubusercontent.com/microsoft/Azure-Kinect-Sensor-SDK/develop/scripts/99-k4a.rules;
     echo 1234 | sudo wget https://raw.githubusercontent.com/Kinovarobotics/kinova-ros/melodic-devel/kinova_driver/udev/10-kinova-arm.rules;
-    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/udev/99-microstrain-imu.rules;
-    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/udev/99-hokuyo-ust-20ln.rules;
+    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-microstrain-imu.rules;
+    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-hokuyo-ust-20ln.rules;
     echo 1234 | sudo rm 10-kinova-arm.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-k4a.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-microstrain-imu.rules.*; # removes the duplicates
@@ -135,8 +135,8 @@ SCRIPTS=(
     cd /etc/udev/rules.d;
     echo 1234 | sudo wget https://raw.githubusercontent.com/microsoft/Azure-Kinect-Sensor-SDK/develop/scripts/99-k4a.rules;
     echo 1234 | sudo wget https://raw.githubusercontent.com/Kinovarobotics/kinova-ros/melodic-devel/kinova_driver/udev/10-kinova-arm.rules;
-    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/udev/99-microstrain-imu.rules;
-    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/udev/99-hokuyo-ust-20ln.rules;
+    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-microstrain-imu.rules;
+    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-hokuyo-ust-20ln.rules;
     echo 1234 | sudo rm 10-kinova-arm.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-k4a.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-microstrain-imu.rules.*; # removes the duplicates
@@ -199,8 +199,8 @@ SCRIPTS=(
     cd /etc/udev/rules.d;
     echo 1234 | sudo wget https://raw.githubusercontent.com/microsoft/Azure-Kinect-Sensor-SDK/develop/scripts/99-k4a.rules;
     echo 1234 | sudo wget https://raw.githubusercontent.com/Kinovarobotics/kinova-ros/melodic-devel/kinova_driver/udev/10-kinova-arm.rules;
-    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/udev/99-microstrain-imu.rules;
-    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/udev/99-hokuyo-ust-20ln.rules;    
+    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-microstrain-imu.rules;
+    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-hokuyo-ust-20ln.rules;
     echo 1234 | sudo rm 10-kinova-arm.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-k4a.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-microstrain-imu.rules.*; # removes the duplicates
@@ -261,8 +261,8 @@ SCRIPTS=(
     cd /etc/udev/rules.d;
     echo 1234 | sudo wget https://raw.githubusercontent.com/microsoft/Azure-Kinect-Sensor-SDK/develop/scripts/99-k4a.rules;
     echo 1234 | sudo wget https://raw.githubusercontent.com/Kinovarobotics/kinova-ros/melodic-devel/kinova_driver/udev/10-kinova-arm.rules;
-    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/udev/99-microstrain-imu.rules;
-    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/udev/99-hokuyo-ust-20ln.rules;
+    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-microstrain-imu.rules;
+    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-hokuyo-ust-20ln.rules;
     echo 1234 | sudo rm 10-kinova-arm.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-k4a.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-microstrain-imu.rules.*; # removes the duplicates
