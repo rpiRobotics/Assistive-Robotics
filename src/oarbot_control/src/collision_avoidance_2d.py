@@ -78,7 +78,7 @@ class CollisionAvoidance2D():
 
         # Subscribers
         self.sub_cmd_vel = rospy.Subscriber(self.in_cmd_vel_topic_name, geometry_msgs.msg.Twist, self.cmd_vel_callback, queue_size=1)
-        self.sub_laser_scan = rospy.Subscriber(self.in_cmd_vel_topic_name, LaserScan, self.laser_scan_callback, queue_size=1)
+        self.sub_laser_scan = rospy.Subscriber(self.laser_scan_topic_name, LaserScan, self.laser_scan_callback, queue_size=1)
 
         # other parameters
         self.num_of_robots = rospy.get_param("~number_of_robots", 2)
