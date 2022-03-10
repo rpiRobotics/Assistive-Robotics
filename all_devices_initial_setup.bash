@@ -39,6 +39,7 @@ SCRIPTS=(
     echo 1234 | sudo -S apt install -y ros-melodic-robot-localization;
     echo 1234 | sudo -S apt install -y ros-melodic-microstrain-inertial-driver;
     echo 1234 | sudo -S apt install -y ros-melodic-microstrain-inertial-rqt;
+    echo 1234 | sudo -S apt install -y ros-melodic-tf2-sensor-msgs;
     echo 1234 | sudo -S apt install -y python-cvxopt; # TODO
     echo 1234 | sudo -S apt install -y python3-pip;
     echo 1234 | sudo -S apt install -y python-pip;
@@ -106,6 +107,7 @@ SCRIPTS=(
     echo 1234 | sudo -S apt install -y ros-melodic-robot-localization;
     echo 1234 | sudo -S apt install -y ros-melodic-microstrain-inertial-driver;
     echo 1234 | sudo -S apt install -y ros-melodic-microstrain-inertial-rqt;
+    echo 1234 | sudo -S apt install -y ros-melodic-tf2-sensor-msgs;
     echo 1234 | sudo -S apt install -y python-cvxopt; # TODO
     echo 1234 | sudo -S apt install -y python3-pip;
     echo 1234 | sudo -S apt install -y python-pip;
@@ -170,6 +172,7 @@ SCRIPTS=(
     echo 1234 | sudo -S apt install -y ros-melodic-robot-localization;
     echo 1234 | sudo -S apt install -y ros-melodic-microstrain-inertial-driver;
     echo 1234 | sudo -S apt install -y ros-melodic-microstrain-inertial-rqt;
+    echo 1234 | sudo -S apt install -y ros-melodic-tf2-sensor-msgs;
     echo 1234 | sudo -S apt install -y python-cvxopt; # TODO
     echo 1234 | sudo -S apt install -y python3-pip;
     echo 1234 | sudo -S apt install -y python-pip;

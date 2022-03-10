@@ -1,6 +1,8 @@
 enable_collision_avoidance: true
 toggle_collision_avoidance_service_name: "toggle_collision_avoidance"
 
+enable_collision_avoidance_dynamic: true # dynamic collision avoidance with laser scanner msgs
+
 number_of_robots: 2
 
 in_cmd_vel_topic_name: "cmd_vel_base" # subscribed
@@ -8,6 +10,7 @@ out_cmd_vel_topic_name: "cmd_vel_base_safer" # published
 
 tf_world_frame_id: "world_floor"
 tf_mobile_base_frame_id: "oarbot_silver_base"
+tf_laser_scan_frame_id: "oarbot_silver_laser_scanner_2d_sensor"
 
 obs_dist_thres: 0.20 # meter
 obs_dist_hard_thres: 0.10 # meter
@@ -45,3 +48,6 @@ viz_mobile_base_obs_dist_thres_topic_name: "viz_oarbot_silver_base_obs_dist_thre
 viz_mobile_base_obs_dist_hard_thres_topic_name: "viz_oarbot_silver_base_obs_dist_hard_thres"
 viz_workspace_polygon_topic_name: "viz_oarbot_silver_workspace_polygon"
 viz_out_rate: 25.0 # Hz
+
+laser_scan_topic_name: "scan_2d"
+laser_scan_expected_rate: 40.0 # hz, used to define a time out for laser scan msgs

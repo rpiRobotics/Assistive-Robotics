@@ -21,6 +21,12 @@ import tf2_ros
 
 import geometry_msgs.msg # for Twist and other visualization msgs
 
+from sensor_msgs.msg import LaserScan
+import laser_geometry
+from sensor_msgs.msg import PointCloud2 # for debug publish
+from tf2_sensor_msgs.tf2_sensor_msgs import do_transform_cloud
+import sensor_msgs.point_cloud2 as pc2
+
 from std_srvs.srv import SetBool, SetBoolRequest, SetBoolResponse
 
 import shapely
@@ -57,16 +63,30 @@ class CollisionAvoidance2D():
         self.Wy_modified = 0.0
         self.Wz_modified = 0.0
 
+        # To store the laser scanner readings
+        self.scan_msg = None
+
+        self.laser_projector = laser_geometry.laser_geometry.LaserProjection()
+
+        # Point cloud Debug publishers
+        self.pub_point_cloud = rospy.Publisher("converted_point_cloud", PointCloud2, queue_size=1)
+        self.pub_point_cloud_transformed = rospy.Publisher("converted_point_cloud_transformed", PointCloud2, queue_size=1)
+
         # Subscribed topic names
         self.in_cmd_vel_topic_name = rospy.get_param("~in_cmd_vel_topic_name")
+        self.laser_scan_topic_name = rospy.get_param("~scan_2d")
+
         # Subscribers
         self.sub_cmd_vel = rospy.Subscriber(self.in_cmd_vel_topic_name, geometry_msgs.msg.Twist, self.cmd_vel_callback, queue_size=1)
+        self.sub_laser_scan = rospy.Subscriber(self.in_cmd_vel_topic_name, LaserScan, self.laser_scan_callback, queue_size=1)
 
         # other parameters
         self.num_of_robots = rospy.get_param("~number_of_robots", 2)
         
         self.tf_world_frame_id = rospy.get_param("~tf_world_frame_id")
         self.tf_mobile_base_frame_id = rospy.get_param("~tf_mobile_base_frame_id")
+
+        self.tf_laser_scan_frame_id = rospy.get_param("~tf_laser_scan_frame_id")
         
         self.obs_dist_thres = rospy.get_param("~obs_dist_thres")
         self.obs_dist_hard_thres = rospy.get_param("~obs_dist_hard_thres")
@@ -87,6 +107,9 @@ class CollisionAvoidance2D():
             self.TFs.append(None)
 
         self.TFs_are_ready = False
+
+        self.TF_scan = None
+        self.TFs_are_ready_scan = False
         
         # Debug and Visualizer publishers
         self.viz_mobile_base_polygon_topic_name_prefix = rospy.get_param("~viz_mobile_base_polygon_topic_name_prefix")
@@ -116,16 +139,23 @@ class CollisionAvoidance2D():
         self.enable_collision_avoidance = rospy.get_param("~enable_collision_avoidance", True) 
         self.toggle_collision_avoidance_service_name = rospy.get_param("~toggle_collision_avoidance_service_name") 
 
+        self.enable_collision_avoidance_dynamic = rospy.get_param("~enable_collision_avoidance_dynamic", True) 
+
         # Service to toggle the collision avoidance (enable/disable)
         self.srv_toggle_collision_avoidance = rospy.Service(self.toggle_collision_avoidance_service_name, SetBool, self.srv_toggle_collision_avoidance_cb)
 
         # Publish rate debuggers/visualizers
         self.viz_out_rate = rospy.get_param("~viz_out_rate", 100.0) 
 
+        self.laser_scan_expected_rate = rospy.get_param("~laser_scan_expected_rate",40.0) 
+
         # Set a timeout to wait for incoming msgs. If there is no incoming cmd msg more than this timeout
         # the node will publish 0 velocities for safety.
         self.cmd_wait_timeout = 3.0 * (1.00/self.viz_out_rate)
         self.time_last_cmd_vel = 0.0
+
+        self.scan_wait_timeout = 3.0 * (1.00/self.laser_scan_expected_rate)
+        self.time_last_laser_scan = 0.0
 
         # Start publishing
         rospy.Timer(rospy.Duration(1.00/self.viz_out_rate), self.run)
@@ -133,6 +163,7 @@ class CollisionAvoidance2D():
     def run(self, event=None):
         if self.enable_collision_avoidance:
             self.TFs_are_ready = self.get_TFs()
+            self.TFs_are_ready_scan = self.get_TFs_scan()
 
             if self.TFs_are_ready:
                 # Calculate shapely polygons and publish the visualizers
@@ -140,6 +171,7 @@ class CollisionAvoidance2D():
 
                 # Calculate the obstacles with shapely
                 collision_polygons, collision_polygons_hard = self.calculate_obstacles()
+                collision_points, collision_points_hard = self.calculate_obstacles_dynamic()
 
                 # Calculate the safer cmd_vel
                 self.avoid_obstacles(collision_polygons, collision_polygons_hard)
@@ -170,7 +202,9 @@ class CollisionAvoidance2D():
             self.Wx = 0.0
             self.Wy = 0.0
             self.Wz = 0.0
-
+        if (rospy.Time.now().to_sec() - self.time_last_laser_scan > self.scan_wait_timeout):
+            # If the timeouts, reset the incoming laser scan msg values to none.
+            self.scan_msg = None
 
     
     def get_TFs(self):
@@ -195,7 +229,23 @@ class CollisionAvoidance2D():
                     self.TFs[i] = None
                 return False
         return True
-        
+
+    def get_TFs_scan(self):
+        try:
+            # Find the transform between the robot and the laser scanner
+            tf_ = self.tfBuffer.lookup_transform(self.tf_mobile_base_frame_id, self.tf_laser_scan_frame_id,  rospy.Time()) # in the robot frame
+            self.TF_scan = tf_
+
+        except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
+            # Put a warning which says that the transformation could not found
+            rospy.logwarn('Collision Avoidance 2D: Could not find the transformation from %s to %s' 
+                            % (self.tf_mobile_base_frame_id, self.tf_laser_scan_frame_id )) 
+
+            # reset the saved TFs to None
+            rospy.logwarn('Collision Avoidance 2D: Resetting the saved laser scanner TF')
+            self.TF_scan = None
+            return False
+        return True
 
     def publish_visualizers(self):
         # Create the robot's workspace_polygon visualizer
@@ -303,6 +353,71 @@ class CollisionAvoidance2D():
         self.Wx = msg.angular.x
         self.Wy = msg.angular.y
         self.Wz = msg.angular.z
+
+    def laser_scan_callback(self, msg):
+        if self.tf_laser_scan_frame_id == msg.header.frame_id: # = self.tf_frame_id
+            self.time_last_laser_scan = rospy.Time.now().to_sec()
+            # msg.header.stamp # = rospy.Time.now()
+            # self.scan_angle_min = msg.angle_min 
+            # self.scan_angle_max = msg.angle_max 
+            # self.scan_angle_increment = msg.angle_increment 
+            # msg.scan_time 
+            # msg.time_increment = self.scan_time/360.0
+            # msg.range_max 
+            # msg.range_min 
+            # msg.intensities 
+            # self.scan_ranges = msg.ranges 
+            self.scan_msg = msg
+        else:
+            rospy.logerr("Collision avoidance 2D: The frame that scanning is subscribed does match with the frame specified in the yaml file")
+
+    def calculate_obstacles_dynamic(self):
+        if (self.TFs_are_ready_scan) and (self.enable_collision_avoidance_dynamic) and (self.scan_msg is not None):
+            collision_points = [] # list of detected collisions' shapely Point objects
+            collision_ponts_hard = [] # list of detected hard collisions' shapely Point objects
+
+            # Transform the scan readings from laser scanner frame to robot base link frame
+            point_cloud_msg = self.laser_projector.projectLaser(self.scan_msg)
+
+            # publish the point cloud msg for debug purposes
+            # (for the other things that you can do see: http://wiki.ros.org/laser_geometry)
+            self.pub_point_cloud.publish(point_cloud_msg)
+
+            # Transform the point cloud to robot base link
+            point_cloud_msg_transformed = do_transform_cloud(point_cloud_msg, self.TF_scan)
+
+            # publish the point cloud msg for debug purposes
+            # (for the other things that you can do see: http://wiki.ros.org/laser_geometry)
+            self.pub_point_cloud_transformed.publish(point_cloud_msg_transformed)
+
+            # Convert the point cloud into a generator of the individual points
+            point_generator = pc2.read_points(point_cloud_msg_transformed)
+    
+            # iterate through each point and check whether they are collision point or not (consider z height = 0)
+            # we can access a generator in a loop
+            sum = 0.0
+            num = 0
+            for point in point_generator:
+                if not math.isnan(point[2]):
+                    sum += point[2]
+                    num += 1
+
+            # we can calculate the average z value for example
+            rospy.logwarn(str(sum/num))
+
+            # # or a list of the individual points which is less efficient
+            # point_list = pc2.read_points_list(point_cloud_msg_transformed)
+
+            # # we can access the point list with an index, each element is a namedtuple
+            # # we can access the elements by name, the generator does not yield namedtuples!
+            # # if we convert it to a list and back this possibility is lost
+            # print(point_list[len(point_list)/2].x)
+
+
+            return collision_points, collision_ponts_hard 
+        else:
+            return [], []
+
 
     def calculate_obstacles(self):
         # self.workspace_polygon 

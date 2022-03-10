@@ -68,6 +68,10 @@
   <exec_depend>tf</exec_depend>
   <exec_depend>tf2</exec_depend>
 
+  <build_depend>laser_geometry</build_depend>
+  <build_export_depend>laser_geometry</build_export_depend>
+  <exec_depend>laser_geometry</exec_depend>
+
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
