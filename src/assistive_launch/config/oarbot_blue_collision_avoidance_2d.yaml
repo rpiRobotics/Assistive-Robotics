@@ -10,7 +10,7 @@ out_cmd_vel_topic_name: "cmd_vel_base_safer" # "turtle1/cmd_vel" #"cmd_vel_base_
 
 tf_world_frame_id: "world_floor"
 tf_mobile_base_frame_id: "oarbot_blue_base"
-tf_laser_scan_frame_id: "oarbot_silver_laser_scanner_2d_sensor"
+tf_laser_scan_frame_id: "oarbot_blue_laser_scanner_2d_sensor"
 
 obs_dist_thres: 0.20 # meter
 obs_dist_hard_thres: 0.10 # meter
