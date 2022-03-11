@@ -69,8 +69,8 @@ class CollisionAvoidance2D():
         self.laser_projector = laser_geometry.laser_geometry.LaserProjection()
 
         # Point cloud Debug publishers
-        self.pub_point_cloud = rospy.Publisher("converted_point_cloud", PointCloud2, queue_size=1)
-        self.pub_point_cloud_transformed = rospy.Publisher("converted_point_cloud_transformed", PointCloud2, queue_size=1)
+        # self.pub_point_cloud = rospy.Publisher("converted_point_cloud", PointCloud2, queue_size=1)
+        # self.pub_point_cloud_transformed = rospy.Publisher("converted_point_cloud_transformed", PointCloud2, queue_size=1)
 
         # Subscribed topic names
         self.in_cmd_vel_topic_name = rospy.get_param("~in_cmd_vel_topic_name")
@@ -174,7 +174,7 @@ class CollisionAvoidance2D():
                 collision_points, collision_points_hard = self.calculate_obstacles_dynamic()
 
                 # Calculate the safer cmd_vel
-                self.avoid_obstacles(collision_polygons, collision_polygons_hard)
+                self.avoid_obstacles(collision_polygons, collision_polygons_hard, collision_points, collision_points_hard)
                 
                 # Publish the safer cmd_vel
                 self.publishVelCmd()
@@ -374,36 +374,41 @@ class CollisionAvoidance2D():
     def calculate_obstacles_dynamic(self):
         if (self.TFs_are_ready_scan) and (self.enable_collision_avoidance_dynamic) and (self.scan_msg is not None):
             collision_points = [] # list of detected collisions' shapely Point objects
-            collision_ponts_hard = [] # list of detected hard collisions' shapely Point objects
+            collision_points_hard = [] # list of detected hard collisions' shapely Point objects
 
             # Transform the scan readings from laser scanner frame to robot base link frame
             point_cloud_msg = self.laser_projector.projectLaser(self.scan_msg)
 
             # publish the point cloud msg for debug purposes
             # (for the other things that you can do see: http://wiki.ros.org/laser_geometry)
-            self.pub_point_cloud.publish(point_cloud_msg)
+            # self.pub_point_cloud.publish(point_cloud_msg)
 
             # Transform the point cloud to robot base link
             point_cloud_msg_transformed = do_transform_cloud(point_cloud_msg, self.TF_scan)
 
             # publish the point cloud msg for debug purposes
             # (for the other things that you can do see: http://wiki.ros.org/laser_geometry)
-            self.pub_point_cloud_transformed.publish(point_cloud_msg_transformed)
+            # self.pub_point_cloud_transformed.publish(point_cloud_msg_transformed)
 
             # Convert the point cloud into a generator of the individual points
             point_generator = pc2.read_points(point_cloud_msg_transformed)
     
             # iterate through each point and check whether they are collision point or not (consider z height = 0)
             # we can access a generator in a loop
-            sum = 0.0
-            num = 0
             for point in point_generator:
                 if not math.isnan(point[2]):
-                    sum += point[2]
-                    num += 1
+                    x = point[0]
+                    y = point[1]
+                    z = point[2] # ignore this
+                    # create a shapely point object from x and y coordinates in robot's base link frame
+                    pt = shapely.geometry.Point(x,y)
 
-            # we can calculate the average z value for example
-            rospy.logwarn(str(sum/num))
+                    if not self.mobile_base_polygons[self.index].contains(pt):
+                        if self.obs_dist_hard_thres_polygon.contains(pt):
+                            # Add the point to collision points hard
+                            collision_points_hard.append(pt)
+                        elif self.obs_dist_thres_polygon.contains(pt):
+                            collision_points.append(pt)
 
             # # or a list of the individual points which is less efficient
             # point_list = pc2.read_points_list(point_cloud_msg_transformed)
@@ -414,7 +419,7 @@ class CollisionAvoidance2D():
             # print(point_list[len(point_list)/2].x)
 
 
-            return collision_points, collision_ponts_hard 
+            return collision_points, collision_points_hard 
         else:
             return [], []
 
@@ -560,7 +565,7 @@ class CollisionAvoidance2D():
 
         return collision_polygons, collision_polygons_hard
 
-    def avoid_obstacles(self, collision_polygons, collision_polygons_hard):
+    def avoid_obstacles(self, collision_polygons, collision_polygons_hard, collision_points, collision_points_hard):
         # Note that collision_polygons or/and collision_polygons_hard are lists
         # and include shapely Polygon objects
         V = np.array([self.Vx,self.Vy])
@@ -575,6 +580,43 @@ class CollisionAvoidance2D():
             pt_on_self = np.array(nearest_pts[0]) # closest point on the robot # array([x, y])
             pt_on_obj =  np.array(nearest_pts[1]) # closest point on the obstacle object # array([x, y])
             dist = self.mobile_base_polygons[self.index].distance(polygon) # distance between the obstacle object and the robot # float
+            if dist > 0.0:
+                unit_vect = (pt_on_self - pt_on_obj) / dist # unit vector from obstacle object to the robot # array([x, y]) 
+
+                # factor is btw [0,1]; 
+                # 0: distance is too far away (away from the specified obs_dist_thres), 
+                # 1: distance is too close (closer than the specified obs_dist_hard_thres)
+                factor = 1.0 - (  (dist - self.obs_dist_hard_thres) / (self.obs_dist_thres - self.obs_dist_hard_thres) ) # linearly changing factor
+
+                # Calculate the linear repulsive "force" caused by the obstacle acting on the robot multiplied by its factor
+                force = factor * unit_vect
+                forces.append(force)
+
+                # Calculate repulsive "torque" caused by the obstacle acting on the robot multiplied by its factor
+                # Similar to the normalization of the force norm btw. 0 to 1, with the hard and soft threshold values, 
+                # we also need to scale the maximum possible torque btw 0 to 1.
+                # We can achieve that finding the possible max and min distances that a torque can be applied to the origin of the robot.
+                # Shapely has distance(for min) and hausdorff_distance(for max) values.
+                pt_center = shapely.geometry.Point(0,0) # assumed to be the origin of the robot and inside polygon of the robot
+                # min_dist = pt_center.distance(self.mobile_base_polygons[self.index])
+                # max_dist = pt_center.hausdorff_distance(self.mobile_base_polygons[self.index])
+                app_dist = pt_center.distance(nearest_pts[0]) # point of application of the force/torque distance to the pt_center
+                unit_vect_torque = pt_on_self / app_dist
+
+                # factor_torque = (app_dist - min_dist) / (max_dist - min_dist)
+                
+                # r = factor_torque * unit_vect_torque
+                r = unit_vect_torque
+                torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
+                torques.append(torque)
+            else:
+                rospy.logwarn("Soft threshold Obstacle collided with the robot!!")
+
+        for point in collision_points:
+            nearest_pts = nearest_points(self.mobile_base_polygons[self.index], point)
+            pt_on_self = np.array(nearest_pts[0]) # closest point on the robot # array([x, y])
+            pt_on_obj =  np.array(nearest_pts[1]) # closest point on the obstacle object # array([x, y])
+            dist = self.mobile_base_polygons[self.index].distance(point) # distance between the obstacle object and the robot # float
             if dist > 0.0:
                 unit_vect = (pt_on_self - pt_on_obj) / dist # unit vector from obstacle object to the robot # array([x, y]) 
 
@@ -646,6 +688,43 @@ class CollisionAvoidance2D():
             pt_on_self = np.array(nearest_pts[0]) # closest point on the robot # array([x, y])
             pt_on_obj =  np.array(nearest_pts[1]) # closest point on the obstacle object # array([x, y])
             dist = self.mobile_base_polygons[self.index].distance(polygon) # distance between the obstacle object and the robot # float
+            if dist > 0.0:
+                unit_vect = (pt_on_self - pt_on_obj) / dist # unit vector from obstacle object to the robot # array([x, y]) 
+
+                # factor is btw [0,1]; 
+                # 0: distance is too far away (away from the specified obs_dist_thres), 
+                # 1: distance is too close (closer than the specified obs_dist_hard_thres)
+                factor = 1.0 - (  dist / self.obs_dist_hard_thres )**2 # quadratically changing factor
+
+                # Calculate the linear repulsive "force" caused by the obstacle acting on the robot multiplied by its factor
+                force = factor * unit_vect 
+                forces.append(force)       
+
+                # Calculate repulsive "torque" caused by the obstacle acting on the robot multiplied by its factor
+                # Similar to the normalization of the force norm btw. 0 to 1, with the hard and soft threshold values, 
+                # we also need to scale the maximum possible torque btw 0 to 1.
+                # We can achieve that finding the possible max and min distances that a torque can be applied to the origin of the robot.
+                # Shapely has distance(for min) and hausdorff_distance(for max) values.
+                pt_center = shapely.geometry.Point(0,0) # assumed to be the origin of the robot and inside polygon of the robot
+                # min_dist = pt_center.distance(self.mobile_base_polygons[self.index])
+                # max_dist = pt_center.hausdorff_distance(self.mobile_base_polygons[self.index])
+                app_dist = pt_center.distance(nearest_pts[0]) # point of application of the force/torque distance to the pt_center
+                unit_vect_torque = pt_on_self / app_dist
+
+                # factor_torque = (app_dist - min_dist) / (max_dist - min_dist)
+                
+                # r = factor_torque * unit_vect_torque
+                r = unit_vect_torque
+                torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
+                torques.append(torque)
+            else:
+                rospy.logwarn("Obstacle collided with the robot!!")
+
+        for point in collision_points_hard: 
+            nearest_pts = nearest_points(self.mobile_base_polygons[self.index], point)
+            pt_on_self = np.array(nearest_pts[0]) # closest point on the robot # array([x, y])
+            pt_on_obj =  np.array(nearest_pts[1]) # closest point on the obstacle object # array([x, y])
+            dist = self.mobile_base_polygons[self.index].distance(point) # distance between the obstacle object and the robot # float
             if dist > 0.0:
                 unit_vect = (pt_on_self - pt_on_obj) / dist # unit vector from obstacle object to the robot # array([x, y]) 
 
