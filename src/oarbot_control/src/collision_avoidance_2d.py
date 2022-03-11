@@ -612,6 +612,9 @@ class CollisionAvoidance2D():
             else:
                 rospy.logwarn("Soft threshold Obstacle collided with the robot!!")
 
+        forces_dynamic = []
+        torques_dynamic = []
+
         for point in collision_points:
             nearest_pts = nearest_points(self.mobile_base_polygons[self.index], point)
             pt_on_self = np.array(nearest_pts[0]) # closest point on the robot # array([x, y])
@@ -627,7 +630,7 @@ class CollisionAvoidance2D():
 
                 # Calculate the linear repulsive "force" caused by the obstacle acting on the robot multiplied by its factor
                 force = factor * unit_vect
-                forces.append(force)
+                forces_dynamic.append(force)
 
                 # Calculate repulsive "torque" caused by the obstacle acting on the robot multiplied by its factor
                 # Similar to the normalization of the force norm btw. 0 to 1, with the hard and soft threshold values, 
@@ -645,10 +648,33 @@ class CollisionAvoidance2D():
                 # r = factor_torque * unit_vect_torque
                 r = unit_vect_torque
                 torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
-                torques.append(torque)
+                torques_dynamic.append(torque)
             else:
-                rospy.logwarn("Soft threshold Obstacle collided with the robot!!")
+                rospy.logwarn("Soft threshold Obstacle from Laser Scanner collided with the robot!!")
 
+        forces_dynamic = np.array(forces_dynamic)
+        torques_dynamic = np.array(torques_dynamic)
+
+        force_dynamic_sum = np.sum(forces_dynamic,axis=0) # summation of all factored force vectors with norms btw 0-1. # array([x, y])
+        torque_dynamic_sum = np.sum(torques_dynamic,axis=0) # summation of all factored torques with norms btw 0-1. (scalar bcs. all torques are in 2D and creates a vector around z axis)
+
+        if len(forces_dynamic) > 0:
+            forces_dynamic_avr = force_dynamic_sum / len(forces_dynamic)  # array([x, y])
+        else:
+            forces_dynamic_avr = force_dynamic_sum  # array([x, y])
+
+        if len(torques_dynamic) > 0:
+            torques_dynamic_avr = torque_dynamic_sum / len(torques_dynamic) # scalar float
+        else:
+            torques_dynamic_avr = torque_dynamic_sum # scalar float
+        
+        # Add the average of dynamic forces to other forces with some weighting
+        weight_forces_dynamic = 1.0
+        weight_torques_dynamic = 1.0
+        forces.append(weight_forces_dynamic   * forces_dynamic_avr)
+        torques.append(weight_torques_dynamic * torques_dynamic_avr)
+
+        # Now continue the total force calculation
         forces = np.array(forces)
         torques = np.array(torques)
 
@@ -678,7 +704,7 @@ class CollisionAvoidance2D():
         if (torque_avr_norm > 0) and (np.dot(W,torque_avr) < 0.0):
             W = W - (factor_w)**n * ((np.dot(W,torque_avr) * torque_avr) / torque_avr_norm**2)
 
-
+        ##########################################################################
         # After the soft threshold obstacles are treated, if there is a hard threshold obstacle, we need to create a repulsive velocity out of it.
         forces = []
         torques = []
@@ -720,6 +746,9 @@ class CollisionAvoidance2D():
             else:
                 rospy.logwarn("Obstacle collided with the robot!!")
 
+        forces_dynamic = []
+        torques_dynamic = []
+
         for point in collision_points_hard: 
             nearest_pts = nearest_points(self.mobile_base_polygons[self.index], point)
             pt_on_self = np.array(nearest_pts[0]) # closest point on the robot # array([x, y])
@@ -735,7 +764,7 @@ class CollisionAvoidance2D():
 
                 # Calculate the linear repulsive "force" caused by the obstacle acting on the robot multiplied by its factor
                 force = factor * unit_vect 
-                forces.append(force)       
+                forces_dynamic.append(force)       
 
                 # Calculate repulsive "torque" caused by the obstacle acting on the robot multiplied by its factor
                 # Similar to the normalization of the force norm btw. 0 to 1, with the hard and soft threshold values, 
@@ -753,10 +782,33 @@ class CollisionAvoidance2D():
                 # r = factor_torque * unit_vect_torque
                 r = unit_vect_torque
                 torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
-                torques.append(torque)
+                torques_dynamic.append(torque)
             else:
-                rospy.logwarn("Obstacle collided with the robot!!")
+                rospy.logwarn("Obstacle from Laser Scanner collided with the robot!!")
 
+        forces_dynamic = np.array(forces_dynamic)
+        torques_dynamic = np.array(torques_dynamic)
+
+        force_dynamic_sum = np.sum(forces_dynamic,axis=0) # summation of all factored force vectors with norms btw 0-1. # array([x, y])
+        torque_dynamic_sum = np.sum(torques_dynamic,axis=0) # summation of all factored torques with norms btw 0-1. (scalar bcs. all torques are in 2D and creates a vector around z axis)
+
+        if len(forces_dynamic) > 0:
+            forces_dynamic_avr = force_dynamic_sum / len(forces_dynamic)  # array([x, y])
+        else:
+            forces_dynamic_avr = force_dynamic_sum  # array([x, y])
+
+        if len(torques_dynamic) > 0:
+            torques_dynamic_avr = torque_dynamic_sum / len(torques_dynamic) # scalar float
+        else:
+            torques_dynamic_avr = torque_dynamic_sum # scalar float
+        
+        # Add the average of dynamic forces to other forces with some weighting
+        weight_forces_dynamic = 1.0
+        weight_torques_dynamic = 1.0
+        forces.append(weight_forces_dynamic   * forces_dynamic_avr)
+        torques.append(weight_torques_dynamic * torques_dynamic_avr)
+
+        # Now continue the total force calculation
         forces = np.array(forces)
         torques = np.array(torques)
 
