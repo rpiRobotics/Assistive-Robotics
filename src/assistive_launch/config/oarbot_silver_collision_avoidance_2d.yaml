@@ -1,7 +1,7 @@
 enable_collision_avoidance: true
 toggle_collision_avoidance_service_name: "toggle_collision_avoidance"
 
-enable_collision_avoidance_dynamic: true # dynamic collision avoidance with laser scanner msgs
+enable_collision_avoidance_dynamic: false # dynamic collision avoidance with laser scanner msgs
 
 number_of_robots: 2
 
