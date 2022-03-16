@@ -53,10 +53,14 @@
         <rosparam command="load" file="$(find assistive_launch)/config/oarbot_blue_laser_scanner_2d.yaml"  />
     </node>
 
-    <!-- Launch TF broadcaster btw Mobile Base and the IMU -->
+    <!-- Launch TF broadcaster btw Mobile Base and the laser scanner 2d -->
     <node name="tf_mobile_base_laser_scanner_2d_broadcaster" pkg="tf_broadcasters" type="tf_mobile_base_laser_scanner_2d_broadcaster.py" output="screen">
         <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_mobile_base_laser_scanner_2d.yaml"/>
     </node>
+
+    <!-- Launch Oarbot Obstacle Detector Base -->
+    <include file="$(find assistive_launch)/launch/test_launch/oarbot_blue_obstacle_detector.launch">
+    </include>
 
 </group>
 </launch>
