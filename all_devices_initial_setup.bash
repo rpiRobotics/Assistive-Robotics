@@ -17,7 +17,7 @@ SCRIPTS=(
     cd ..;
     ####################
     source /opt/ros/noetic/setup.bash;
-    catkin_make -DCATKIN_WHITELIST_PACKAGES='assistive_msgs;assistive_gui;assistive_launch;tablet_arduino_talker;kinova_bringup;kinova_control;kinova_demo;kinova_description;kinova_docs;kinova_driver;kinova_gazebo;kinova_helper;kinova_msgs; obstacle_detector';
+    catkin_make -DCATKIN_WHITELIST_PACKAGES='assistive_msgs;assistive_gui;assistive_launch;tablet_arduino_talker;kinova_bringup;kinova_control;kinova_demo;kinova_description;kinova_docs;kinova_driver;kinova_gazebo;kinova_helper;kinova_msgs;obstacle_detector;';
     grep -qxF 'source ~/catkin_ws_assistive/devel/setup.bash' ~/.bashrc || echo 'source ~/catkin_ws_assistive/devel/setup.bash' >> ~/.bashrc;
     source ~/.bashrc;
     source ~/catkin_ws_assistive/devel/setup.bash;
