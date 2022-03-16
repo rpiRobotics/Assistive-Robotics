@@ -20,7 +20,7 @@
     <param name="max_y_range"       value="20.0"/>
 
     <param name="fixed_frame_id"    value="world_floor"/>
-    <param name="target_frame_id"   value="oarbot_blue"/>
+    <param name="target_frame_id"   value="oarbot_blue_base"/>
 
     <remap from="front_scan" to="scan_2d"/>
     <remap from="rear_scan" to="rear_scan"/>
