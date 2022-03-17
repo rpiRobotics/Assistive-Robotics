@@ -54,3 +54,4 @@ src/CMakeLists.txt
 .vscode/
 src/Azure_Kinect_ROS_Driver/
 src/kinova-ros/
+src/obstacle_detector/
