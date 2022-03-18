@@ -49,5 +49,5 @@ viz_workspace_polygon_topic_name: "viz_oarbot_blue_workspace_polygon"
 viz_out_rate: 25.0 # Hz
 
 laser_obstacles_topic_name: "obstacles"
-laser_obstacles_expected_rate: 40.0 # hz, used to define a time out for laser obstacle msgs
+laser_obstacles_expected_rate: 100.0 # hz, used to define a time out for laser obstacle msgs
 line_obstacle_buffer_distance: 0.025
