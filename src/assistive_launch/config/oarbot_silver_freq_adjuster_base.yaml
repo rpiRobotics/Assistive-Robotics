@@ -4,4 +4,4 @@ in_rate: 25.0 # Expected for setting the timeout properly
 
 out_cmd_vel_topic_name: 'freq_cmd_vel_base'
 out_cmd_vel_topic_type: 'geometry_msgs.msg.Twist'
-out_rate: 25.0
+out_rate: 100.0

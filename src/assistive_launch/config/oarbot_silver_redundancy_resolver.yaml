@@ -25,5 +25,5 @@ plate_bottom_max: 0.76 # Max z height of the plate bottom from floor
 plate_bottom2arm_base: 0.0465 # Z height from plate bottom to kinova arm base 
 
 pub_rate_arm: 100.0 # For kinova arm 100 Hz is needed
-pub_rate_base: 25.0 
+pub_rate_base: 100.0 
 min_rate_cmd_vel: 25.0 # Minimum expected rate of input cmd
