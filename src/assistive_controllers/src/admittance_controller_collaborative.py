@@ -180,7 +180,7 @@ class AdmittanceControllerCollaborative():
         self.time_last_wrench = [0. for i in range(self.num_robots)] # last time wrench input time keepers
         # Set a timeout to wait for incoming msgs. If there is no incoming msg more than this timeout
         # the node will publish 0 velocities for safety.
-        self.wrench_wait_timeout = 3.0 * self.expected_duration
+        self.wrench_wait_timeout = 10.0 * self.expected_duration
 
         # Start control
         rospy.Timer(rospy.Duration(self.expected_duration), self.run)
@@ -209,14 +209,14 @@ class AdmittanceControllerCollaborative():
                 rospy.logwarn("3)V_world_1: " + str(V_world[0]))
                 rospy.logwarn("3)V_world_2: " + str(V_world[1]))
                 rospy.logwarn("~")
-                
+
                 self.V_pub = self.world2robot_velocities(V_world)
                 rospy.logwarn("4)V_robot_1: " + str(self.V_pub[0]))
                 rospy.logwarn("4)V_robot_2: " + str(self.V_pub[1]))
                 rospy.logwarn("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
                 # Publish the command to move the end effector to the body joint
-                # self.publishPoseVelCmd(self.V_pub)
+                self.publishPoseVelCmd(self.V_pub)
 
             else:
                 pass
@@ -227,6 +227,7 @@ class AdmittanceControllerCollaborative():
         # Check for timeout for incoming msgs
         for i in range(self.num_robots):
             if ((rospy.Time.now().to_sec() - self.time_last_wrench[i]) > self.wrench_wait_timeout):
+                rospy.logerr("Admittance controller timed out")
                 # If the timeouts, reset all wrenches/velocities to zero prevent any damage
                 self.W_meas = np.zeros((self.num_robots,6))
                 self.V_pub = np.zeros((self.num_robots,6))
