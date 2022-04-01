@@ -25,7 +25,7 @@ max_ang_vels:
 
 pub_rate: 110.0 # It is a must to be 100 Hz for Kinova arm (If higher kinova can continue to move after the the command sendings stops bcs of the queue size)
 
-enable_admittance: true
+enable_admittance: false
 toggle_admittance_service_name: "toggle_admittance_collaborative"
 
 force_err_thres: 0.1 # N
