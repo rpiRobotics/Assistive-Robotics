@@ -1,0 +1,114 @@
+num_robots: 2 # how many robots are used in the collab. admittance control
+
+wrench_external_topic_names: 
+  - '/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered'
+  - '/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered'
+
+robot_cartesian_cmd_vel_topic_names: 
+  - '/oarbot_silver/cmd_vel' # 'j2n6s300_left_driver/in/cartesian_velocity'
+  - '/oarbot_blue/cmd_vel' # 'j2n6s300_left_driver/in/cartesian_velocity'
+
+robot_cartesian_cmd_vel_msg_type: 'geometry_msgs.msg.Twist' # 'kinova_msgs.msg.PoseVelocity'
+
+max_lin_accs: 
+  - 5.0 # 1.5 # 0.6 # 1.5 # m/s^2
+  - 5.0 # 1.5 # 0.6 # 1.5 # m/s^2
+max_lin_vels: 
+  - 0.5 # m/s 
+  - 0.5 # m/s 
+max_ang_accs: 
+  - 5.0 # 1.5 # 0.8 # 1.5 # rad/s^2
+  - 5.0 # 1.5 # 0.8 # 1.5 # rad/s^2
+max_ang_vels: 
+  - 1.5 # Rad/s 
+  - 1.5 # Rad/s 
+
+pub_rate: 110.0 # It is a must to be 100 Hz for Kinova arm (If higher kinova can continue to move after the the command sendings stops bcs of the queue size)
+
+enable_admittance: true
+toggle_admittance_service_name: "toggle_admittance_collaborative"
+
+force_err_thres: 0.1 # N
+torque_err_thres: 0.1 # N.m
+
+# Admittance spring constants for absolute task
+K_a:
+  - 10.0  # lin_x
+  - 10.0  # lin_y
+  - 10.0  # lin_z
+  - 10.0  # ang_x
+  - 10.0  # ang_y
+  - 10.0  # ang_z
+
+# Admittance damper constants for absolute task
+B_a:
+  - 10.0  # lin_x
+  - 10.0  # lin_y
+  - 10.0  # lin_z
+  - 10.0  # ang_x
+  - 10.0  # ang_y
+  - 10.0  # ang_z
+
+# Admittance spring constants for RELATIVE task
+K_r:
+  - 10.0  # lin_x
+  - 10.0  # lin_y
+  - 10.0  # lin_z
+  - 10.0  # ang_x
+  - 10.0  # ang_y
+  - 10.0  # ang_z
+
+# Admittance damper constants for RELATIVE task
+B_r:
+  - 10.0  # lin_x
+  - 10.0  # lin_y
+  - 10.0  # lin_z
+  - 10.0  # ang_x
+  - 10.0  # ang_y
+  - 10.0  # ang_z
+
+# Desired wrench to regulate the external stress (ABSOLUTE Task)
+W_a_desired:
+  - 0.0  # lin_x
+  - 0.0  # lin_y
+  - 0.0  # lin_z
+  - 0.0  # ang_x
+  - 0.0  # ang_y
+  - 0.0  # ang_z
+
+# Desired internal wrench to regulate the internal stress (RELATIVE Task)
+W_r_desired:
+  - 0.0  # lin_x
+  - 0.0  # lin_y
+  - 0.0  # lin_z
+  - 0.0  # ang_x
+  - 0.0  # ang_y
+  - 0.0  # ang_z
+
+gravity_const: 9.80395 # m/s^2 #for Albany/NY
+mass_of_carried_obj: 1.148 # kg # TODO: later automatically estimate this 
+center_of_mass_position: #meters, wrt absolute task frame # TODO: later automatically estimate this 
+  x: 0.5
+  y: 0.08
+  z: -0.035
+
+# publishers
+# pubs_cmd_vel: list of publishers
+
+########################################
+tf_end_effector_frame_names: 
+  - 'j2n6s300_left_end_effector'
+  - 'j2n6s300_right_end_effector'
+tf_robot_base_frame_names: 
+  - 'oarbot_silver_base'
+  - 'oarbot_blue_base' # 'j2n6s300_left_link_base'
+tf_arm_base_frame_names: 
+  - 'j2n6s300_left_link_base'
+  - 'j2n6s300_right_link_base'
+
+tf_interaction_point_frame_name: 'interaction_point'
+tf_absolute_task_frame_name: 'j2n6s300_left_end_effector'
+tf_relative_task_frame_name: 'j2n6s300_right_end_effector'
+tf_carried_obj_frame_name: 'j2n6s300_left_end_effector'
+tf_world_frame_name: 'world_floor'
+

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Launch TF broadcaster btw Interaction pt to Absolute base frame -->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="tf_interaction_point_broadcaster" args="0.5 0.08 0.09      0 0 0 1 j2n6s300_left_end_effector interaction_point" />
+
+    <!-- Launch admittance controller -->
+    <arg name="pkg_name" default="assistive_controllers"/>
+	  <arg name="node_name" default="admittance_controller_collaborative"/>		
+	
+    <node name="$(arg node_name)" pkg="$(arg pkg_name)" type="$(arg node_name).py" output="screen">
+		<rosparam file="$(find assistive_launch)/config/assistive_controllers_admittance_controller_collaborative.yaml"/>
+    </node>
+</launch>
