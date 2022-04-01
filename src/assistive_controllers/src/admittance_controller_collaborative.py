@@ -414,13 +414,13 @@ class AdmittanceControllerCollaborative():
 
     def wrench_external_callback(self, wrench_stamped_msg, args):
         # args[0]: i # (Robot index)
-        self.time_last_wrench[args[1]] = rospy.Time.now().to_sec() 
-        self.W_meas[args[0]][0] = wrench_stamped_msg.wrench.force.x
-        self.W_meas[args[0]][1] = wrench_stamped_msg.wrench.force.y
-        self.W_meas[args[0]][2] = wrench_stamped_msg.wrench.force.z
-        self.W_meas[args[0]][3] = wrench_stamped_msg.wrench.torque.x
-        self.W_meas[args[0]][4] = wrench_stamped_msg.wrench.torque.y
-        self.W_meas[args[0]][5] = wrench_stamped_msg.wrench.torque.z
+        self.time_last_wrench[args] = rospy.Time.now().to_sec() 
+        self.W_meas[args][0] = wrench_stamped_msg.wrench.force.x
+        self.W_meas[args][1] = wrench_stamped_msg.wrench.force.y
+        self.W_meas[args][2] = wrench_stamped_msg.wrench.force.z
+        self.W_meas[args][3] = wrench_stamped_msg.wrench.torque.x
+        self.W_meas[args][4] = wrench_stamped_msg.wrench.torque.y
+        self.W_meas[args][5] = wrench_stamped_msg.wrench.torque.z
 
         #debug: check whether the self.W_meas is really updated with this callback
         rospy.logwarn( "self.W_meas: " + str(self.W_meas)) 
