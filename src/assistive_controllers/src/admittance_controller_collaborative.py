@@ -79,7 +79,7 @@ class AdmittanceControllerCollaborative():
         self.subs_wrenches = [] # To prevent garbage collector to capture the subscribers
         for i in range(self.num_robots):
             topic_name = self.wrench_external_topic_names[i]
-            self.subs_wrenches.append(rospy.Subscriber(topic_name, geometry_msgs.msg.WrenchStamped, self.wrench_external_callback, (self.W_meas,i), queue_size=1))
+            self.subs_wrenches.append(rospy.Subscriber(topic_name, geometry_msgs.msg.WrenchStamped, self.wrench_external_callback, (i), queue_size=1))
 
         ##############################################
         self.enable_admittance = rospy.get_param("~enable_admittance", True)
@@ -413,15 +413,14 @@ class AdmittanceControllerCollaborative():
         return V_pub
 
     def wrench_external_callback(self, wrench_stamped_msg, args):
-        # args[0]: self.W_meas
-        # args[1]: i (Robot index)
+        # args[0]: i # (Robot index)
         self.time_last_wrench[args[1]] = rospy.Time.now().to_sec() 
-        args[0][args[1]][0] = wrench_stamped_msg.wrench.force.x
-        args[0][args[1]][1] = wrench_stamped_msg.wrench.force.y
-        args[0][args[1]][2] = wrench_stamped_msg.wrench.force.z
-        args[0][args[1]][3] = wrench_stamped_msg.wrench.torque.x
-        args[0][args[1]][4] = wrench_stamped_msg.wrench.torque.y
-        args[0][args[1]][5] = wrench_stamped_msg.wrench.torque.z
+        self.W_meas[args[0]][0] = wrench_stamped_msg.wrench.force.x
+        self.W_meas[args[0]][1] = wrench_stamped_msg.wrench.force.y
+        self.W_meas[args[0]][2] = wrench_stamped_msg.wrench.force.z
+        self.W_meas[args[0]][3] = wrench_stamped_msg.wrench.torque.x
+        self.W_meas[args[0]][4] = wrench_stamped_msg.wrench.torque.y
+        self.W_meas[args[0]][5] = wrench_stamped_msg.wrench.torque.z
 
         #debug: check whether the self.W_meas is really updated with this callback
         rospy.logwarn( "self.W_meas: " + str(self.W_meas)) 

@@ -42,7 +42,7 @@ body_joint_following_service_address:
   - '/oarbot_blue/toggle_body_joint_following'
 
 admittance_service_address:
-  - '/toggle_admittance_collaborative' # '/oarbot_silver/toggle_admittance' # TODO temporary!!!!
+  - '/oarbot_silver/toggle_admittance'
   - '/oarbot_blue/toggle_admittance'
 
 reset_desired_body_pose_service_address: 
