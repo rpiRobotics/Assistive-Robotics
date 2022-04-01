@@ -11,5 +11,5 @@ mobile_base2arm_base_pose:
     w: 1.0
   position: # in meters
     x: 0.305
-    y: -0.03
+    y: -0.003
     z: 0.804
