@@ -24,6 +24,8 @@ Broadcasts to:
 import rospy
 
 import numpy as np
+np.set_printoptions(precision=1)
+np.set_printoptions(suppress=True)
 import tf2_ros
 import tf2_geometry_msgs
 import geometry_msgs.msg 
@@ -96,15 +98,22 @@ class AdmittanceControllerCollaborative():
 
         # (Admittance spring constants)
         self.K_a = rospy.get_param("~K_a") # absolute task
+        self.K_a = np.array(self.K_a)
         self.K_r = rospy.get_param("~K_r") # relative task
+        self.K_r = np.array(self.K_r)
 
         # (Admittance damper constants)
         self.B_a = rospy.get_param("~B_a") # absolute task
+        self.B_a = np.array(self.B_a)
         self.B_r = rospy.get_param("~B_r") # relative task
+        self.B_r = np.array(self.B_r)
 
         # Desired wrenches
         self.W_a_desired = rospy.get_param("~W_a_desired") # absolute task
+        self.W_a_desired = np.array(self.W_a_desired)
+
         self.W_r_desired = rospy.get_param("~W_r_desired") # relative task
+        self.W_r_desired = np.array(self.W_r_desired)
 
         # Maximum accelaration and velocities of the robots
         self.max_lin_accs = rospy.get_param("~max_lin_accs")
@@ -180,21 +189,34 @@ class AdmittanceControllerCollaborative():
     def run(self, event=None):
         if self.enable_admittance:
             self.TFs_are_ready = self.get_TFs()
-
             if self.TFs_are_ready:
+                rospy.logwarn("0)W_robot_1: " + str(self.W_meas[0]))
+                rospy.logwarn("0)W_robot_2: " + str(self.W_meas[1]))
+                rospy.logwarn("~")
+
                 Wa,Wr = self.wrench_adapter()
+                rospy.logwarn("1)Wa: " + str(Wa))
+                rospy.logwarn("1)Wr: " + str(Wr))
+                rospy.logwarn("~")
 
                 # With control law specify the command
-                # self.V_pub = self.controlLaw()
                 Va,Vr = self.control_law_force(Wa,Wr)
+                rospy.logwarn("2)Va: " + str(Va))
+                rospy.logwarn("2)Vr: " + str(Vr))
+                rospy.logwarn("~")
 
                 V_world = self.task2world_velocities(Va,Vr)
-
+                rospy.logwarn("3)V_world_1: " + str(V_world[0]))
+                rospy.logwarn("3)V_world_2: " + str(V_world[1]))
+                rospy.logwarn("~")
+                
                 self.V_pub = self.world2robot_velocities(V_world)
-                # rospy.logwarn("control law result : Vx, Vy, Vz, Wx, Wy, Wz = "+ str([self.V_pub]))
+                rospy.logwarn("4)V_robot_1: " + str(self.V_pub[0]))
+                rospy.logwarn("4)V_robot_2: " + str(self.V_pub[1]))
+                rospy.logwarn("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
                 # Publish the command to move the end effector to the body joint
-                self.publishPoseVelCmd(self.V_pub)
+                # self.publishPoseVelCmd(self.V_pub)
 
             else:
                 pass
@@ -388,7 +410,7 @@ class AdmittanceControllerCollaborative():
         Par_o = self.transform_vector_rotate_only(Par_a, self.T_world2absolute)
         vr_o = va_o + self.transform_vector_rotate_only(vr_a, self.T_world2absolute) - np.cross(Par_o,wa_o)
 
-        wr_o = self.transform_vector_rotate_only(wr_a)
+        wr_o = self.transform_vector_rotate_only(wr_a,self.T_world2absolute)
 
         V_pub[1][:3] = vr_o # o: in_world frame
         V_pub[1][3:] = wr_o # o: in_world frame
@@ -423,7 +445,7 @@ class AdmittanceControllerCollaborative():
         self.W_meas[args][5] = wrench_stamped_msg.wrench.torque.z
 
         #debug: check whether the self.W_meas is really updated with this callback
-        rospy.logwarn( "self.W_meas: " + str(self.W_meas)) 
+        # rospy.logwarn( "self.W_meas: " + str(self.W_meas)) 
 
 
     def srv_toggle_admittance_cb(self,req):
