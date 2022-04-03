@@ -24,4 +24,4 @@ th_vel_scaling: 1.02783725910064
 twist_covariance_diagonal: [1.0e-2, 1.0e-2, 1.0e-2,    0., 0., 25.0e-3] # [x_dot,y_dot,z_dot,rotx_dot,roty_dot,rotz_dot] # TODO: z_dot will be measured when the screw mechanism is active
 tf_mobile_base_frame_id: 'oarbot_blue_base'
 
-motor_control_rate: 25.0 # Hz
+motor_control_rate: 25.0 # Hzz
