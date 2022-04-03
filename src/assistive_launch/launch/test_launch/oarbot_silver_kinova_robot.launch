@@ -38,6 +38,9 @@
     </node>
   </group>
 
+  <!-- Call for Activating manually setup payload and COM estimations  -->
+  <node pkg="rosservice" type="rosservice" name="$(arg kinova_robotName)_rosservice" args="call /oarbot_silver/j2n6s300_left_driver/in/set_torque_control_parameters"/>
+
   <node name="$(arg kinova_robotName)_helper_publisher" pkg="kinova_helper" type="helper_publisher.py" output="screen" cwd="node">
     <param name="robot_name" value="$(arg kinova_robotName)" />
     <param name="min_singular_value_topic_name" value="$(arg kinova_robotName)_driver/out/min_singular_value" />
@@ -52,7 +55,7 @@
     
     <param name="wrench_filter_factor" value="0.1" />
     <param name="force_dead_zone_thres" value="4.0" /> <!-- 15.0 N to 3.5 -->
-    <param name="torque_dead_zone_thres" value="0.02" /> <!-- 2.0 Nm to 0.75 -->
+    <param name="torque_dead_zone_thres" value="0.75" /> <!-- 2.0 Nm to 0.75 -->
   </node>
 
 </launch>
