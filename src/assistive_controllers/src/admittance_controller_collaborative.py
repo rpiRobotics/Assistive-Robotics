@@ -24,7 +24,7 @@ Broadcasts to:
 import rospy
 
 import numpy as np
-np.set_printoptions(precision=1)
+np.set_printoptions(precision=4)
 np.set_printoptions(suppress=True)
 import tf2_ros
 import tf2_geometry_msgs
@@ -252,7 +252,7 @@ class AdmittanceControllerCollaborative():
 
         # Transform these wrenches to world frame
         W1_in_world = self.transform_wrench(W1,self.T_world2armbases[0])
-        W2_in_world = self.transform_wrench(W1,self.T_world2armbases[1])
+        W2_in_world = self.transform_wrench(W2,self.T_world2armbases[1])
 
         F1_in_world = W1_in_world[:3]
         M1_in_world = W1_in_world[3:]
@@ -487,6 +487,30 @@ class AdmittanceControllerCollaborative():
         W_transformed[3:] = np.dot(R,W[3:])
 
         return W_transformed
+
+    # def transform_wrench2(self, W, T):
+    #     # W: wrench 1D np array with 6 elements (Wa_in_a = [Ma_in_a, Fa_in_a]^T)
+    #     # T: transform (T_b_to_a)
+    #     # returns W_transformed: 1D np array with 6 elements (Wb_in_b)
+
+    #     qw = T.transform.rotation.w # Scalar part of quaternion
+    #     qx = T.transform.rotation.x
+    #     qy = T.transform.rotation.y
+    #     qz = T.transform.rotation.z
+    #     q = [qx,qy,qz,qw]
+    #     R = tf.transformations.quaternion_matrix(q)
+    #     Rba = R[:3,:3]
+
+    #     Pba_in_a = np.array([T.transform.translation.x,T.transform.translation.y,T.transform.translation.z])
+
+    #     F = # force
+    #     M = # torque
+
+    #     W_transformed = np.zeros(6)
+    #     W_transformed[:3] = np.dot(R,W[:3])
+    #     W_transformed[3:] = np.dot(R,W[3:])
+
+    #     return W_transformed
 
     def get_position_from_transform(self,T):
         return np.array([T.transform.translation.x,T.transform.translation.y,T.transform.translation.z])

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>   
+    <node pkg="rosbag" type="record" name="rosbag_record_general"
+        args="record -o /home/burak/rosbag_records/ /tf /tf_static"/>
+
+</launch>
+<!-- /oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered /oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered -->
+<!-- j2n6s300_right_link_base j2n6s300_left_link_base -->

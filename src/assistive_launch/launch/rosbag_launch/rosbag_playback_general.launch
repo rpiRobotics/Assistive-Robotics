@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- <param name="use_sim_time" value="true"/> -->
+    <remap from="/tf" to="/tf_old"/>
+    <remap from="/tf_static" to="/tf_static_old"/>
+    <node name="tfs_demo" pkg="rosbag" type="play" output="screen" args="--loop /home/burak/rosbag_records/_2022-04-03-18-01-47.bag"/>
+    
+</launch>
+
+<!-- /oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered /oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered -->
+<!-- j2n6s300_right_link_base j2n6s300_left_link_base -->
