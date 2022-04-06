@@ -195,9 +195,9 @@ class AdmittanceControllerCollaborative():
                 rospy.logwarn("~")
 
                 Wa,Wr = self.wrench_adapter()
-                rospy.logwarn("1)Wa: " + str(Wa))
-                rospy.logwarn("1)Wr: " + str(Wr))
-                rospy.logwarn("~")
+                # rospy.logwarn("1)Wa: " + str(Wa))
+                # rospy.logwarn("1)Wr: " + str(Wr))
+                # rospy.logwarn("~")
 
                 # With control law specify the command
                 Va,Vr = self.control_law_force(Wa,Wr)
@@ -235,8 +235,19 @@ class AdmittanceControllerCollaborative():
 
     def wrench_adapter(self):
         Wa,Wr = self.task_space_conversion()
+        rospy.logwarn("0.1) After task space conv. Wa: " + str(Wa))
+        rospy.logwarn("0.1) After task space conv. Wr: " + str(Wr))
+        rospy.logwarn("~")
+
         Wa = self.cancel_objects_gravity(Wa)
+        rospy.logwarn("0.2) After canvel gravity. Wa: " + str(Wa))
+        rospy.logwarn("0.2) After canvel gravity. Wr: " + str(Wr))
+        rospy.logwarn("~")
+
         Wa = self.retrieve_human_intent(Wa)
+        rospy.logwarn("0.3) After retrieve intent. Wa: " + str(Wa))
+        rospy.logwarn("0.3) After retrieve intent. Wr: " + str(Wr))
+        rospy.logwarn("~")
         return Wa, Wr
 
     def task_space_conversion(self):

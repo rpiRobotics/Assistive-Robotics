@@ -3,6 +3,8 @@ num_robots: 2 # how many robots are used in the collab. admittance control
 wrench_external_topic_names: 
   - '/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered'
   - '/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered'
+  # - '/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered_custom' # '/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered'
+  # - '/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered_custom' # '/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered'
 
 robot_cartesian_cmd_vel_topic_names: 
   - '/oarbot_silver/cmd_vel' # 'j2n6s300_left_driver/in/cartesian_velocity'
@@ -25,7 +27,7 @@ max_ang_vels:
 
 pub_rate: 110.0 # It is a must to be 100 Hz for Kinova arm (If higher kinova can continue to move after the the command sendings stops bcs of the queue size)
 
-enable_admittance: false
+enable_admittance: true
 toggle_admittance_service_name: "toggle_admittance_collaborative"
 
 force_err_thres: 0.1 # N
@@ -42,12 +44,12 @@ K_a:
 
 # Admittance damper constants for absolute task
 B_a:
-  - 100.0  # lin_x #- 10.0  # lin_x
-  - 100.0  # lin_y #- 10.0  # lin_y
-  - 100.0  # lin_z #- 10.0  # lin_z
-  - 50.0  # ang_x #- 10.0  # ang_x
-  - 50.0  # ang_y #- 10.0  # ang_y
-  - 50.0  # ang_z #- 10.0  # ang_z
+  - 50.0  # lin_x #- 10.0  # lin_x
+  - 50.0  # lin_y #- 10.0  # lin_y
+  - 50.0  # lin_z #- 10.0  # lin_z
+  - 25.0  # ang_x #- 10.0  # ang_x
+  - 25.0  # ang_y #- 10.0  # ang_y
+  - 25.0  # ang_z #- 10.0  # ang_z
 
 # Admittance spring constants for RELATIVE task
 K_r:
@@ -60,12 +62,12 @@ K_r:
 
 # Admittance damper constants for RELATIVE task
 B_r:
-  - 100.0  # lin_x #- 10.0  # lin_x
-  - 100.0  # lin_y #- 10.0  # lin_y
-  - 100.0  # lin_z #- 10.0  # lin_z
-  - 50.0  # ang_x #- 10.0  # ang_x
-  - 50.0  # ang_y #- 10.0  # ang_y
-  - 50.0  # ang_z #- 10.0  # ang_z
+  - 300.0  # lin_x #- 10.0  # lin_x
+  - 300.0  # lin_y #- 10.0  # lin_y
+  - 300.0  # lin_z #- 10.0  # lin_z
+  - 150.0  # ang_x #- 10.0  # ang_x
+  - 150.0  # ang_y #- 10.0  # ang_y
+  - 150.0  # ang_z #- 10.0  # ang_z
 
 # Desired wrench to regulate the external stress (ABSOLUTE Task)
 W_a_desired:

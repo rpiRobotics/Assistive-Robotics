@@ -10,4 +10,39 @@
     <node name="$(arg node_name)" pkg="$(arg pkg_name)" type="$(arg node_name).py" output="screen">
 		<rosparam file="$(find assistive_launch)/config/assistive_controllers_admittance_controller_collaborative.yaml"/>
     </node>
+    
+    <!-- launch rqt plots -->
+    <arg name="robot1_force_topic" default="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered/wrench/force"/>
+    <arg name="robot1_torque_topic" default="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered/wrench/torque"/>
+    <arg name="robot2_force_topic" default="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered/wrench/force"/>
+    <arg name="robot2_torque_topic" default="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered/wrench/torque"/>
+
+    <!-- <arg name="robot1_force_topic" default="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered_custom/wrench/force"/>
+    <arg name="robot1_torque_topic" default="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered_custom/wrench/torque"/>
+    <arg name="robot2_force_topic" default="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered_custom/wrench/force"/>
+    <arg name="robot2_torque_topic" default="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered_custom/wrench/torque"/> -->
+
+    <node name="oarbot_silver_force_plot"
+        pkg="rqt_plot"
+        type="rqt_plot"
+        args="$(arg robot1_force_topic)" />
+
+    <node name="oarbot_blue_force_plot"
+        pkg="rqt_plot"
+        type="rqt_plot"
+        args="$(arg robot2_force_topic)" />
+
+    <node name="oarbot_silver_torque_plot"
+        pkg="rqt_plot"
+        type="rqt_plot"
+        args="$(arg robot1_torque_topic)" />
+
+    <node name="oarbot_blue_torque_plot"
+        pkg="rqt_plot"
+        type="rqt_plot"
+        args="$(arg robot2_torque_topic)" />
 </launch>
+
+<!-- TO READ MORE CORRCET WRENCH VALUES EVERY TIME RUN: -->
+<!-- rosservice call /oarbot_blue/j2n6s300_right_driver/in/set_torque_control_parameters  -->
+<!-- rosservice call /oarbot_silver/j2n6s300_left_driver/in/set_torque_control_parameters  -->
