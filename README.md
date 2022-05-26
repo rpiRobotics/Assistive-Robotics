@@ -229,3 +229,24 @@ As stated in one of the answers in [this link](https://ubuntu.forumming.com/ques
 ## Install ROS Melodic
 - See [here](http://wiki.ros.org/Installation/Ubuntu)
   
+# Usage
+
+run 
+```
+./test_launcher_all_oarbots.bash
+```
+
+Then to correct the torque readings on Kinova arms, run:
+```
+./correct_kinova_torques.bash
+```
+
+To plot the Force/Torque plots either run:
+```
+./test_launcher_rqt_plotter.bash
+```
+
+Or if you have PlotJuggler installed, run:
+```
+./test_launcher_plotjuggler.bash
+```
