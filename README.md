@@ -248,5 +248,5 @@ To plot the Force/Torque plots either run:
 
 Or if you have PlotJuggler installed, run:
 ```
-rosrun plotjuggler plotjuggler --layout ~/catkin_ws_assistive/plotjuggler_layouts/plotjuggler_layout.xml
+./test_launcher_plotjuggler.bash
 ```

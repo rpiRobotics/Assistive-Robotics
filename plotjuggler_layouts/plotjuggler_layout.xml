@@ -1,47 +1,47 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <root>
- <tabbed_widget parent="main_window" name="Main Window">
+ <tabbed_widget name="Main Window" parent="main_window">
   <Tab containers="1" tab_name="FT data">
    <Container>
-    <DockSplitter count="1" orientation="-" sizes="1">
-     <DockSplitter count="2" orientation="|" sizes="0.500355;0.499645">
-      <DockSplitter count="2" orientation="-" sizes="0.500557;0.499443">
+    <DockSplitter count="1" sizes="1" orientation="-">
+     <DockSplitter count="2" sizes="0.500397;0.499603" orientation="|">
+      <DockSplitter count="2" sizes="0.5;0.5" orientation="-">
        <DockArea name="...">
-        <plot flip_x="false" style="Lines" flip_y="false" mode="TimeSeries">
-         <range right="1653592784.555814" left="1653592744.578619" bottom="-6.213908" top="0.536203"/>
+        <plot mode="TimeSeries" flip_x="false" style="Lines" flip_y="false">
+         <range bottom="-6.289392" right="1653593922.650136" top="0.153400" left="1653593882.676114"/>
          <limitY/>
-         <curve name="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered/wrench/force/x" color="#1f77b4"/>
-         <curve name="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered/wrench/force/y" color="#d62728"/>
-         <curve name="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered/wrench/force/z" color="#1ac938"/>
+         <curve color="#1f77b4" name="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered/wrench/force/x"/>
+         <curve color="#d62728" name="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered/wrench/force/y"/>
+         <curve color="#1ac938" name="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered/wrench/force/z"/>
         </plot>
        </DockArea>
        <DockArea name="...">
-        <plot flip_x="false" style="Lines" flip_y="false" mode="TimeSeries">
-         <range right="1653592784.556296" left="1653592744.586644" bottom="-0.998915" top="5.602512"/>
+        <plot mode="TimeSeries" flip_x="false" style="Lines" flip_y="false">
+         <range bottom="-1.288336" right="1653593922.669618" top="5.623139" left="1653593882.691201"/>
          <limitY/>
-         <curve name="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered/wrench/force/x" color="#17becf"/>
-         <curve name="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered/wrench/force/y" color="#bcbd22"/>
-         <curve name="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered/wrench/force/z" color="#1f77b4"/>
+         <curve color="#17becf" name="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered/wrench/force/x"/>
+         <curve color="#bcbd22" name="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered/wrench/force/y"/>
+         <curve color="#1f77b4" name="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered/wrench/force/z"/>
         </plot>
        </DockArea>
       </DockSplitter>
-      <DockSplitter count="2" orientation="-" sizes="0.500557;0.499443">
+      <DockSplitter count="2" sizes="0.5;0.5" orientation="-">
        <DockArea name="...">
-        <plot flip_x="false" style="Lines" flip_y="false" mode="TimeSeries">
-         <range right="1653592784.555814" left="1653592744.578619" bottom="-1.490784" top="1.658612"/>
+        <plot mode="TimeSeries" flip_x="false" style="Lines" flip_y="false">
+         <range bottom="-1.364113" right="1653593922.650136" top="1.686938" left="1653593882.676114"/>
          <limitY/>
-         <curve name="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered/wrench/torque/x" color="#ff7f0e"/>
-         <curve name="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered/wrench/torque/y" color="#f14cc1"/>
-         <curve name="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered/wrench/torque/z" color="#9467bd"/>
+         <curve color="#ff7f0e" name="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered/wrench/torque/x"/>
+         <curve color="#f14cc1" name="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered/wrench/torque/y"/>
+         <curve color="#9467bd" name="/oarbot_blue/j2n6s300_right_driver/out/tool_wrench_filtered/wrench/torque/z"/>
         </plot>
        </DockArea>
        <DockArea name="...">
-        <plot flip_x="false" style="Lines" flip_y="false" mode="TimeSeries">
-         <range right="1653592784.556296" left="1653592744.586644" bottom="-1.031133" top="0.025150"/>
+        <plot mode="TimeSeries" flip_x="false" style="Lines" flip_y="false">
+         <range bottom="-0.962490" right="1653593922.669618" top="0.023475" left="1653593882.691201"/>
          <limitY/>
-         <curve name="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered/wrench/torque/x" color="#d62728"/>
-         <curve name="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered/wrench/torque/y" color="#1ac938"/>
-         <curve name="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered/wrench/torque/z" color="#ff7f0e"/>
+         <curve color="#d62728" name="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered/wrench/torque/x"/>
+         <curve color="#1ac938" name="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered/wrench/torque/y"/>
+         <curve color="#ff7f0e" name="/oarbot_silver/j2n6s300_left_driver/out/tool_wrench_filtered/wrench/torque/z"/>
         </plot>
        </DockArea>
       </DockSplitter>
@@ -49,7 +49,37 @@
     </DockSplitter>
    </Container>
   </Tab>
-  <currentTabIndex index="0"/>
+  <Tab containers="1" tab_name="Joint Torques">
+   <Container>
+    <DockSplitter count="2" sizes="0.5;0.5" orientation="-">
+     <DockArea name="Blue/Right Joint Torques">
+      <plot mode="TimeSeries" flip_x="false" style="Lines" flip_y="false">
+       <range bottom="-2.368288" right="1653593925.579678" top="0.886369" left="1653593885.581770"/>
+       <limitY/>
+       <curve color="#1f77b4" name="/oarbot_blue/j2n6s300_right_driver/out/joint_state/j2n6s300_right_joint_1/effort"/>
+       <curve color="#d62728" name="/oarbot_blue/j2n6s300_right_driver/out/joint_state/j2n6s300_right_joint_2/effort"/>
+       <curve color="#1ac938" name="/oarbot_blue/j2n6s300_right_driver/out/joint_state/j2n6s300_right_joint_3/effort"/>
+       <curve color="#ff7f0e" name="/oarbot_blue/j2n6s300_right_driver/out/joint_state/j2n6s300_right_joint_4/effort"/>
+       <curve color="#f14cc1" name="/oarbot_blue/j2n6s300_right_driver/out/joint_state/j2n6s300_right_joint_5/effort"/>
+       <curve color="#9467bd" name="/oarbot_blue/j2n6s300_right_driver/out/joint_state/j2n6s300_right_joint_6/effort"/>
+      </plot>
+     </DockArea>
+     <DockArea name="Silver/Left Joint Torques">
+      <plot mode="TimeSeries" flip_x="false" style="Lines" flip_y="false">
+       <range bottom="-0.500355" right="1653593925.583466" top="1.811519" left="1653593885.608751"/>
+       <limitY/>
+       <curve color="#17becf" name="/oarbot_silver/j2n6s300_left_driver/out/joint_state/j2n6s300_left_joint_1/effort"/>
+       <curve color="#bcbd22" name="/oarbot_silver/j2n6s300_left_driver/out/joint_state/j2n6s300_left_joint_2/effort"/>
+       <curve color="#1f77b4" name="/oarbot_silver/j2n6s300_left_driver/out/joint_state/j2n6s300_left_joint_3/effort"/>
+       <curve color="#d62728" name="/oarbot_silver/j2n6s300_left_driver/out/joint_state/j2n6s300_left_joint_4/effort"/>
+       <curve color="#1ac938" name="/oarbot_silver/j2n6s300_left_driver/out/joint_state/j2n6s300_left_joint_5/effort"/>
+       <curve color="#ff7f0e" name="/oarbot_silver/j2n6s300_left_driver/out/joint_state/j2n6s300_left_joint_6/effort"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <currentTabIndex index="1"/>
  </tabbed_widget>
  <use_relative_time_offset enabled="0"/>
  <!-- - - - - - - - - - - - - - - -->
