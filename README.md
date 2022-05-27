@@ -243,10 +243,10 @@ Then to correct the torque readings on Kinova arms, run:
 
 To plot the Force/Torque plots either run:
 ```
-./test_launcher_rqt_plotter.bash
+./rqt_plotter.bash
 ```
 
 Or if you have PlotJuggler installed, run:
 ```
-./test_launcher_plotjuggler.bash
+./plotjuggler.bash
 ```
