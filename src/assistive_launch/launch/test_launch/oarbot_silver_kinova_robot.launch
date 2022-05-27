@@ -45,7 +45,7 @@
     <param name="robot_name" value="$(arg kinova_robotName)" />
     <param name="min_singular_value_topic_name" value="$(arg kinova_robotName)_driver/out/min_singular_value" />
     <param name="min_singular_value_thres" value="0.08" /> <!-- to show a warning only -->
-    <param name="joint_torque_dead_zone_thres" value="0.7" />
+    <param name="joint_torque_dead_zone_thres" value="[1.0,1.0,1.0, 0.6,0.6,0.6]" />
     <remap from="out_custom/tool_wrench" to="$(arg kinova_robotName)_driver/out/tool_wrench"/>
     <remap from="out_custom/tool_pose" to="$(arg kinova_robotName)_driver/out/tool_pose"/>
   </node>
