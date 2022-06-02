@@ -2,8 +2,11 @@ kinect_body_tracking_data_topic_name: 'body_tracking_data'
 tf_camera_frame_id: 'j2n6s300_left_depth_camera_link'
 body_joints_tf_prefix: 'j2n6s300_left_body_'
 
-pose_covariance_diagonal_max: [2.25e-2, 2.25e-2, 2.25e-2,      1.219e-1, 1.219e-1, 1.219e-1] # [x,y,z,rotx,roty,rotz] # least reliable
-pose_covariance_diagonal_min: [9.0e-4, 9.0e-4, 9.0e-4,      7.6e-3, 7.6e-3, 7.6e-3] # [x,y,z,rotx,roty,rotz] # most_reliable
+# pose_covariance_diagonal_max: [2.25e-2, 2.25e-2, 2.25e-2,      1.219e-1, 1.219e-1, 1.219e-1] # [x,y,z,rotx,roty,rotz] # least reliable
+# pose_covariance_diagonal_min: [9.0e-4, 9.0e-4, 9.0e-4,      7.6e-3, 7.6e-3, 7.6e-3] # [x,y,z,rotx,roty,rotz] # most_reliable
+pose_covariance_diagonal_max: [2.25e-1, 2.25e-1, 2.25e-1,      1.219e-1, 1.219e-1, 1.219e-1] # [x,y,z,rotx,roty,rotz] # least reliable
+pose_covariance_diagonal_min: [9.0e-2, 9.0e-2, 9.0e-2,      7.6e-2, 7.6e-2, 7.6e-2] # [x,y,z,rotx,roty,rotz] # most_reliable
+
 tf_broadcast_enable: true
 
 reliability_func_param_m: 0.0
