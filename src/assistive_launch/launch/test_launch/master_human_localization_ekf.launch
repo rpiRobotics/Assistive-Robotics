@@ -1,5 +1,5 @@
 <launch>
-  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+  <node pkg="robot_localization" type="ekf_localization_node" name="human_localization_ekf_se" clear_params="true">
     <rosparam command="load" file="$(find assistive_launch)/config/master_human_localization_ekf.yaml" />
 
    <!--  Placeholder for output topic remapping

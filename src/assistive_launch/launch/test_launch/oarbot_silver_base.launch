@@ -44,7 +44,7 @@
     </node>
 
 	<!-- Launch robot localization -->
-    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+    <node pkg="robot_localization" type="ekf_localization_node" name="robot_localization_ekf_se" clear_params="true">
         <rosparam command="load" file="$(find assistive_launch)/config/oarbot_silver_robot_localization_ekf.yaml" />
     </node>
 
