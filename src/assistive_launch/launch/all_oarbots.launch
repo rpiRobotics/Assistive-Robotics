@@ -7,4 +7,5 @@
     <include file="$(find assistive_launch)/launch/oarbot_silver.launch" />
     <include file="$(find assistive_launch)/launch/oarbot_blue.launch" />
     <include file="$(find assistive_launch)/launch/test_launch/nuc_kinect_with_aruco.launch" />
+    <include file="$(find assistive_launch)/launch/test_launch/master_human_localization_ekf.launch" />
 </launch>
