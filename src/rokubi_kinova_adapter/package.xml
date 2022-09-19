@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>rokubi_kinova_adapter</name>
+  <version>0.6.1</version>
+  <description>The rokubi_kinova_adapter package</description>
+
+  <maintainer email="sw-support@botasys.com">Bota Systems AG</maintainer>
+
+  <license>Apache 2.0</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>xacro</depend>
+</package>

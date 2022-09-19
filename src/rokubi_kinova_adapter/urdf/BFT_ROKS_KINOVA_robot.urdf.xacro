@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro"
+       name="sensor" >
+
+ 
+  <xacro:arg name="prefix" default="ft_sensor0"/>
+
+  <xacro:include filename="$(find rokubi_kinova_adapter)/urdf/BFT_ROKS_KINOVA.urdf.xacro" />
+  <!-- <xacro:include filename="$(find rokubi_kinova_adapter)/urdf/BFT_ROKS_SER_M8.urdf.xacro" /> -->
+
+  <xacro:property name="prefix" value="$(arg prefix)" />
+
+  <xacro:BFT_ROKS_KINOVA prefix="${prefix}" />
+
+  <link name="world" />
+
+  <joint name="world_joint" type="fixed">
+    <parent link="world" />
+    <child link = "$(arg prefix)_robot_side" />
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+  </joint>
+
+</robot>

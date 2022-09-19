@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-1-g15f4949  Build Version: 1.6.7594.29634
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<root xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:gazebo="http://playerstage.sourceforge.net/gazebo/xmlschema/#gz"
+    xmlns:model="http://playerstage.sourceforge.net/gazebo/xmlschema/#model"
+    xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+    xmlns:body="http://playerstage.sourceforge.net/gazebo/xmlschema/#body"
+    xmlns:geom="http://playerstage.sourceforge.net/gazebo/xmlschema/#geom"
+    xmlns:joint="http://playerstage.sourceforge.net/gazebo/xmlschema/#joint"
+    xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+    xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+    xmlns:rendering="http://playerstage.sourceforge.net/gazebo/xmlschema/#rendering"
+    xmlns:renderable="http://playerstage.sourceforge.net/gazebo/xmlschema/#renderable"
+    xmlns:physics="http://playerstage.sourceforge.net/gazebo/xmlschema/#physics"
+    xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find rokubi_kinova_adapter)/urdf/BFT_ROKS_SER_M8.urdf.xacro" />
+
+  <xacro:macro name="BFT_ROKS_KINOVA" params="prefix">
+    <link name="${prefix}_robot_side">
+      <inertial>
+        <origin
+          xyz="-1.493E-05 0.00031132 0.030733"
+          rpy="0 0 0" />
+        <mass
+          value="0.11363" />
+        <inertia
+          ixx="6.0031E-05"
+          ixy="-4.9397E-10"
+          ixz="2.1498E-08"
+          iyy="6.1766E-05"
+          iyz="-3.7872E-07"
+          izz="7.9726E-05" />
+      </inertial>
+      <visual>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://rokubi_kinova_adapter/meshes/adapter/mounting.STL" />
+        </geometry>
+        <material
+          name="">
+          <color
+            rgba="0.8 0.8 0.8 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://rokubi_kinova_adapter/meshes/adapter/mounting.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <link name="${prefix}_adapter"/>
+    <joint
+      name="${prefix}_adapter_joint"
+      type="fixed">
+      <origin
+        xyz="0 0 0.045"
+        rpy="0 0 0" />
+      <parent
+        link="${prefix}_robot_side" />
+      <child
+        link="${prefix}_adapter" />
+      <axis
+        xyz="0 0 0" />
+    </joint>
+
+    <xacro:BFT_ROKS_SER_M8 prefix="${prefix}" />
+
+    <joint name="${prefix}_sensor_joint" type="fixed">
+      <parent link="${prefix}_adapter" />
+      <child link = "${prefix}_mounting" />
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <joint name="${prefix}_gripper_adapter_joint" type="fixed">
+      <parent link="${prefix}_wrench" />
+      <child link = "${prefix}_gripper_adapter" />
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <link name="${prefix}_gripper_adapter">
+      <inertial>
+        <origin
+          xyz="4.4172E-05 0.00059454 0.00333"
+          rpy="0 0 0" />
+        <mass
+          value="0.050072" />
+        <inertia
+          ixx="1.0012E-05"
+          ixy="1.3176E-09"
+          ixz="-4.0839E-09"
+          iyy="1.0674E-05"
+          iyz="-5.0596E-09"
+          izz="2.0223E-05" />
+      </inertial>
+      <visual>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://rokubi_kinova_adapter/meshes/adapter/gripper_adapter.STL" />
+        </geometry>
+        <material
+          name="">
+          <color
+            rgba="0.8 0.8 0.8 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://rokubi_kinova_adapter/meshes/adapter/gripper_adapter.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <link name="${prefix}_gripper"/>
+    <joint
+      name="${prefix}_gripper_joint"
+      type="fixed">
+      <origin
+        xyz="0 0 0.007"
+        rpy="0 0 0" />
+      <parent
+        link="${prefix}_gripper_adapter" />
+      <child
+        link="${prefix}_gripper" />
+      <axis
+        xyz="0 0 0" />
+    </joint>
+
+  </xacro:macro>
+</root>
