@@ -1,0 +1,21 @@
+robot_name: "j2n6s300_right"
+
+joint_state_topic_name: "j2n6s300_right_driver/out/joint_state" # subscribed 
+
+tool_wrench_topic_name: "j2n6s300_right_driver/out/tool_wrench" #(wrt base) # published
+tool_pose_topic_name:  "j2n6s300_right_driver/out/tool_pose" #(wrt base) # published
+min_singular_value_topic_name: "j2n6s300_right_driver/out/min_singular_value" # published
+
+min_singular_value_thres: 0.08 # to show a warning only 
+joint_torque_dead_zone_thres: [1.2,1.2,1.2, 0.6,0.6,0.6]
+
+# Default link lengths (DO  CHANGE UNLESS YOU DON'T KNOW WHAT YOU ARE DOING)
+# D1: 0.2755
+# D2: 0.41
+# e2: 0.0098
+# D3: 0.2073
+# D4: 0.0741
+# D5: 0.0741
+# D6: 0.1600
+
+D6: 0.2370 # With rokubi ft sensor
