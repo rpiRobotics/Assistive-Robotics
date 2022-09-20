@@ -1,0 +1,15 @@
+<launch>
+  <node name="ft_sensor" pkg="rokubimini_serial" type="rokubimini_serial_bus_manager_node" output="screen">
+    <rosparam command="load" file="$(find assistive_launch)/config/oarbot_silver_ft_bota_rokubi.yaml"  />
+  </node>
+
+  <?ignore
+  <!-- Visualization -->
+  <node  name="multiplot" pkg="rqt_multiplot" type="rqt_multiplot" args="--multiplot-config $(find rokubi_kinova_adapter)/config/force_torque_plot_left.xml --multiplot-run-all"/>
+  
+  <!-- URDF and RVIZ with kinova adapter -->
+  <include file="$(find rokubi_kinova_adapter)/launch/display.launch">
+        <arg name="sensor" value="BFT_ROKS_KINOVA_robot" />
+  </include>
+  ?>
+</launch>

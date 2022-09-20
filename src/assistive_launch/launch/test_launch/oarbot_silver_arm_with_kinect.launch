@@ -85,5 +85,8 @@
         <rosparam file="$(find assistive_launch)/config/oarbot_silver_freq_adjuster_arm.yaml"/>
     </node>
 
+    <!-- Launch Bota Rokubimini FT sensor -->
+    <include file="$(find assistive_launch)/launch/test_launch/oarbot_silver_ft_bota_rokubi.launch">
+    </include>
 </group> 
 </launch>
