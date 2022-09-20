@@ -10,5 +10,5 @@ arm2camera_pose:
     w: 0.5
   position: # in meters
     x: 0.0
-    y: -0.055
-    z: 0.04
+    y: -0.1064
+    z: -0.10015
