@@ -98,6 +98,8 @@ SCRIPTS=(
     grep -qxF 'export ROSLAUNCH_SSH_UNKNOWN=1' ~/.bashrc || echo 'export ROSLAUNCH_SSH_UNKNOWN=1' >> ~/.bashrc;
     source ~/.bashrc;
     source ~/catkin_ws_assistive/devel/setup.bash;    
+    grep -qxF 'razer    soft   rtprio    99' /etc/security/limits.conf || echo 1234 | sudo -S echo 'razer    soft   rtprio    99' >> /etc/security/limits.conf; # for FT sensor, effective after reboot
+    grep -qxF 'razer    hard   rtprio    99' /etc/security/limits.conf || echo 1234 | sudo -S echo 'razer    hard   rtprio    99' >> /etc/security/limits.conf; # for FT sensor, effective after reboot
     "
 
     ############### OARBOT_SILVER ##############
@@ -164,7 +166,9 @@ SCRIPTS=(
     catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;tablet_arduino_talker';
     grep -qxF 'source ~/catkin_ws_assistive/devel/setup.bash' ~/.bashrc || echo 'source ~/catkin_ws_assistive/devel/setup.bash' >> ~/.bashrc;
     source ~/.bashrc;
-    source ~/catkin_ws_assistive/devel/setup.bash;    
+    source ~/catkin_ws_assistive/devel/setup.bash;
+    grep -qxF 'oarbot_silver    soft   rtprio    99' /etc/security/limits.conf || echo 1234 | sudo -S echo 'oarbot_silver    soft   rtprio    99' >> /etc/security/limits.conf; # for FT sensor, effective after reboot
+    grep -qxF 'oarbot_silver    hard   rtprio    99' /etc/security/limits.conf || echo 1234 | sudo -S echo 'oarbot_silver    hard   rtprio    99' >> /etc/security/limits.conf; # for FT sensor, effective after reboot 
     "
 
     ############### OARBOT_BLUE ##############
@@ -231,7 +235,9 @@ SCRIPTS=(
     catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;tablet_arduino_talker';
     grep -qxF 'source ~/catkin_ws_assistive/devel/setup.bash' ~/.bashrc || echo 'source ~/catkin_ws_assistive/devel/setup.bash' >> ~/.bashrc;
     source ~/.bashrc;
-    source ~/catkin_ws_assistive/devel/setup.bash;    
+    source ~/catkin_ws_assistive/devel/setup.bash;
+    grep -qxF 'oarbot_blue    soft   rtprio    99' /etc/security/limits.conf || echo 1234 | sudo -S echo 'oarbot_blue    soft   rtprio    99' >> /etc/security/limits.conf; # for FT sensor, effective after reboot
+    grep -qxF 'oarbot_blue    hard   rtprio    99' /etc/security/limits.conf || echo 1234 | sudo -S echo 'oarbot_blue    hard   rtprio    99' >> /etc/security/limits.conf; # for FT sensor, effective after reboot 
     "
     
     ############### NUC ##############
