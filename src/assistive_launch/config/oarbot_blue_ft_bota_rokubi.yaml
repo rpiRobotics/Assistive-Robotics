@@ -1,4 +1,4 @@
-port: "/dev/ttyUSB0"
+port: "/dev/sensor_bota_rokubi_ft_0" # "/dev/ttyUSB0"
 
 # Nothing needs to be adjusted below this line!! except the name!!
 # FT offsets can be removed with gravity compensation package

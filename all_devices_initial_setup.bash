@@ -73,10 +73,12 @@ SCRIPTS=(
     echo 1234 | sudo wget https://raw.githubusercontent.com/Kinovarobotics/kinova-ros/melodic-devel/kinova_driver/udev/10-kinova-arm.rules;
     echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-microstrain-imu.rules;
     echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-hokuyo-ust-20ln.rules;
+    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-bota-rokubi-ft.rules;
     echo 1234 | sudo rm 10-kinova-arm.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-k4a.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-microstrain-imu.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-hokuyo-ust-20ln.rules.*; # removes the duplicates
+    echo 1234 | sudo rm 99-bota-rokubi-ft.rules.*; # removes the duplicates
     ##################
     cd; 
     mkdir catkin_ws_assistive; 
@@ -145,10 +147,12 @@ SCRIPTS=(
     echo 1234 | sudo wget https://raw.githubusercontent.com/Kinovarobotics/kinova-ros/melodic-devel/kinova_driver/udev/10-kinova-arm.rules;
     echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-microstrain-imu.rules;
     echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-hokuyo-ust-20ln.rules;
+    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-bota-rokubi-ft.rules;
     echo 1234 | sudo rm 10-kinova-arm.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-k4a.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-microstrain-imu.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-hokuyo-ust-20ln.rules.*; # removes the duplicates
+    echo 1234 | sudo rm 99-bota-rokubi-ft.rules.*; # removes the duplicates
     ##################
     cd; 
     mkdir catkin_ws_assistive; 
@@ -214,10 +218,12 @@ SCRIPTS=(
     echo 1234 | sudo wget https://raw.githubusercontent.com/Kinovarobotics/kinova-ros/melodic-devel/kinova_driver/udev/10-kinova-arm.rules;
     echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-microstrain-imu.rules;
     echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-hokuyo-ust-20ln.rules;
+    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-bota-rokubi-ft.rules;
     echo 1234 | sudo rm 10-kinova-arm.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-k4a.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-microstrain-imu.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-hokuyo-ust-20ln.rules.*; # removes the duplicates
+    echo 1234 | sudo rm 99-bota-rokubi-ft.rules.*; # removes the duplicates
     ##################
     cd; 
     mkdir catkin_ws_assistive; 
@@ -279,10 +285,12 @@ SCRIPTS=(
     echo 1234 | sudo wget https://raw.githubusercontent.com/Kinovarobotics/kinova-ros/melodic-devel/kinova_driver/udev/10-kinova-arm.rules;
     echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-microstrain-imu.rules;
     echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-hokuyo-ust-20ln.rules;
+    echo 1234 | sudo wget https://raw.githubusercontent.com/rpiRobotics/Assistive-Robotics/main/udev/99-bota-rokubi-ft.rules;
     echo 1234 | sudo rm 10-kinova-arm.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-k4a.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-microstrain-imu.rules.*; # removes the duplicates
     echo 1234 | sudo rm 99-hokuyo-ust-20ln.rules.*; # removes the duplicates
+    echo 1234 | sudo rm 99-bota-rokubi-ft.rules.*; # removes the duplicates
     ##################
     cd; 
     mkdir catkin_ws_assistive; 
