@@ -89,10 +89,10 @@
     <include file="$(find assistive_launch)/launch/test_launch/oarbot_blue_ft_bota_rokubi.launch">
     </include>
 
-    <!-- Launch arm to FT sensor TF broadcaster -->
-    <node name="tf_arm_ft_broadcaster" pkg="tf_broadcasters" type="tf_arm_ft_broadcaster.py" output="screen">
-        <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_arm_ft.yaml"/>
-    </node>
+    <!-- Launch arm to FT sensor TF broadcaster (NO need if the sensor name is given accordingly)-->
+    <!-- <node name="tf_arm_ft_broadcaster" pkg="tf_broadcasters" type="tf_arm_ft_broadcaster.py" output="screen"> -->
+        <!-- <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_arm_ft.yaml"/> -->
+    <!-- </node> -->
 
 </group>
 </launch>

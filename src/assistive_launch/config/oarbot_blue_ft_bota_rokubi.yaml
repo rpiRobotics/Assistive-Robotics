@@ -8,8 +8,8 @@ num_spinners: 1
 # time_step: 0.01
 
 rokubiminis:
-  ft_right: # must be same as name below
-    name: "ft_right"
+  j2n6s300_right: # must be same as name below
+    name: "j2n6s300_right"
     product_name: "BFT-ROKS-SER-M8"
     set_reading_to_nan_on_disconnect:  false
     imu_acceleration_range: 2
