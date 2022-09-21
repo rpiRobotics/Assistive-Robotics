@@ -18,6 +18,7 @@
     </include>
 
     <!-- Launch Azure Kinect -->
+    <remap from="imu" to="$(arg prefix_for_tf)_kinect_imu"/>
     <include file="$(find azure_kinect_ros_driver)/launch/kinect_rgbd.launch">
         <arg name="camera" value="k4a" />
         <!-- publish Azure Kinect coordiante frames -->
@@ -65,7 +66,6 @@
         <arg name="hw_registered_processing"        value="false" unless="$(arg depth_registration)" />
         <arg name="sw_registered_processing"        value="true" unless="$(arg depth_registration)" /> -->
 
-        <remap from="imu" to="$(arg prefix_for_tf)_kinect_imu"/>
     </include>
 
     <!-- Launch Kinect Body TF broadcasters -->

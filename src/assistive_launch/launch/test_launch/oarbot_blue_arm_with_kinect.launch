@@ -6,6 +6,7 @@
     <arg name="prefix_for_tf" default="j2n6s300_right" />  <!-- Applies to both kinova arm and the kinect -->
     
     <!-- Launch Kinova Arm -->
+    <remap from="imu" to="$(arg prefix_for_tf)_kinect_imu"/>
     <include file="$(find assistive_launch)/launch/test_launch/oarbot_blue_kinova_robot.launch">
         <arg name="use_urdf" value="true"/>
         <arg name="kinova_robotType" value="j2n6s300" />
@@ -65,7 +66,6 @@
         <arg name="hw_registered_processing"        value="false" unless="$(arg depth_registration)" />
         <arg name="sw_registered_processing"        value="true" unless="$(arg depth_registration)" /> -->
 
-        <remap from="imu" to="$(arg prefix_for_tf)_kinect_imu"/>
     </include>
 
     <!-- Launch Kinect Body TF broadcasters -->
