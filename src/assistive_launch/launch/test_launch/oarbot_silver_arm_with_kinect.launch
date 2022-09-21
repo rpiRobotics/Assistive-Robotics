@@ -65,6 +65,7 @@
         <arg name="hw_registered_processing"        value="false" unless="$(arg depth_registration)" />
         <arg name="sw_registered_processing"        value="true" unless="$(arg depth_registration)" /> -->
 
+        <remap from="imu" to="$(arg kinova_robotName)_kinect_imu"/>
     </include>
 
     <!-- Launch Kinect Body TF broadcasters -->
@@ -93,5 +94,16 @@
     <!-- <node name="tf_arm_ft_broadcaster" pkg="tf_broadcasters" type="tf_arm_ft_broadcaster.py" output="screen"> -->
         <!-- <rosparam file="$(find assistive_launch)/config/oarbot_silver_tf_arm_ft.yaml"/> -->
     <!-- </node> -->
+
+    <!-- imu filter node for orientation estimation for ft sensor-->
+    <node name="imu_filter" pkg="imu_filter_madgwick" type="imu_filter_node">
+        <param name="reverse_tf" type="bool" value="true"/>
+        <param name="use_mag" type="bool" value="false"/>
+        <param name="fixed_frame" type="string" value="$(arg prefix_for_tf)_wrench"/>
+        <!-- remap for subscription -->
+        <remap from="imu/data_raw" to="$(arg kinova_robotName)_kinect_imu"/>
+        <!-- remap for publishing -->
+        <remap from="imu/data" to="$(arg kinova_robotName)_ft_imu"/>
+    </node>
 </group> 
 </launch>
