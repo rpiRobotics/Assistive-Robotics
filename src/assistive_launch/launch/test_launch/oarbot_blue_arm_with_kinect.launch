@@ -94,7 +94,7 @@
         <!-- <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_arm_ft.yaml"/> -->
     <!-- </node> -->
 
-    <!-- imu filter node for orientation estimation for ft sensor-->
+    <!-- imu transformer node for ft sensor-->
     <node name="imu_transformer" pkg="imu_transformer" type="imu_transformer_node">
         <param name="target_frame" type="string" value="$(arg prefix_for_tf)_wrench"/>
         <!-- remap for subscription -->
