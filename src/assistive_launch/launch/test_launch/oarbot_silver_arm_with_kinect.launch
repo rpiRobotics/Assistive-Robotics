@@ -18,7 +18,7 @@
     </include>
 
     <!-- Launch Azure Kinect -->
-    <remap from="imu" to="$(arg prefix_for_tf)_kinect_imu/data_raw"/>
+    <!-- <remap from="imu" to="$(arg prefix_for_tf)_kinect_imu/data_raw"/> -->
     <include file="$(find azure_kinect_ros_driver)/launch/kinect_rgbd.launch">
         <arg name="camera" value="k4a" />
         <!-- publish Azure Kinect coordiante frames -->
