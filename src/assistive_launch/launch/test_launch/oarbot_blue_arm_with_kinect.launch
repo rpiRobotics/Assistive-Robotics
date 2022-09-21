@@ -64,8 +64,8 @@
         <arg name="sw_registered_processing"        value="false" if="$(arg depth_registration)" />
         <arg name="hw_registered_processing"        value="false" unless="$(arg depth_registration)" />
         <arg name="sw_registered_processing"        value="true" unless="$(arg depth_registration)" /> -->
-        
-        <remap from="imu" to="$(arg kinova_robotName)_kinect_imu"/>
+
+        <remap from="imu" to="$(arg prefix_for_tf)_kinect_imu"/>
     </include>
 
     <!-- Launch Kinect Body TF broadcasters -->
@@ -101,9 +101,9 @@
         <param name="use_mag" type="bool" value="false"/>
         <param name="fixed_frame" type="string" value="$(arg prefix_for_tf)_wrench"/>
         <!-- remap for subscription -->
-        <remap from="imu/data_raw" to="$(arg kinova_robotName)_kinect_imu"/>
+        <remap from="imu/data_raw" to="$(arg prefix_for_tf)_kinect_imu"/>
         <!-- remap for publishing -->
-        <remap from="imu/data" to="$(arg kinova_robotName)_ft_imu"/>
+        <remap from="imu/data" to="$(arg prefix_for_tf)_ft_imu"/>
     </node>
 </group>
 </launch>
