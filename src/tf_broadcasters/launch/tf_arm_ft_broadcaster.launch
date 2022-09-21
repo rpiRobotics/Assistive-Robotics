@@ -1,0 +1,10 @@
+<launch>
+	<arg name="pkg_name" default="tf_broadcasters"/>
+	<arg name="node_name" default="tf_arm_ft_broadcaster"/>		
+	<arg name="param_file_name" default="default" doc="Specify a param file. ex:megaman"/>
+	
+    <node name="$(arg node_name)" pkg="$(arg pkg_name)" type="$(arg node_name).py" output="screen">
+		<rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_arm_ft.yaml"/>
+    </node>
+    
+</launch>

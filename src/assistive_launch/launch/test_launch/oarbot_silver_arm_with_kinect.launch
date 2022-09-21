@@ -88,5 +88,10 @@
     <!-- Launch Bota Rokubimini FT sensor -->
     <include file="$(find assistive_launch)/launch/test_launch/oarbot_silver_ft_bota_rokubi.launch">
     </include>
+
+    <!-- Launch arm to FT sensor TF broadcaster -->
+    <node name="tf_arm_ft_broadcaster" pkg="tf_broadcasters" type="tf_arm_ft_broadcaster.py" output="screen">
+        <rosparam file="$(find assistive_launch)/config/oarbot_silver_tf_arm_ft.yaml"/>
+    </node>
 </group> 
 </launch>

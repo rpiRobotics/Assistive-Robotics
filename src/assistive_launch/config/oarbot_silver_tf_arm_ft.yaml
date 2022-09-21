@@ -1,0 +1,13 @@
+tf_arm_frame_id: 'j2n6s300_left_wrench' # comes from URDF/xacro
+tf_ft_frame_id: 'ft_left_wrench' # defined as: <ft sensor name> + _wrench
+
+arm2ft_pose: 
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  position: # in meters
+    x: 0.0
+    y: 0.0
+    z: 0.0
