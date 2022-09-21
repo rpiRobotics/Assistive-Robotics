@@ -6,7 +6,6 @@
     <arg name="prefix_for_tf" default="j2n6s300_right" />  <!-- Applies to both kinova arm and the kinect -->
     
     <!-- Launch Kinova Arm -->
-    <remap from="imu" to="$(arg prefix_for_tf)_kinect_imu"/>
     <include file="$(find assistive_launch)/launch/test_launch/oarbot_blue_kinova_robot.launch">
         <arg name="use_urdf" value="true"/>
         <arg name="kinova_robotType" value="j2n6s300" />
@@ -19,6 +18,7 @@
     </include>
 
     <!-- Launch Azure Kinect -->
+    <remap from="imu" to="$(arg prefix_for_tf)_kinect_imu/data_raw"/>
     <include file="$(find azure_kinect_ros_driver)/launch/kinect_rgbd.launch">
         <arg name="camera" value="k4a" />
         <!-- publish Azure Kinect coordiante frames -->
