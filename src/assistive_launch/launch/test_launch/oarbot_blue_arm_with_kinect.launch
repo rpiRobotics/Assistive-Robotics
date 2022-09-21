@@ -96,7 +96,7 @@
 
     <!-- imu filter node for orientation estimation for ft sensor-->
     <node name="imu_filter" pkg="imu_filter_madgwick" type="imu_filter_node">
-        <param name="reverse_tf" type="bool" value="false"/>
+        <param name="reverse_tf" type="bool" value="true"/>
         <param name="use_mag" type="bool" value="false"/>
         <param name="fixed_frame" type="string" value="$(arg prefix_for_tf)_wrench"/>
         <!-- remap for subscription -->
