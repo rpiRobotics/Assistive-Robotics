@@ -91,8 +91,9 @@ SCRIPTS=(
     git clone https://github.com/burakaksoy/Azure_Kinect_ROS_Driver.git;
     git clone https://github.com/burakaksoy/kinova-ros.git kinova-ros;
     git clone https://github.com/rpiRobotics/obstacle_detector.git;
-
-    cd ..;
+    cd bota_rokubi_ft_sensor;
+    git clone -b melodic https://github.com/rpiRobotics/force_torque_tools.git;
+    cd ../..;
     ##############
     source /opt/ros/melodic/setup.bash;
     catkin_make -DCATKIN_BLACKLIST_PACKAGES='tablet_arduino_talker';
@@ -167,8 +168,9 @@ SCRIPTS=(
     git clone https://github.com/burakaksoy/Azure_Kinect_ROS_Driver.git;
     git clone https://github.com/burakaksoy/kinova-ros.git kinova-ros;
     git clone https://github.com/rpiRobotics/obstacle_detector.git;
-
-    cd ..;
+    cd bota_rokubi_ft_sensor;
+    git clone -b melodic https://github.com/rpiRobotics/force_torque_tools.git;
+    cd ../..;
     ##############
     source /opt/ros/melodic/setup.bash;
     catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;tablet_arduino_talker';
@@ -240,8 +242,9 @@ SCRIPTS=(
     git clone https://github.com/burakaksoy/Azure_Kinect_ROS_Driver.git;
     git clone https://github.com/burakaksoy/kinova-ros.git kinova-ros;
     git clone https://github.com/rpiRobotics/obstacle_detector.git;
-
-    cd ..;
+    cd bota_rokubi_ft_sensor;
+    git clone -b melodic https://github.com/rpiRobotics/force_torque_tools.git;
+    cd ../..;
     ##############
     source /opt/ros/melodic/setup.bash;
     catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;tablet_arduino_talker';
@@ -307,8 +310,9 @@ SCRIPTS=(
     git clone https://github.com/burakaksoy/Azure_Kinect_ROS_Driver.git;
     git clone https://github.com/burakaksoy/kinova-ros.git kinova-ros;
     git clone https://github.com/rpiRobotics/obstacle_detector.git;
-
-    cd ..;
+    cd bota_rokubi_ft_sensor;
+    git clone -b melodic https://github.com/rpiRobotics/force_torque_tools.git;
+    cd ../..;
     ##############
     source /opt/ros/melodic/setup.bash;
     catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;tablet_arduino_talker';

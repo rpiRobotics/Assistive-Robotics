@@ -102,5 +102,16 @@
         <!-- remap for publishing -->
         <remap from="imu_out/data" to="$(arg prefix_for_tf)_ft_imu"/>
     </node>
+
+    <!-- FT gravity compensation node -->
+    <node name="imu_gravity_compensation" pkg="gravity_compensation" type="gravity_compensation_node" cwd="node" respawn="false" output="screen">
+        <rosparam command="load" file="$(find assistive_launch)/config/oarbot_blue_ft_calib_data.yaml"/>
+        <!-- remap for subscription -->
+        <remap from="ft_raw" to="ft_sensor/$(arg prefix_for_tf)/ft_sensor_readings/wrench" />
+        <remap from="imu" to="$(arg prefix_for_tf)_ft_imu" />
+        <!-- remap for publishing -->
+        <remap from="ft_zeroed" to="ft_sensor/$(arg prefix_for_tf)/ft_sensor_readings/wrench_zeroed" />
+        <remap from="ft_compensated" to="ft_sensor/$(arg prefix_for_tf)/ft_sensor_readings/wrench_compensated" />
+    </node>
 </group>
 </launch>
