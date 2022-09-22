@@ -236,7 +236,7 @@ def main():
     ftCalib = FTCalib()
 
     i = 0
-    speed = 12 # a number to execute a pose every that location 
+    speed = 1 # a number to execute a pose every that location 
     for joint_pose in joint_poses_all:
         if (i % speed == 0):
             #####################################################################
