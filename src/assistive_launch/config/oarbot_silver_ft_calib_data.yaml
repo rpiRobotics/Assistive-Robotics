@@ -1,14 +1,14 @@
 # ns: "" #(string, default: "~") #All published topics are pushed down into the <ns> namespace, i.e., the topics for the compensated force-torque measurements (ft_zeroed and ft_compensated) will be published under <ns> (<ns>/ft_zeroed and <ns>/ft_compensated.
 
-bias: [1.01070284, -15.15579777,  -4.50297542, -0.16396863, -0.04490225, -0.02025673] # 6x1 double array which contains the ([fx, fy, fz, tx, ty, tz]) force-torque bias of the force-torque sensor.
+bias: [-1.56365157, -3.58940157, -1.63655572,  0.06126408, -0.03329708, -0.1085475] # 6x1 double array which contains the ([fx, fy, fz, tx, ty, tz]) force-torque bias of the force-torque sensor.
 
-gripper_mass: 1.2947030654360585 # (double) mass of the gripper attached to the force-torque sensor.
+gripper_mass: 1.2271697966535375 # (double) mass of the gripper attached to the force-torque sensor.
 
 gripper_com_frame_id: "j2n6s300_left_wrench" # (string) ID of the frame in which the gripper center of mass is expressed.
 
 gripper_com_child_frame_id: "j2n6s300_left_gripper_com" #(string) ID of the (child) frame of the gripper center of mass. This can be freely chosen by the user.
 
-gripper_com_pose: [-0.04731711, -0.00387406,  0.04430228,
+gripper_com_pose: [ 0.0407208,  -0.00243385,  0.05250709,
   0.0, 0.0, 0.0] # (double array) 6x1 array ([x y z r p y]) with x,y,z translation and roll, pitch, yaw orientation (in meters and radians) containing the pose of the gripper COM expressed in the gripper_com_frame_id frame
 
 gripper_com_broadcast_frequency: 100 # (double, default: 100.0) broadcast frequency (in Hz) of the gripper COM pose on /tf.
