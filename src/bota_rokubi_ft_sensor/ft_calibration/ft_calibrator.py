@@ -215,11 +215,16 @@ class ROS_ft_subscriber():
 
 def main():
     file_name = "./ft_calibration_joint_poses_right2.csv"
-    ros_topic_imu = "/oarbot_blue/j2n6s300_right_ft_imu"
-    ros_topic_ft = "/oarbot_blue/ft_sensor/j2n6s300_right/ft_sensor_readings/wrench"
-    # action_address = '/oarbot_silver/j2n6s300_left_driver/joints_action/joint_angles' # For oarbot silver, left
-    action_address = '/oarbot_blue/j2n6s300_right_driver/joints_action/joint_angles' # For oarbot blue, right
+    
+    # ros_topic_imu = "/oarbot_blue/j2n6s300_right_ft_imu"
+    ros_topic_imu = "/oarbot_silver/j2n6s300_left_ft_imu"
+    
+    # ros_topic_ft = "/oarbot_blue/ft_sensor/j2n6s300_right/ft_sensor_readings/wrench"
+    ros_topic_ft = "/oarbot_silver/ft_sensor/j2n6s300_left/ft_sensor_readings/wrench"
 
+    # action_address = '/oarbot_blue/j2n6s300_right_driver/joints_action/joint_angles' # For oarbot blue, right
+    action_address = '/oarbot_silver/j2n6s300_left_driver/joints_action/joint_angles' # For oarbot silver, left
+    
     # initialize ros node
     rospy.init_node('kinova_ft_calibrator', anonymous=True)
 

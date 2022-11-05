@@ -27,7 +27,7 @@
   </group>
 
   <group if="$(arg use_urdf)">
-    <param name="robot_description" command="$(find xacro)/xacro.py '$(find assistive_launch)/urdf/oarbot_silver_$(arg kinova_robotType)_standalone_with_ft.xacro'
+    <param name="robot_description" command="$(find xacro)/xacro '$(find assistive_launch)/urdf/oarbot_silver_$(arg kinova_robotType)_standalone_with_ft.xacro'
       robot_root_name:=$(arg kinova_root_name)
       robot_prefix:=$(arg kinova_prefix)" />
     <node name="$(arg kinova_robotName)_state_publisher"
@@ -39,7 +39,7 @@
   </group>
 
   <!-- Call for Activating manually setup payload and COM estimations  -->
-  <node pkg="rosservice" type="rosservice" name="$(arg kinova_robotName)_rosservice" args="call /oarbot_silver/j2n6s300_left_driver/in/set_torque_control_parameters"/>
+  <!-- <node pkg="rosservice" type="rosservice" name="$(arg kinova_robotName)_rosservice" args="call /oarbot_silver/j2n6s300_left_driver/in/set_torque_control_parameters"/> -->
 
   <node name="$(arg kinova_robotName)_helper_publisher" pkg="kinova_helper" type="helper_publisher.py" output="screen" cwd="node">
     <rosparam file="$(find assistive_launch)/config/oarbot_silver_kinova_helper_publisher.yaml"/>
