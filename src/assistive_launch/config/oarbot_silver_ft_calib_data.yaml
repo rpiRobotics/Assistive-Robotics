@@ -4,9 +4,9 @@ bias: [1.01070284, -15.15579777,  -4.50297542, -0.16396863, -0.04490225, -0.0202
 
 gripper_mass: 1.2947030654360585 # (double) mass of the gripper attached to the force-torque sensor.
 
-gripper_com_frame_id: "j2n6s300_right_wrench" # (string) ID of the frame in which the gripper center of mass is expressed.
+gripper_com_frame_id: "j2n6s300_left_wrench" # (string) ID of the frame in which the gripper center of mass is expressed.
 
-gripper_com_child_frame_id: "j2n6s300_right_gripper_com" #(string) ID of the (child) frame of the gripper center of mass. This can be freely chosen by the user.
+gripper_com_child_frame_id: "j2n6s300_left_gripper_com" #(string) ID of the (child) frame of the gripper center of mass. This can be freely chosen by the user.
 
 gripper_com_pose: [-0.04731711, -0.00387406,  0.04430228,
   0.0, 0.0, 0.0] # (double array) 6x1 array ([x y z r p y]) with x,y,z translation and roll, pitch, yaw orientation (in meters and radians) containing the pose of the gripper COM expressed in the gripper_com_frame_id frame
