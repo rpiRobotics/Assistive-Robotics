@@ -92,7 +92,6 @@ SCRIPTS=(
     git clone https://github.com/burakaksoy/Azure_Kinect_ROS_Driver.git;
     git clone https://github.com/burakaksoy/kinova-ros.git kinova-ros;
     git clone https://github.com/rpiRobotics/obstacle_detector.git;
-    git clone --branch throttle-tf-repeated-data-error https://github.com/burakaksoy/geometry2.git; # to fix tf repeating data warning flooding
     cd bota_rokubi_ft_sensor;
     git clone -b melodic https://github.com/rpiRobotics/force_torque_tools.git;
     cd ../..;
@@ -170,7 +169,6 @@ SCRIPTS=(
     git clone https://github.com/burakaksoy/Azure_Kinect_ROS_Driver.git;
     git clone https://github.com/burakaksoy/kinova-ros.git kinova-ros;
     git clone https://github.com/rpiRobotics/obstacle_detector.git;
-    git clone --branch throttle-tf-repeated-data-error https://github.com/burakaksoy/geometry2.git; # to fix tf repeating data warning flooding
     cd bota_rokubi_ft_sensor;
     git clone -b melodic https://github.com/rpiRobotics/force_torque_tools.git;
     cd ../..;
@@ -245,7 +243,6 @@ SCRIPTS=(
     git clone https://github.com/burakaksoy/Azure_Kinect_ROS_Driver.git;
     git clone https://github.com/burakaksoy/kinova-ros.git kinova-ros;
     git clone https://github.com/rpiRobotics/obstacle_detector.git;
-    git clone --branch throttle-tf-repeated-data-error https://github.com/burakaksoy/geometry2.git; # to fix tf repeating data warning flooding
     cd bota_rokubi_ft_sensor;
     git clone -b melodic https://github.com/rpiRobotics/force_torque_tools.git;
     cd ../..;
@@ -314,7 +311,6 @@ SCRIPTS=(
     git clone https://github.com/burakaksoy/Azure_Kinect_ROS_Driver.git;
     git clone https://github.com/burakaksoy/kinova-ros.git kinova-ros;
     git clone https://github.com/rpiRobotics/obstacle_detector.git;
-    git clone --branch throttle-tf-repeated-data-error https://github.com/burakaksoy/geometry2.git; # to fix tf repeating data warning flooding
     cd bota_rokubi_ft_sensor;
     git clone -b melodic https://github.com/rpiRobotics/force_torque_tools.git;
     cd ../..;
