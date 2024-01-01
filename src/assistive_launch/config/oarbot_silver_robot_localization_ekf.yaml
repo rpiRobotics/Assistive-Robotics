@@ -146,6 +146,8 @@ pose0_queue_size: 5
 # pose0_rejection_threshold: 2  # Note the difference in parameter name
 pose0_nodelay: false
 
+
+
 twist0: /oarbot_silver/vel_feedback
 twist0_config: [false, false, false,
                 false, false, false,
@@ -155,6 +157,8 @@ twist0_config: [false, false, false,
 twist0_queue_size: 3
 # twist0_rejection_threshold: 2
 twist0_nodelay: false
+
+
 
 imu0: /oarbot_silver/nav/filtered_imu/data
 imu0_config: [false, false, false,

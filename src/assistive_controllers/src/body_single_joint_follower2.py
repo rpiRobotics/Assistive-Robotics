@@ -21,6 +21,8 @@ Broadcasts to:
 """
 
 import rospy
+import time
+
 
 import numpy as np
 import tf2_ros
@@ -249,6 +251,7 @@ class BodySingleJointFollower():
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
             rospy.logwarn('TFs_body_follower: Waiting to find the transformations') 
+            time.sleep(1)
             return False
 
 
@@ -261,6 +264,7 @@ class BodySingleJointFollower():
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
             rospy.logwarn('TFs_admittance: Waiting to find the transformations') 
+            time.sleep(1)
             return False
 
 
