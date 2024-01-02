@@ -172,7 +172,7 @@ class ArucoRobots2Floor():
         self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster for robots and world frame
         self.tf_broadcaster_static = tf2_ros.StaticTransformBroadcaster() # Create a static tf broadcster for rbg camera and the world frame
         self.publish_rgb2world_floor_tf_static()
-        rospy.Subscriber(self.image_topic_name, sensor_msgs.msg.Image, self.handle_mobile_robot_pose, queue_size=2)
+        rospy.Subscriber(self.image_topic_name, sensor_msgs.msg.Image, self.handle_mobile_robot_pose, queue_size=1)
 
     def load_coefficients(self,path):
         """ Loads camera matrix and distortion coefficients. """
