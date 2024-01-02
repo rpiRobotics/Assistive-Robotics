@@ -32,15 +32,25 @@ all_mobile_base_frame_coords: # width for expansion in x axis, height for expans
     - [ 0.32,-0.29]
     - [ 0.37, 0.00]
 
+# FOR 8th FLOOR LAB
 workspace_polygon_coords: # each polygon corner is [x,y] wrt tf_world_frame_id
-  - [ 0.0, -1.0]
-  - [ 1.9, -1.0]
-  - [ 1.9,  3.7]
-  - [-1.1,  3.7]
-  - [-1.1,  3.05]
-  - [-1.7,  3.05]
-  - [-1.7,  1.1]
-  - [ 0.0,  1.1]
+  - [ 0.0, 0.0]
+  - [ 3.7, 0.0]
+  - [ 3.7, 5.0]
+  - [ 0.4, 5.0]
+  - [ 0.4, 3.6]
+  - [ 0.0, 3.6]
+
+#  FOR HIGHBAY CAGE
+# workspace_polygon_coords: # each polygon corner is [x,y] wrt tf_world_frame_id
+#   - [ 0.0, -1.0]
+#   - [ 1.9, -1.0]
+#   - [ 1.9,  3.7]
+#   - [-1.1,  3.7]
+#   - [-1.1,  3.05]
+#   - [-1.7,  3.05]
+#   - [-1.7,  1.1]
+#   - [ 0.0,  1.1]
 
 viz_mobile_base_polygon_topic_name_prefix: "viz_oarbot_blue_robots_"
 viz_mobile_base_obs_dist_thres_topic_name: "viz_oarbot_blue_base_obs_dist_thres"
