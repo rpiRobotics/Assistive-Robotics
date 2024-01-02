@@ -33,10 +33,14 @@ from shapely.ops import triangulate
 import numpy as np
 import math
 
+from rospy_log_controller import LogController
+
 class CollisionAvoidance2D():
     def __init__(self):
 
         rospy.init_node('collision_avoidance_2d', anonymous=True)
+
+        self.logger = LogController() # To Manage the maximum rate of rospy log data
 
         # Published topic names 
         self.out_cmd_vel_topic_name = rospy.get_param("~out_cmd_vel_topic_name")
@@ -207,11 +211,20 @@ class CollisionAvoidance2D():
 
             except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
                 # Put a warning which says that the transformation could not found
-                rospy.logwarn('Collision Avoidance 2D: Could not find the transformation from %s to (%s or %s)' 
-                                % (self.tf_mobile_base_frame_id, self.tf_world_frame_id, self.all_tf_mobile_base_frame_ids[i])) 
+                msg = 'Collision Avoidance 2D: Could not find the transformation from %s to (%s or %s)' \
+                        % (self.tf_mobile_base_frame_id, self.tf_world_frame_id, self.all_tf_mobile_base_frame_ids[i])
+
+                # rospy.logwarn(msg)
+                self.logger.log(msg,
+                                log_type='warning', 
+                                min_period=1.0)
 
                 # reset the saved TFs to None
-                rospy.logwarn('Collision Avoidance 2D: Resetting the saved TF list')
+                # rospy.logwarn('Collision Avoidance 2D: Resetting the saved TF list')
+                self.logger.log('Collision Avoidance 2D: Resetting the saved TF list',
+                                log_type='warning', 
+                                min_period=1.0)
+                
                 for i in range(self.num_of_robots):
                     self.TFs[i] = None
                 return False
@@ -592,7 +605,10 @@ class CollisionAvoidance2D():
                 torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
                 torques.append(torque)
             else:
-                rospy.logwarn("Soft threshold Obstacle collided with the robot!!")
+                # rospy.logwarn("Soft threshold Obstacle collided with the robot!!")
+                self.logger.log("Soft threshold Obstacle collided with the robot!!",
+                                log_type='warning', 
+                                min_period=1.0)
 
         forces_dynamic = []
         torques_dynamic = []
@@ -632,7 +648,10 @@ class CollisionAvoidance2D():
                 torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
                 torques_dynamic.append(torque)
             else:
-                rospy.logwarn("Soft threshold Obstacle from Laser Scanner collided with the robot!!")
+                # rospy.logwarn("Soft threshold Obstacle from Laser Scanner collided with the robot!!")
+                self.logger.log("Soft threshold Obstacle from Laser Scanner collided with the robot!!",
+                                log_type='warning', 
+                                min_period=1.0)
 
         # forces_dynamic = np.array(forces_dynamic)
         # torques_dynamic = np.array(torques_dynamic)
@@ -729,7 +748,10 @@ class CollisionAvoidance2D():
                 torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
                 torques.append(torque)
             else:
-                rospy.logwarn("Obstacle collided with the robot!!")
+                # rospy.logwarn("Obstacle collided with the robot!!")
+                self.logger.log("Obstacle collided with the robot!!",
+                                log_type='warning', 
+                                min_period=1.0)
 
         forces_dynamic = []
         torques_dynamic = []
@@ -769,7 +791,10 @@ class CollisionAvoidance2D():
                 torque = float(np.cross(r,force)) # on 2D, numpy cross returns a scalar array, convert it to float
                 torques_dynamic.append(torque)
             else:
-                rospy.logwarn("Obstacle from Laser Scanner collided with the robot!!")
+                # rospy.logwarn("Obstacle from Laser Scanner collided with the robot!!")
+                self.logger.log("Obstacle from Laser Scanner collided with the robot!!",
+                                log_type='warning', 
+                                min_period=1.0)
 
         # forces_dynamic = np.array(forces_dynamic)
         # torques_dynamic = np.array(torques_dynamic)
