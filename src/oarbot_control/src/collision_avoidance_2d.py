@@ -651,7 +651,7 @@ class CollisionAvoidance2D():
                 # rospy.logwarn("Soft threshold Obstacle from Laser Scanner collided with the robot!!")
                 self.logger.log("Soft threshold Obstacle from Laser Scanner collided with the robot!!",
                                 log_type='warning', 
-                                min_period=1.0)
+                                min_period=2.0)
 
         # forces_dynamic = np.array(forces_dynamic)
         # torques_dynamic = np.array(torques_dynamic)
@@ -794,7 +794,7 @@ class CollisionAvoidance2D():
                 # rospy.logwarn("Obstacle from Laser Scanner collided with the robot!!")
                 self.logger.log("Obstacle from Laser Scanner collided with the robot!!",
                                 log_type='warning', 
-                                min_period=1.0)
+                                min_period=2.0)
 
         # forces_dynamic = np.array(forces_dynamic)
         # torques_dynamic = np.array(torques_dynamic)

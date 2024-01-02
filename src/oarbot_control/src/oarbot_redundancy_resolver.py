@@ -64,10 +64,14 @@ import numpy as np
 import math
 import time
 
+from rospy_log_controller import LogController
+
 class OarbotRedundancyResolver():
     def __init__(self):
 
         rospy.init_node('oarbot_redundancy_resolver', anonymous=True)
+
+        self.logger = LogController() # To Manage the maximum rate of rospy log data
 
         # Published topic names 
         self.cmd_vel_arm_topic_name = rospy.get_param("~cmd_vel_arm_topic_name", "j2n6s300_driver/in/cartesian_velocity")
@@ -221,9 +225,13 @@ class OarbotRedundancyResolver():
             self.velocity_command_sent_base = False
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
-            rospy.logwarn('Waiting to find the transformation from %s to %s, OR transformation from %s to %s' 
-                            % ( self.tf_world_frame_id, self.tf_mobile_base_frame_id, 
-                            self.tf_mobile_base_frame_id, self.tf_arm_base_frame_id))   
+            warn_msg = 'Waiting to find the transformation from %s to %s, OR transformation from %s to %s' \
+                    % ( self.tf_world_frame_id, self.tf_mobile_base_frame_id, 
+                        self.tf_mobile_base_frame_id, self.tf_arm_base_frame_id)
+            # rospy.logwarn(warn_msg)
+            self.logger.log(warn_msg,
+                            log_type='warning', 
+                            min_period=1.0) 
 
     def splitLaw(self, des_cmd, q):
         """

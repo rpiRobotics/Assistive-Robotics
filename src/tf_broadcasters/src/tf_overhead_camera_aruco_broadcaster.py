@@ -78,9 +78,14 @@ ARUCO_DICT = {
 	"DICT_ARUCO_ORIGINAL": cv2.aruco.DICT_ARUCO_ORIGINAL,
 }
 
+from rospy_log_controller import LogController
+
 class ArucoRobots2Floor():
     def __init__(self):
         rospy.init_node('tf_overhead_camera_aruco_broadcaster', anonymous=True)
+
+        self.logger = LogController() # To Manage the maximum rate of rospy log data
+
         self.debug_image_view = rospy.get_param('~debug_image_view', False)
         self.debug_image_topic_name = rospy.get_param('~debug_image_topic_name', "debug_aruco_detected_image")
         self.debug_image_scale_percent = rospy.get_param('~debug_image_scale_percent', 50) # percent of original size
@@ -469,7 +474,11 @@ class ArucoRobots2Floor():
             # rospy.logwarn("-- 006 --- %s seconds ---" % (time.time() - start_time))
             # rospy.logwarn("--------------- ALL --- %s seconds ---" % (time.time() - start_time0))
         else:
-            rospy.logwarn("No robot could be detected, waiting to detect..")
+            # rospy.logwarn("No robot could be detected, waiting to detect..")
+            self.logger.log("No robot could be detected, waiting to detect..",
+                            log_type='warning', 
+                            min_period=2.0) 
+
 
 
     def publish_rgb2world_floor_tf_static(self):

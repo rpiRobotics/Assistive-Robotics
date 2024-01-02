@@ -10,10 +10,14 @@ from roboteq import RoboteqHandler
 from roboteq import roboteq_commands as cmds
 import threading
 
+from rospy_log_controller import LogController
+
 class OarbotControl_Motor():
     def __init__(self):
         self.last_vel_lock = threading.Lock()
         rospy.init_node('oarbot_ctrl_motor', anonymous=True)
+
+        self.logger = LogController() # To Manage the maximum rate of rospy log data
 
         self.serial_front = rospy.get_param('~serial_front')
         self.serial_back = rospy.get_param('~serial_back')
@@ -73,7 +77,10 @@ class OarbotControl_Motor():
             assert rpm[0] == 'S'# or rpm[0] == '?s' # To make sure that is a speed reading
             return float(rpm[1])
         except Exception as e:
-            rospy.logwarn("Improper motor speed message:" + speed_message)
+            # rospy.logwarn("Improper motor speed message:" + speed_message)
+            self.logger.log("Improper motor speed message:" + speed_message,
+                            log_type='warning', 
+                            min_period=1.0) 
             raise e
 
     def format_voltage(self, voltage_message):
@@ -83,7 +90,10 @@ class OarbotControl_Motor():
             assert V[0] == 'V'
             return float(V[1])/10.0
         except Exception as e:
-            rospy.logwarn("Improper  battery voltage message:" + voltage_message)
+            # rospy.logwarn("Improper battery voltage message:" + voltage_message)
+            self.logger.log("Improper battery voltage message:" + voltage_message,
+                            log_type='warning', 
+                            min_period=1.0) 
             raise e
             
 
@@ -93,10 +103,16 @@ class OarbotControl_Motor():
             fm = stat_flag_message.split('=')
             assert fm[0] == 'FM'
             if int(fm[1]) != 0:
-                rospy.logwarn("Status flag is non zero, it is:" + str(int(fm[1])) + ", on motor: " + motor_name )
+                # rospy.logwarn("Status flag is non zero, it is:" + str(int(fm[1])) + ", on motor: " + motor_name )
+                self.logger.log("Status flag is non zero, it is:" + str(int(fm[1])) + ", on motor: " + motor_name ,
+                            log_type='warning', 
+                            min_period=1.0) 
             return int(fm[1])
         except Exception as e:
-            rospy.logwarn("Improper status flag message:" + stat_flag_message)
+            # rospy.logwarn("Improper status flag message:" + stat_flag_message)
+            self.logger.log("Improper status flag message:" + stat_flag_message,
+                            log_type='warning', 
+                            min_period=1.0) 
             raise e
 
     def motor_feedback(self,event):    
@@ -107,7 +123,10 @@ class OarbotControl_Motor():
                 self.controller_b.send_command(cmds.DUAL_DRIVE, 0.0, 0.0)
                 
                 if self.is_zero_cmd_vel_sent_ever == False:
-                    rospy.logwarn("Zero velocities to the motors are sent for the first time")
+                    # rospy.logwarn("Zero velocities to the motors are sent for the first time")
+                    self.logger.log("Zero velocities to the motors are sent for the first time",
+                                    log_type='warning', 
+                                    min_period=1.0) 
                     self.is_zero_cmd_vel_sent_ever = True
             else:
                 # self.controller_f.send_command(cmds.DUAL_DRIVE, self.motor_cmd_msg.v_fr, -self.motor_cmd_msg.v_fl)

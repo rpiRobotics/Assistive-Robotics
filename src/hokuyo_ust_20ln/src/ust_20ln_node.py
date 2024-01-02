@@ -10,9 +10,13 @@ from hokuyo import UST20LN_Handler
 from hokuyo import ust_commands as cmds
 import numpy as np
 
+from rospy_log_controller import LogController
+
 class UST20LN_Node():
     def __init__(self):
         rospy.init_node('ust_20ln_node', anonymous=True)
+
+        self.logger = LogController() # To Manage the maximum rate of rospy log data
 
         self.serial_port        = rospy.get_param("~serial_port",       "/dev/ttyACM0")
         
@@ -46,15 +50,6 @@ class UST20LN_Node():
         rospy.loginfo("Hokuyo info: " + str(ret.decode()))
         self.scanner.start_ranging()
         
-    def format_speed(self, speed_message):
-        # Formats the speed message (RPM) obtained from roboteq driver into float
-        try:
-            rpm = speed_message.split('=')
-            assert rpm[0] == 'S'# or rpm[0] == '?s' # To make sure that is a speed reading
-            return float(rpm[1])
-        except Exception as e:
-            rospy.logwarn("Improper motor speed message:" + speed_message)
-            raise e            
 
     def get_scan_data(self,event):    
         try:
@@ -87,11 +82,18 @@ class UST20LN_Node():
 
                 self.laser_scan_pub.publish(laser_scan_msg)
             else:
-                rospy.logwarn("Hokuyo: measured number of steps less than the specified number" )
+                # rospy.logwarn("Hokuyo: measured number of steps less than the specified number" )
+                self.logger.log("Hokuyo: measured number of steps less than the specified number",
+                                log_type='warning', 
+                                min_period=2.0)
         except Exception as ex:
             template = "An exception of type {0} occurred while reading the laser scan measurements. Arguments:\n{1!r}"
             message = template.format(type(ex).__name__, ex.args)
-            rospy.logwarn(message)
+            # rospy.logwarn(message)
+            self.logger.log(message,
+                            log_type='error', 
+                            min_period=2.0)
+            
 
         
 
