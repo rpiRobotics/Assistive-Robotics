@@ -1,6 +1,6 @@
 z_height_topic_name: 'TODO'
 is_fixed_z: True
-tf_mobile_base_frame_id: 'oarbot_blue_base'
+tf_mobile_base_frame_id: 'd1_tf_arm_mount'
 tf_arm_base_frame_id: 'root_right_arm'
 
 mobile_base2arm_base_pose:
@@ -10,6 +10,6 @@ mobile_base2arm_base_pose:
     z: 0.0
     w: 1.0
   position: # in meters
-    x: 0.305
-    y: -0.003
-    z: 0.804
+    x: 0.0
+    y: 0.0
+    z: 0.0

@@ -1,0 +1,6 @@
+gazebo_ros_control:
+  pid_gains:
+    $(arg tf_prefix)front_left_wheel: {p: 0.5, i: 0.01, d: 0}
+    $(arg tf_prefix)front_right_wheel: {p: 0.5, i: 0.01, d: 0}
+    $(arg tf_prefix)rear_left_wheel: {p: 0.5, i: 0.01, d: 0}
+    $(arg tf_prefix)rear_right_wheel: {p: 0.5, i: 0.01, d: 0}

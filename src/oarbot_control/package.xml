@@ -62,9 +62,9 @@
   <exec_depend>tf2</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
 
-  <build_depend>kinova_msgs</build_depend>
-  <build_export_depend>kinova_msgs</build_export_depend>
-  <exec_depend>kinova_msgs</exec_depend>
+  <!-- <build_depend>kinova_msgs</build_depend> -->
+  <!-- <build_export_depend>kinova_msgs</build_export_depend> -->
+  <!-- <exec_depend>kinova_msgs</exec_depend> -->
   
   <build_depend>geometry_msgs</build_depend>
   <build_export_depend>geometry_msgs</build_export_depend>

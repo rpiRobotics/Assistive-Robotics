@@ -29,7 +29,6 @@ from std_srvs.srv import Trigger, TriggerRequest, TriggerResponse
 from geometry_msgs.msg import Pose2D, Twist, PoseStamped
 from led_indicator import LEDIndicator
 
-from assistive_msgs.msg import FrameTwist
 
 import actionlib
 import kinova_msgs.msg

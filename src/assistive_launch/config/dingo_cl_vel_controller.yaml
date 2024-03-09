@@ -1,0 +1,22 @@
+feedback_gain_xy: 3.0
+feedback_gain_theta: 1.0
+is_skid_steer_mode: False
+
+cmd_input_topic_name: 'desired_state' # desired robot pose and velocity
+
+position_feedback_topic_name: 'odometry/filtered'
+control_cmd_publish_topic_name: 'cmd_vel'
+
+vel_lim_x: 1.3
+vel_lim_y: 1.3
+vel_lim_theta: 4.0
+
+# # Used by turntable inv_kin & fwd_kin
+# p_x: 0.3713 # m # CANNOT BE ZERO
+# p_y: 0.0 # m
+
+# turntable_position_topic_name: 'turntable_position'
+# turntable_cmd_vel_topic_name: 'turntable_cmd_vel'
+# robot_cmd_vel_topic_name: 'cmd_vel'
+# tf_turntable_frame_name: 'husky_blue_tt'
+# tf_robot_frame_name: 'husky_blue_fusion'

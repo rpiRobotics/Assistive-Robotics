@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   geometry_msgs
-  kinova_msgs
+  # kinova_msgs
   tf2
   tf2_ros
 )
@@ -109,7 +109,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES oarbot_control
-   CATKIN_DEPENDS rospy std_msgs tf2 tf2_ros geometry_msgs message_runtime kinova_msgs
+   CATKIN_DEPENDS rospy std_msgs tf2 tf2_ros geometry_msgs message_runtime  # kinova_msgs
 #  DEPENDS system_lib
 )
 

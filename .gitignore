@@ -57,3 +57,9 @@ src/kinova-ros/
 src/obstacle_detector/
 src/bota_rokubi_ft_sensor/force_torque_tools
 src/geometry2
+src/AssistiveRobot-SimulationFiles/
+src/RVizMeshVisualizer/
+src/uwb_gazebo_plugin/
+src/rviz_ortho_view_controller/
+src/rosbag_editor/
+src/topic_tf_transformers/

@@ -1,0 +1,81 @@
+<launch>
+  <arg name="config_extras"
+       default="$(eval optenv('DINGO_CONFIG_EXTRAS', find('dingo_control') + '/config/empty.yaml'))"/>
+
+  <arg name="robot_namespace"       default="$(optenv DINGO_CUSTOM_NAME d)"/>
+  <!-- Generate the tf_prefix from the namespace -->
+  <arg name="tf_prefix" default="$(eval optenv('TF_PREFIX', arg('robot_namespace') + '_tf_'))" />
+
+  <!-- Here we spawn (load and launch) two controllers 
+       The key thing we need to do is to set the 
+       "base_frame_id" of the diff_drive_controller
+       to include the tf_pre so that our tf trees work out.   
+       So, we load the default control configuration and then overwrite 
+       the base_frame_id -->
+
+  <!-- Load controller configuration (Based on robot type: omnidir) -->
+  <group if="$(optenv DINGO_OMNI 0)">
+    <rosparam command="load" file="$(find assistive_launch)/config/dingo_control_omni.yaml" subst_value="true"/>
+
+    <rosparam param="dingo_velocity_controller/front_left_wheel_joint"  subst_value="true">$(arg tf_prefix)front_left_wheel</rosparam>
+    <rosparam param="dingo_velocity_controller/back_left_wheel_joint"   subst_value="true">$(arg tf_prefix)rear_left_wheel</rosparam>
+    <rosparam param="dingo_velocity_controller/front_right_wheel_joint" subst_value="true">$(arg tf_prefix)front_right_wheel</rosparam>
+    <rosparam param="dingo_velocity_controller/back_right_wheel_joint"  subst_value="true">$(arg tf_prefix)rear_right_wheel</rosparam>
+
+    <rosparam param="dingo_velocity_controller/odom_frame_id" subst_value="true">$(arg tf_prefix)odom</rosparam>
+    <rosparam param="dingo_velocity_controller/base_frame_id" subst_value="true">$(arg tf_prefix)base_link</rosparam>
+  </group>
+  <group unless="$(optenv DINGO_OMNI 0)">
+    <rosparam command="load" file="$(find assistive_launch)/config/dingo_control_diff.yaml" />
+  </group>
+
+  <!-- Spawn controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner"
+        args="dingo_joint_publisher dingo_velocity_controller" />
+
+  <!-- EKF localization -->
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
+    <rosparam command="load" file="$(find assistive_launch)/config/dingo_robot_localization.yaml" />
+
+    <!-- <rosparam param="world_frame"      subst_value="true">map</rosparam> -->
+    <!-- <rosparam param="map_frame"        subst_value="true">map</rosparam> -->
+    <!-- <rosparam param="odom_frame"       subst_value="true">$(arg tf_prefix)odom</rosparam> -->
+    <!-- <rosparam param="base_link_frame"  subst_value="true">$(arg tf_prefix)base_link</rosparam> -->
+  
+    <rosparam param="world_frame"      subst_value="true">world_floor</rosparam>
+    <rosparam param="map_frame"        subst_value="true">map</rosparam>
+    <!-- <rosparam param="odom_frame"       subst_value="true">world_floor</rosparam> -->
+    <rosparam param="odom_frame"       subst_value="true">$(arg tf_prefix)odom</rosparam>
+    <rosparam param="base_link_frame"  subst_value="true">$(arg tf_prefix)base_link</rosparam>
+
+  </node>
+
+  <!-- Robot Internal twist mux -->
+  <node pkg="twist_mux" type="twist_mux" name="twist_mux">
+    <rosparam command="load" file="$(find assistive_launch)/config/dingo_twist_mux.yaml" />
+    <remap from="cmd_vel_out" to="dingo_velocity_controller/cmd_vel"/>
+    <!-- <remap from="cmd_vel_out" to="dingo_velocity_controller/e_stop_cmd_vel"/> -->
+    <remap from="/diagnostics" to="diagnostics"/>
+  </node>
+
+  <rosparam command="load" file="$(arg config_extras)" subst_value="true" />
+
+  <!-- Closed Loop Velocity Controller for when a desired location is specified for the robot -->
+  <node name="cl_vel_controller" pkg="vel_controller" type="vel_controller.py">
+    <rosparam command="load" file="$(find assistive_launch)/config/dingo_cl_vel_controller.yaml"/>
+  </node>
+
+  <!-- Launch Frequency Adjuster -->
+  <node name="dingo_freq_adjuster" pkg="oarbot_control" type="freq_adjuster.py">
+    <rosparam command="load" file="$(find assistive_launch)/config/dingo_freq_adjuster.yaml"/>
+  </node>
+
+  <!-- Launch Oarbot Collision Avoider -->
+  <node name="collision_avoidance_2d" pkg="oarbot_control" type="collision_avoidance_2d.py">
+    <rosparam  command="load" file="$(find assistive_launch)/config/dingo_collision_avoidance_2d.yaml"/>
+
+    <rosparam param="tf_world_frame_id"         subst_value="true">world_floor</rosparam>
+    <rosparam param="tf_mobile_base_frame_id"   subst_value="true">$(arg tf_prefix)base_link</rosparam>
+  </node>
+
+</launch>

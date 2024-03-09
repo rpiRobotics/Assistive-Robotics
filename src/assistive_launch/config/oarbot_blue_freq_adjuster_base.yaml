@@ -1,7 +1,0 @@
-in_cmd_vel_topic_name: 'cmd_vel_base_safer' # 'cmd_vel_base'
-in_cmd_vel_topic_type: 'geometry_msgs.msg.Twist'
-in_rate: 25.0 # Expected for setting the timeout properly
-
-out_cmd_vel_topic_name: 'freq_cmd_vel_base'
-out_cmd_vel_topic_type: 'geometry_msgs.msg.Twist'
-out_rate: 25.0

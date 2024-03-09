@@ -1,4 +1,0 @@
-serial_port: "/dev/sensor_hokuyo_ust_20ln_0" # "pci-0000:00:14.0-usb-0:1.5:1.0" # "/dev/ttyACM0"
-laser_scan_topic_name: "scan_2d"
-frame_id: "oarbot_silver_laser_scanner_2d_sensor"
-publish_intensity: "true"

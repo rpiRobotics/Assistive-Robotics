@@ -1,0 +1,763 @@
+<?xml version="1.0"?>
+<robot name="dingo" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:arg name="robot_namespace" default="/" />
+  
+  <xacro:arg name="tf_prefix" default="" />
+  <xacro:property name="robot_prefix" value="$(arg tf_prefix)" />
+
+  <!-- Args for uwb tag ids -->
+  <xacro:arg name="uwb_tag_1_id" default="0" />
+  <xacro:arg name="uwb_tag_2_id" default="1" />
+  <xacro:property name="uwb_tag_1" value="$(arg uwb_tag_1_id)" />
+  <xacro:property name="uwb_tag_2" value="$(arg uwb_tag_2_id)" />
+
+  <xacro:property name="uwb_tag_mass" value="0.1" />
+
+  <xacro:property name="pacs_enabled" value="$(optenv DINGO_PACS_ENABLED 0)" />
+
+  <xacro:property name="PI" value="3.1415926535897931" />
+
+  <xacro:property name="wheelbase" value="0.570" />
+  <xacro:property name="track" value="0.3708" />
+  <xacro:property name="wheel_vertical_offset" value="0.035145" />
+
+  <xacro:property name="wheel_radius" value="0.050" />
+  <xacro:property name="wheel_mass" value="0.4" />
+  <xacro:property name="wheel_width" value="0.050" />
+
+  <xacro:property name="dummy_inertia" value="1e-09"/>
+
+
+  <material name="white"><color rgba="1.0 1.0 1.0 1.0" /></material>
+  <material name="dark_grey"><color rgba="0.2 0.2 0.2 1.0" /></material>
+  <material name="light_grey"><color rgba="0.4 0.4 0.4 1.0" /></material>
+  <material name="yellow"><color rgba="0.8 0.8 0.0 1.0" /></material>
+  <material name="black"><color rgba="0.15 0.15 0.15 1.0" /></material>
+  <material name="cyan"><color rgba="0 1.0 1.0 1.0"/></material>
+
+  <xacro:macro name="wheel" params="prefix robot_prefix *joint_pose">
+
+    <link name="${robot_prefix}${prefix}_wheel_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${wheel_mass}"/>
+        <inertia
+          ixx="0.0003234" ixy="0" ixz="0"
+          iyy="0.0003234" iyz="0"
+          izz="0.0004901"/>
+      </inertial>
+    </link>
+
+    <joint name="${robot_prefix}${prefix}_wheel" type="continuous">
+      <parent link="${robot_prefix}chassis_link"/>
+      <child link="${robot_prefix}${prefix}_wheel_link" />
+      <xacro:insert_block name="joint_pose" />
+      <axis xyz="0 1 0" />
+    </joint>
+
+    <transmission name="${robot_prefix}${prefix}_wheel_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${robot_prefix}${prefix}_wheel">
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${robot_prefix}${prefix}_actuator">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+
+  <xacro:wheel prefix="front_left" robot_prefix="${robot_prefix}">
+    <origin xyz="${wheelbase/2} ${track/2+wheel_width/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+  </xacro:wheel>
+  <xacro:wheel prefix="front_right" robot_prefix="${robot_prefix}">
+    <origin xyz="${wheelbase/2} ${-track/2-wheel_width/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+  </xacro:wheel>
+  <xacro:wheel prefix="rear_left" robot_prefix="${robot_prefix}">
+    <origin xyz="${-wheelbase/2} ${track/2+wheel_width/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+  </xacro:wheel>
+  <xacro:wheel prefix="rear_right" robot_prefix="${robot_prefix}">
+    <origin xyz="${-wheelbase/2} ${-track/2-wheel_width/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+  </xacro:wheel>
+
+  <!-- Mounting stand for fabric attachments -->
+  <xacro:macro name="fabric_stand" params="robot_prefix">
+    <link name="${robot_prefix}fabric_mount_link">
+      <visual>
+        <origin xyz="0 0 -0.358061" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.05 0.05 0.716122"/>
+        </geometry>
+        <material name="cyan" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 -0.358061" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.05 0.05 0.716122"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0 0 -0.358061" rpy="0 0 0"/>
+        <mass value="2.0"/>
+        <inertia
+            ixx="0.0855449"
+            ixy="0.0"
+            ixz="0.0"
+            iyy="0.0855449"
+            iyz="0.0"
+            izz="0.083"
+        /> <!-- https://classic.gazebosim.org/tutorials?tut=build_model&cat=build_robot -->
+      </inertial>
+    </link>
+    
+    <joint name="${robot_prefix}fabric_mount_joint" type="fixed">
+        <origin xyz="0 0 ${0.716122}" rpy="0 0 0" />  <!-- will make it 80 cm above ground. --> 
+        <parent link="${robot_prefix}mid_mount"/>
+        <child link="${robot_prefix}fabric_mount_link" />
+        <!-- <axis xyz="0 0 1" /> -->
+    </joint>
+
+    <!-- Top Cylinder Link Definition -->
+    <link name="${robot_prefix}fabric_mount_cylinder_link">
+      <visual>
+        <origin xyz="0 0 -0.01" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="0.35" length="0.02"/>
+        </geometry>
+        <material name="cyan" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 -0.01" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="0.35" length="0.02"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0 0 -0.01" rpy="0 0 0"/>
+        <mass value="1.0"/>
+        <inertia
+            ixx="0.01"
+            ixy="0.0"
+            ixz="0.0"
+            iyy="0.01"
+            iyz="0.0"
+            izz="0.01"
+        />
+      </inertial>
+    </link>
+    
+    <!-- Top Cylinder Joint Definition -->
+    <joint name="${robot_prefix}fabric_mount_cylinder_joint" type="fixed">
+        <origin xyz="0 0 0.0" rpy="0 0 0" />
+        <parent link="${robot_prefix}fabric_mount_link"/>
+        <child link="${robot_prefix}fabric_mount_cylinder_link" />
+    </joint>
+
+  </xacro:macro>
+
+  <!-- <xacro:fabric_stand robot_prefix="${robot_prefix}">
+  </xacro:fabric_stand> -->
+  
+  <!-- UWB tag macro -->
+  <xacro:macro name="uwb_tag" params="tag_num robot_prefix *joint_pose">
+
+    <link name="${robot_prefix}uwb_tag_${tag_num}_link">
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <mesh filename="package://uwb_reader/meshes/Decawave.stl"/>
+        </geometry>
+        <material name="white" />
+      </visual>
+
+      <collision>
+          <origin xyz="0 -0.013 0" rpy="0 0 0"/>
+          <geometry>
+              <box size="0.05 0.026 0.102"/>
+          </geometry>
+      </collision>
+
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${uwb_tag_mass}"/>
+        <inertia
+          ixx="1.0" ixy="0" ixz="0"
+          iyy="1.0" iyz="0"
+          izz="1.0"/>
+      </inertial>
+
+    </link>
+
+    <joint name="${robot_prefix}uwb_tag_${tag_num}_joint" type="fixed">
+      <parent link="${robot_prefix}mid_mount"/>
+      <child link="${robot_prefix}uwb_tag_${tag_num}_link" />
+      <xacro:insert_block name="joint_pose" />
+    </joint>
+
+  </xacro:macro>
+
+  <!-- Right uwb tag -->
+  <xacro:uwb_tag tag_num="1" robot_prefix="${robot_prefix}"> 
+    <origin xyz="$(optenv DINGO_UWB_TAG_1_OFFSET 0 -0.22 0.1)" rpy="0 0 0"/>
+  </xacro:uwb_tag>
+
+  <!-- Left uwb tag -->
+  <xacro:uwb_tag tag_num="2" robot_prefix="${robot_prefix}"> 
+    <origin xyz="$(optenv DINGO_UWB_TAG_2_OFFSET 0 0.22 0.1)" rpy="0 0 ${PI}"/>
+  </xacro:uwb_tag>
+  
+  <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+  <!-- PVC Robot Arm Riser (definition) -->
+  <xacro:macro name="robot_arm_riser" params="robot_prefix">
+
+    <!-- PVC RISER LINK -->
+    <link name="${robot_prefix}robot_arm_riser_link">
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <mesh filename="package://dingo_customization/meshes/pvc_riser.STL"/>
+        </geometry>
+        <!-- <material name="white" /> -->
+      </visual>
+    
+      <collision>
+        <origin xyz="0 0 0.29" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.11 0.11 0.58"/>
+        </geometry>
+      </collision>
+    
+      <inertial>
+        <origin xyz="0 0 0.29" rpy="0 0 0"/>
+        <mass value="1.0"/>
+        <inertia
+            ixx="0.03"
+            ixy="0.0"
+            ixz="0.0"
+            iyy="0.03"
+            iyz="0.0"
+            izz="0.002"
+        /> <!-- GET INERTIA FROM SOLIDWORKS-->
+      </inertial>
+    
+    </link>
+
+    <!-- FIXED JOINT BETWEEN PVC RISER AND THE DINGO ROBOT BODY (front_b_mount) -->
+    <joint name="${robot_prefix}robot_arm_riser_joint" type="fixed">
+      <parent link="${robot_prefix}front_b_mount"/>
+      <child link="${robot_prefix}robot_arm_riser_link" />
+      <origin xyz="0 0 0" rpy="0 0 0"/> <!-- mounting POSE RELATIVE TO front_b_mount -->
+    </joint>
+
+    <!-- ADD A LINK TO SPECIFY THE ARM MOUNT FRAME POSE -->
+    <link name="${robot_prefix}arm_mount"/>
+    <!-- AND SPECIFY WHERE IS IT -->
+    <joint name="${robot_prefix}arm_mount_joint" type="fixed">
+      <origin xyz="0 0 0.579525" rpy="0 0 0" />
+      <parent link="${robot_prefix}robot_arm_riser_link"/>
+      <child link="${robot_prefix}arm_mount" />
+    </joint>
+
+    <!-- PVC RISER ARUCO MOUNT LINK -->
+    <link name="${robot_prefix}robot_arm_riser_aruco_mount_link">
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <mesh filename="package://dingo_customization/meshes/pvc_riser_aruco_mount.STL"/>
+        </geometry>
+        <!-- <material name="white" /> -->
+      </visual>
+    
+      <collision>
+        <origin xyz="-0.275 0 -0.025" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.76 0.49 0.05"/>
+        </geometry>
+      </collision>
+    
+      <inertial>
+        <origin xyz="-0.275 0 -0.025" rpy="0 0 0"/>
+        <mass value="0.5"/>
+        <inertia
+            ixx="0.01"
+            ixy="0.0"
+            ixz="0.0"
+            iyy="0.024"
+            iyz="0.0"
+            izz="0.034"
+        /> <!-- GET INERTIA FROM SOLIDWORKS-->
+      </inertial>
+
+    </link>
+
+    <!-- FIXED JOINT BETWEEN PVC RISER ARUCO MOUNT LINK AND THE DINGO ROBOT BODY (front_b_mount) -->
+    <joint name="${robot_prefix}robot_arm_riser_aruco_mount_joint" type="fixed">
+      <parent link="${robot_prefix}front_b_mount"/>
+      <child link="${robot_prefix}robot_arm_riser_aruco_mount_link" />
+      <origin xyz="0 0 0.503175" rpy="0 0 0"/> <!-- mounting POSE RELATIVE TO front_b_mount -->
+    </joint>
+
+    <!-- PVC RISER UWB MOUNT LINK -->
+    <link name="${robot_prefix}robot_arm_riser_uwb_mount_link">
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <mesh filename="package://dingo_customization/meshes/pvc_riser_uwb_mount.STL"/>
+        </geometry>
+        <!-- <material name="white" /> -->
+      </visual>
+    
+      <collision>
+        <origin xyz="0 0 -0.025" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.10 0.55 0.05"/>
+        </geometry>
+      </collision>
+    
+      <inertial>
+        <origin xyz="0 0 -0.025" rpy="0 0 0"/>
+        <mass value="0.5"/>
+        <inertia
+            ixx="0.013"
+            ixy="0.0"
+            ixz="0.0"
+            iyy="0.0005"
+            iyz="0.0"
+            izz="0.013"
+        /> <!-- GET INERTIA FROM SOLIDWORKS-->
+      </inertial>
+
+    </link>
+
+    <!-- FIXED JOINT BETWEEN PVC RISER UWB MOUNT LINK AND THE DINGO ROBOT BODY (front_b_mount) -->
+    <joint name="${robot_prefix}robot_arm_riser_uwb_mount_joint" type="fixed">
+      <parent link="${robot_prefix}front_b_mount"/>
+      <child link="${robot_prefix}robot_arm_riser_uwb_mount_link" />
+      <origin xyz="0 0 0.573175" rpy="0 0 0"/> <!-- mounting POSE RELATIVE TO front_b_mount -->
+    </joint>
+
+  </xacro:macro>
+
+  <xacro:robot_arm_riser robot_prefix="${robot_prefix}"> 
+  </xacro:robot_arm_riser>
+
+  <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+
+  <link name="${robot_prefix}base_link"></link>
+
+  <joint name="${robot_prefix}base_link_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="${robot_prefix}base_link"/>
+    <child link="${robot_prefix}chassis_link" />
+  </joint>
+
+  <link name="${robot_prefix}chassis_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://dingo_description/meshes/omni_chassis.dae"/>
+      </geometry>
+      <material name="dark_grey" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://dingo_description/meshes/omni_chassis_collision.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <!-- Center of mass -->
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="14"/>
+      <!-- Moments of inertia: ( chassis without wheels ) -->
+      <inertia
+        ixx="0.35498" ixy="0" ixz="0"
+        iyy="0.7266" iyz="0"
+        izz="1.0553"/>
+      </inertial>
+  </link>
+
+
+  <link name="${robot_prefix}imu_link">
+    <inertial>
+      <mass value="0.001"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="${dummy_inertia}" ixy="0.0" ixz="0.0" iyy="${dummy_inertia}" iyz="0.0" izz="${dummy_inertia}"/>
+    </inertial>
+  </link>
+
+  <joint name="${robot_prefix}imu_joint" type="fixed">
+    <parent link="${robot_prefix}chassis_link" />
+    <child link="${robot_prefix}imu_link" />
+  </joint>
+
+  <!--
+    Mounting points for accessories in the top channel.
+    These are flush with the top of the robot and all oriented to face forwards.
+    Dingo-D has 6 evenly-spaced 80mm mounts
+    We name the mounts (from front to back)
+      - front
+      - front b
+      - front c
+      - mid
+      - rear c
+      - rear b
+      - rear
+  -->
+  <xacro:unless value="${pacs_enabled}">
+    <link name="${robot_prefix}front_mount"/>
+    <link name="${robot_prefix}front_b_mount"/>
+    <link name="${robot_prefix}front_c_mount"/>
+    <link name="${robot_prefix}rear_mount"/>
+    <link name="${robot_prefix}rear_b_mount"/>
+    <link name="${robot_prefix}rear_c_mount"/>
+    <link name="${robot_prefix}mid_mount"/>
+
+    <joint name="${robot_prefix}mid_mount_joint" type="fixed">
+      <origin xyz="0 0 0.069023" rpy="0 0 0" />
+      <parent link="${robot_prefix}chassis_link"/>
+      <child link="${robot_prefix}mid_mount" />
+    </joint>
+    <joint name="${robot_prefix}front_c_mount_joint" type="fixed">
+      <origin xyz="0.080 0 0" rpy="0 0 0" />
+      <parent link="${robot_prefix}mid_mount"/>
+      <child link="${robot_prefix}front_c_mount" />
+    </joint>
+    <joint name="${robot_prefix}front_b_mount_joint" type="fixed">
+      <origin xyz="0.080 0 0" rpy="0 0 0" />
+      <parent link="${robot_prefix}front_c_mount"/>
+      <child link="${robot_prefix}front_b_mount" />
+    </joint>
+    <joint name="${robot_prefix}front_mount_joint" type="fixed">
+      <origin xyz="0.080 0 0" rpy="0 0 0" />
+      <parent link="${robot_prefix}front_b_mount"/>
+      <child link="${robot_prefix}front_mount" />
+    </joint>
+    <joint name="${robot_prefix}rear_c_mount_joint" type="fixed">
+      <origin xyz="-0.080 0 0" rpy="0 0 0" />
+      <parent link="${robot_prefix}mid_mount"/>
+      <child link="${robot_prefix}rear_c_mount" />
+    </joint>
+    <joint name="${robot_prefix}rear_b_mount_joint" type="fixed">
+      <origin xyz="-0.080 0 0" rpy="0 0 0" />
+      <parent link="${robot_prefix}rear_c_mount"/>
+      <child link="${robot_prefix}rear_b_mount" />
+    </joint>
+    <joint name="${robot_prefix}rear_mount_joint" type="fixed">
+      <origin xyz="-0.080 0 0" rpy="0 0 0" />
+      <parent link="${robot_prefix}rear_b_mount"/>
+      <child link="${robot_prefix}rear_mount" />
+    </joint>
+  </xacro:unless>
+
+  <!--
+    Mounting point for accessories on the front bumper.
+    Use with caution, but thin sensors (e.g Raspberry Pi NoIR camera) could
+    be mounted here for low-budget, front/rear-facing capabilities
+  -->
+  <link name="${robot_prefix}front_bumper_mount"></link>
+  <joint name="${robot_prefix}front_bumper_mount_joint" type="fixed">
+    <origin xyz="0.34159 0 0.0345115" rpy="0 0 0" />
+    <parent link="${robot_prefix}chassis_link"/>
+    <child link="${robot_prefix}front_bumper_mount" />
+  </joint>
+
+  <!-- PACS -->
+  <!-- <xacro:include filename="$(find dingo_description)/urdf/pacs.urdf.xacro"/> -->
+  <!-- <xacro:pacs/> -->
+
+  <!-- Bring in simulation data for Gazebo. -->
+  <!-- ........................................................................ -->
+  <!-- <xacro:include filename="$(find dingo_description)/urdf/dingo.gazebo" /> -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>$(arg robot_namespace)</robotNamespace>  <!-- edited -->
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="imu_controller" filename="libhector_gazebo_ros_imu.so">
+      <robotNamespace>$(arg robot_namespace)</robotNamespace> <!-- edited -->
+      <frameId>${robot_prefix}base_link</frameId>
+      <updateRate>50.0</updateRate>
+      <bodyName>${robot_prefix}imu_link</bodyName>
+      <topicName>imu/data</topicName>
+      <accelDrift>0.0001 0.0001 0.0001</accelDrift>
+      <accelGaussianNoise>0.005 0.005 0.005</accelGaussianNoise>
+      <rateDrift>0.0001 0.0001 0.0001 </rateDrift>
+      <rateGaussianNoise>0.005 0.005 0.005 </rateGaussianNoise>
+      <headingDrift>0.0001</headingDrift>
+      <headingGaussianNoise>0.005</headingGaussianNoise>
+    </plugin>
+  </gazebo>
+
+  <gazebo reference="${robot_prefix}base_link">
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="${robot_prefix}chassis_link">
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+  <gazebo reference="${robot_prefix}imu_link">
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <!-- Fabric mount link -->
+  <gazebo reference="${robot_prefix}fabric_mount_link">
+    <turnGravityOff>false</turnGravityOff>
+    <!-- <material>Gazebo/DarkGrey</material> -->
+    <!-- <mu1>0.0</mu1> -->
+    <!-- <mu2>0.0</mu2> -->
+  </gazebo>
+
+  <!-- UWB tag 1 joint -->
+  <gazebo reference="${robot_prefix}uwb_tag_1_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+  
+  <!-- UWB tag 1 link -->
+  <gazebo reference="${robot_prefix}uwb_tag_1_link">
+    <turnGravityOff>false</turnGravityOff>
+    <!-- <material>Gazebo/DarkGrey</material> -->
+    <!-- <mu1>100.0</mu1> -->
+    <!-- <mu2>50.0</mu2> -->
+  </gazebo>
+
+  <!-- UWB tag 2 joint -->
+  <gazebo reference="${robot_prefix}uwb_tag_2_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+  
+  <!-- UWB tag 2 link -->
+  <gazebo reference="${robot_prefix}uwb_tag_2_link">
+    <turnGravityOff>false</turnGravityOff>
+    <!-- <material>Gazebo/DarkGrey</material> -->
+    <!-- <mu1>100.0</mu1> -->
+    <!-- <mu2>50.0</mu2> -->
+  </gazebo>
+
+
+
+
+  <!-- ........................................................................ -->
+
+  <!-- ........................................................................ -->
+  <!-- <xacro:include filename="$(find dingo_description)/urdf/dingo-o.gazebo" /> -->
+  <gazebo >
+    <plugin name="dingo_ros_force_based_move" filename="libridgeback_ros_force_based_move.so">
+      <robotNamespace>$(arg robot_namespace)</robotNamespace> <!-- edited -->
+      <commandTopic>dingo_velocity_controller/cmd_vel</commandTopic>
+      <odometryTopic>dingo_ros_force_based_move/odom</odometryTopic>
+      
+      <odometryFrame>${robot_prefix}odom</odometryFrame>
+      
+      <odometryRate>50.0</odometryRate>
+      
+      <robotBaseFrame>${robot_prefix}base_link</robotBaseFrame> 
+      
+      <cmdVelTimeOut>0.25</cmdVelTimeOut>
+      <!-- Don't publish a transform: the controller does it. -->
+      <publishOdometryTf>0</publishOdometryTf>
+      <yaw_velocity_p_gain>500.0</yaw_velocity_p_gain>
+      <x_velocity_p_gain>10000.0</x_velocity_p_gain>
+      <y_velocity_p_gain>10000.0</y_velocity_p_gain>
+    </plugin>
+  </gazebo>
+
+  <gazebo reference="${robot_prefix}front_left_wheel_link">
+    <material>Gazebo/DarkGrey</material>
+    <mu1>0.0</mu1>
+    <mu2>0.0</mu2>
+  </gazebo>
+
+  <gazebo reference="${robot_prefix}front_right_wheel_link">
+    <material>Gazebo/DarkGrey</material>
+    <mu1>0.0</mu1>
+    <mu2>0.0</mu2>
+  </gazebo>
+
+  <gazebo reference="${robot_prefix}rear_left_wheel_link">
+    <material>Gazebo/DarkGrey</material>
+    <mu1>0.0</mu1>
+    <mu2>0.0</mu2>
+  </gazebo>
+
+  <gazebo reference="${robot_prefix}rear_right_wheel_link">
+    <material>Gazebo/DarkGrey</material>
+    <mu1>0.0</mu1>
+    <mu2>0.0</mu2>
+  </gazebo>
+  <!-- ........................................................................ -->
+
+  <gazebo>
+    <plugin name="ground_truth" filename="libgazebo_ros_p3d.so">
+      <robotNamespace>$(arg robot_namespace)</robotNamespace>
+      <alwaysOn>true</alwaysOn>
+      <!-- <frameName>${robot_prefix}odom</frameName> -->
+      <frameName>map</frameName>
+      <bodyName>${robot_prefix}base_link</bodyName>
+      <!-- <bodyName>${robot_prefix}fabric_mount_link</bodyName> -->  <!-- Only base link and moving links works, fixed ones don't -->
+      <topicName>ground_truth/odom</topicName>
+      <updateRate>50.0</updateRate>
+      <gaussianNoise>0.0001</gaussianNoise>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="force_controller" filename="libgazebo_ros_force.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>100.0</updateRate>
+      <topicName>fabric_force</topicName>
+      <bodyName>${robot_prefix}base_link</bodyName>
+      <!-- <bodyName>${robot_prefix}fabric_mount_link</bodyName> --> <!-- Only base link and moving links works, fixed ones don't -->
+      <!-- <bodyName>${robot_prefix}front_left_wheel_link</bodyName> -->
+    </plugin>
+  </gazebo>
+
+  <!-- UWB ranging simulation plugin for tag 1 -->
+  <gazebo>
+    <plugin name='libuwb_plugin' filename='libuwb_plugin.so'>
+      <frame_name>map</frame_name>
+      <robot_namespace>$(arg robot_namespace)</robot_namespace> 
+
+      <tag_link>${robot_prefix}uwb_tag_1_link</tag_link>
+      <tag_id>${uwb_tag_1}</tag_id>
+
+      <anchor_prefix>uwb_anchor</anchor_prefix>
+
+      <update_rate>10</update_rate>
+      
+      <nlosSoftWallWidth>0.5</nlosSoftWallWidth>
+      
+      <tag_z_offset>0.0</tag_z_offset>
+
+      <all_los>false</all_los>
+      
+      <topic_name_ranging>uwb/tag_1_ranging</topic_name_ranging>
+
+      <topic_name_serial_ranging>uwb/tag_1_serial_ranging</topic_name_serial_ranging>
+
+      <topic_name_anchors>uwb/tag_1_anchors</topic_name_anchors>
+
+    </plugin>
+  </gazebo>
+
+  <!-- UWB ranging simulation plugin for tag 2 -->
+  <gazebo>
+    <plugin name='libuwb_plugin' filename='libuwb_plugin.so'>
+      <frame_name>map</frame_name>
+      <robot_namespace>$(arg robot_namespace)</robot_namespace> 
+
+      <tag_link>${robot_prefix}uwb_tag_2_link</tag_link>
+      <tag_id>${uwb_tag_2}</tag_id>
+
+      <anchor_prefix>uwb_anchor</anchor_prefix>
+
+      <update_rate>10</update_rate>
+      
+      <nlosSoftWallWidth>0.5</nlosSoftWallWidth>
+      
+      <tag_z_offset>0.0</tag_z_offset>
+
+      <all_los>false</all_los>
+      
+      <topic_name_ranging>uwb/tag_2_ranging</topic_name_ranging>
+
+      <topic_name_serial_ranging>uwb/tag_2_serial_ranging</topic_name_serial_ranging>
+
+      <topic_name_anchors>uwb/tag_2_anchors</topic_name_anchors>
+
+    </plugin>
+  </gazebo>
+
+
+  <!-- ........................................................................ -->
+  <!-- Optional standard accessories, including their simulation data. The rendering
+       of these into the final description is controlled by optenv variables, which
+       default each one to off.-->
+  <!-- <xacro:include filename="$(find dingo_description)/urdf/accessories.urdf.xacro" /> -->
+
+  <xacro:include filename="$(find dingo_description)/urdf/accessories/hokuyo_ust10.urdf.xacro" />
+  
+  <!--
+    Add a lidar sensor.  By default this is a SICK LMS1xx but can be changed with the
+    DINGO_LASER_MODEL environment variable. Valid model designations are:
+    - ust10            :: Hokuyo UST10
+  -->
+  <xacro:if value="$(optenv DINGO_LASER 0)">
+    <xacro:property name="mount" value="$(optenv DINGO_LASER_MOUNT ${robot_prefix}front)" />
+    <xacro:property name="topic" value="$(optenv DINGO_LASER_TOPIC front/scan)" />
+    <xacro:property name="prefix" value="$(optenv DINGO_LASER_PREFIX ${mount})" />
+    <xacro:property name="parent" value="$(optenv DINGO_LASER_PARENT ${mount}_mount)" />
+    <xacro:property name="lidar_model" value="$(optenv DINGO_LASER_MODEL ust10)" />
+
+    <!-- Hokuyo UST10 -->
+    <xacro:if value="${lidar_model == 'ust10'}">
+      <xacro:hokuyo_ust10_mount prefix="${prefix}" topic="${topic}" />
+      <joint name="${prefix}_laser_mount_joint" type="fixed">
+        <origin xyz="$(optenv DINGO_LASER_OFFSET 0 0 0)"
+                rpy="$(optenv DINGO_LASER_RPY 0 0 0)" />
+        <parent link="${parent}" />
+        <child link="${prefix}_laser_mount" />
+      </joint>
+    </xacro:if>
+  </xacro:if>
+
+  <!-- Add the secondary lidar, same format as the first, but on the rear -->
+  <xacro:if value="$(optenv DINGO_LASER_SECONDARY 0)">
+    <xacro:property name="mount" value="$(optenv DINGO_LASER_SECONDARY_MOUNT ${robot_prefix}rear)" />
+    <xacro:property name="topic" value="$(optenv DINGO_LASER_SECONDARY_TOPIC rear/scan)" />
+    <xacro:property name="prefix" value="$(optenv DINGO_LASER_SECONDARY_PREFIX ${mount})" />
+    <xacro:property name="parent" value="$(optenv DINGO_LASER_SECONDARY_PARENT ${mount}_mount)" />
+    <xacro:property name="lidar_model" value="$(optenv DINGO_LASER_SECONDARY_MODEL ust10)" />
+
+    <!-- Secondary Hokuyo UST10 -->
+    <xacro:if value="${lidar_model == 'ust10'}">
+      <xacro:hokuyo_ust10_mount prefix="${prefix}" topic="${topic}" />
+      <joint name="${prefix}_laser_mount_joint" type="fixed">
+        <origin xyz="$(optenv DINGO_LASER_SECONDARY_OFFSET 0 0 0)"
+                rpy="$(optenv DINGO_LASER_SECONDARY_RPY 0 0 ${PI})" />
+        <parent link="${parent}" />
+        <child link="${prefix}_laser_mount" />
+      </joint>
+    </xacro:if>
+  </xacro:if>
+
+  <!--
+    Add Microstrain IMU. By default the DINGO comes equipped with an IMU linked to "imu_link". These extra
+    optional microstrain IMU's will be added to another frame, by default, "microstrain_link".
+  -->
+  <xacro:if value="$(optenv DINGO_IMU_MICROSTRAIN 0)">
+    <xacro:property name="frame"  value="$(optenv DINGO_IMU_MICROSTRAIN_LINK ${robot_prefix}microstrain_link)"/>
+    <xacro:property name="parent" value="$(optenv DINGO_IMU_MICROSTRAIN_PARENT ${robot_prefix}imu_link)"/>
+    <xacro:property name="xyz"    value="$(optenv DINGO_IMU_MICROSTRAIN_OFFSET 0 0 0)"/>
+    <xacro:property name="rpy"    value="$(optenv DINGO_IMU_MICROSTRAIN_RPY 0 0 0)"/>
+    <link name="${frame}" />
+    <joint name="${frame}_joint" type="fixed">
+      <parent link="${parent}" />
+      <child link="${frame}" />
+      <origin xyz="${xyz}" rpy="${rpy}" />
+    </joint>
+  </xacro:if>
+  <!-- ........................................................................ -->
+
+  <!-- Optional custom includes. -->
+  <!-- <xacro:include filename="$(optenv DINGO_URDF_EXTRAS empty.urdf)" /> -->
+</robot>

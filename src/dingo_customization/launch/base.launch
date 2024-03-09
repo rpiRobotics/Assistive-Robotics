@@ -1,0 +1,58 @@
+<launch>
+<group ns="$(optenv DINGO_CUSTOM_NAME d)">
+  <arg name="motor_params" default="$(optenv DINGO_MOTOR_PARAMS base)" />
+
+  <arg name="robot_namespace"       default="$(optenv DINGO_CUSTOM_NAME d)"/>
+  <!-- Generate the tf_prefix from the namespace -->
+  <arg name="tf_prefix" default="$(eval optenv('TF_PREFIX', arg('robot_namespace') + '_tf_'))" />
+
+  <include file="$(find dingo_customization)/launch/description.launch" />
+  <!-- <include file="$(find dingo_description)/launch/description.launch" /> -->
+
+  <node pkg="rosserial_python" type="message_info_service.py" name="rosserial_message_info" output="screen" />
+
+  <node pkg="dingo_base" type="dingo_node" name="dingo_node" output="screen">
+    <param name="dingo_omni" type="bool" value="$(optenv DINGO_OMNI 0)" />
+    <rosparam command="load" file="$(find dingo_base)/config/$(arg motor_params).yaml" />
+    <param name="wireless_interface" value="$(optenv DINGO_WIRELESS_INTERFACE wlp2s0)" />
+
+    <param name="front_left_wheel"  value="$(arg tf_prefix)front_left_wheel" />
+    <param name="front_right_wheel" value="$(arg tf_prefix)front_right_wheel" />
+    <param name="rear_left_wheel"   value="$(arg tf_prefix)rear_left_wheel" />
+    <param name="rear_right_wheel"  value="$(arg tf_prefix)rear_right_wheel" />
+  </node>
+
+  <node pkg="imu_filter_madgwick" type="imu_filter_node" name="imu_filter" output="screen">
+    <rosparam file="$(eval optenv('DINGO_MAG_CONFIG', find('dingo_base')+'/config/mag_config_default.yaml'))" />
+    <rosparam>
+      gain: 0.1
+      zeta: 0.001
+      publish_tf: false
+      use_magnetic_field_msg: true
+    </rosparam>
+  </node>
+
+  <!-- Differential controller and basic localization -->
+  <include file="$(find dingo_customization)/launch/control.launch" />
+  <!-- <include file="$(find dingo_control)/launch/control.launch" /> -->
+
+  <!-- Teleoperation via joystick and rviz interactive markers -->
+  <include file="$(find dingo_customization)/launch/teleop.launch" />
+
+  <!-- Diagnostic Aggregator for robot monitor usage -->
+  <!--
+  <group if="$(optenv DINGO_OMNI 0)">
+    <node pkg="diagnostic_aggregator" type="aggregator_node" name="diagnostic_aggregator" output="screen">
+      <rosparam command="load" file="$(find dingo_base)/config/diagnostic_analyzers_common.yaml" />
+      <rosparam command="load" file="$(find dingo_base)/config/diagnostic_analyzers_omni.yaml" />
+    </node>
+  </group>
+  <group unless="$(optenv DINGO_OMNI 0)">
+    <node pkg="diagnostic_aggregator" type="aggregator_node" name="diagnostic_aggregator" output="screen">
+      <rosparam command="load" file="$(find dingo_base)/config/diagnostic_analyzers_common.yaml" />
+      <rosparam command="load" file="$(find dingo_base)/config/diagnostic_analyzers_diff.yaml" />
+    </node>
+  </group>
+  -->
+</group>
+</launch>

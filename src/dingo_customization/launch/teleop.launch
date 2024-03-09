@@ -1,0 +1,43 @@
+<launch>
+  <!-- If false, disable teleop via bluetooth controller -->
+  <arg name="joystick" default="true" />
+
+  <!-- The joy device we accept input from -->
+  <arg name="joy_dev" default="$(optenv DINGO_JOY_DEV /dev/input/ps4)" />
+
+  <arg name="robot_namespace"       default="$(optenv DINGO_CUSTOM_NAME d)"/>
+  <!-- Generate the tf_prefix from the namespace -->
+  <arg name="tf_prefix" default="$(eval optenv('TF_PREFIX', arg('robot_namespace') + '_tf_'))" />
+
+  <!--
+    The yaml file with the button mappings.
+    If not set via DINGO_JOY_CONFIG, load the appropriate _diff or _omni file from this package
+  -->
+  <arg name="joy_config" default="$(eval optenv('DINGO_JOY_CONFIG', find('dingo_control') + '/config/teleop_omni.yaml'
+                          if int(optenv('DINGO_OMNI', 0)) else find('dingo_control') + '/config/teleop_diff.yaml'))" />
+
+  <group if="$(optenv DINGO_OMNI 0)">
+    <rosparam command="load" ns="bluetooth_teleop" file="$(arg joy_config)" />
+    <arg name="config" value="planar" />
+    <node pkg="interactive_marker_twist_server" type="marker_server" name="twist_marker_server">
+      <rosparam command="load" file="$(find interactive_marker_twist_server)/config/$(arg config).yaml" />
+
+      <rosparam param="link_name"  subst_value="true">$(arg tf_prefix)base_link</rosparam>
+      <rosparam param="robot_name"  subst_value="true">$(arg robot_namespace)_robot</rosparam>
+    </node>
+  </group>
+  <group unless="$(optenv DINGO_OMNI 0)">
+    <rosparam command="load" ns="bluetooth_teleop" file="$(arg joy_config)" />
+    <arg name="config" value="linear" />
+    <node pkg="interactive_marker_twist_server" type="marker_server" name="twist_marker_server">
+      <rosparam command="load" file="$(find interactive_marker_twist_server)/config/$(arg config).yaml" />
+    </node>
+  </group>
+
+  <group ns="bluetooth_teleop" if="$(arg joystick)">
+    <param name="joy_node/dev" value="$(arg joy_dev)" />
+    <node pkg="joy" type="joy_node" name="joy_node" />
+    <node pkg="teleop_twist_joy" type="teleop_node" name="teleop_twist_joy"/>
+  </group>
+
+</launch>

@@ -1,1 +1,0 @@
-KERNEL=="ttyACM*", ATTRS{idVendor}=="15d1", SYMLINK+="sensor_hokuyo_ust_20ln_0", MODE:="666"

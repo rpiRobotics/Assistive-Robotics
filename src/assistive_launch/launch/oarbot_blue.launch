@@ -1,28 +1,26 @@
 <?xml version="1.0"?>
 <launch>   
 <!-- <group ns="oarbot_blue"> -->
-    <machine name="oarbot-blue-P15" address="192.168.1.102" env-loader="/home/oarbot_blue/catkin_ws_assistive/scripts/env_oarbot_blue.sh" user="oarbot_blue" password="1234"  default="true"/>
+    <machine name="oarbot-blue-P15" address="192.168.1.102" env-loader="$(find assistive_launch)/scripts/env_oarbot_blue.sh" user="oarbot_blue" password="1234"  default="true"/>
 
     <!-- Launch Kinova Arm with Kinect + Corresponding TF broadcasters, including Body Joint Broadcaster -->
     <include file="$(find assistive_launch)/launch/test_launch/oarbot_blue_arm_with_kinect.launch">
         <!-- <arg name="prefix_for_tf" value="j2n6s300_right" />  Applies to both kinova arm and the kinect -->
     </include>
 
-    <!-- Launch Oarbot Omnidirectional Base -->
-    <include file="$(find assistive_launch)/launch/test_launch/oarbot_blue_base.launch">
-    </include>
+    <!-- Overall Robot twist mux -->
+    <group ns="oarbot_blue">
+        <node pkg="twist_mux" type="twist_mux" name="twist_mux" output="screen">
+            <rosparam command="load" file="$(find assistive_launch)/config/oarbot_twist_mux.yaml" />
+            <remap from="cmd_vel_out" to="e_stop_cmd_vel"/>
+            <remap from="/diagnostics" to="diagnostics"/>
+        </node>
+    </group>
 
     <!-- Launch Oarbot redundancy resolver -->
     <group ns="oarbot_blue">
         <node name="oarbot_redundancy_resolver" pkg="oarbot_control" type="oarbot_redundancy_resolver.py" output="screen">
             <rosparam file="$(find assistive_launch)/config/oarbot_blue_redundancy_resolver.yaml"/>
-        </node>
-    </group>
-
-    <!-- Launch Oarbot Collision Avoider -->
-    <group ns="oarbot_blue">
-        <node name="collision_avoidance_2d" pkg="oarbot_control" type="collision_avoidance_2d.py" output="screen">
-		    <rosparam file="$(find assistive_launch)/config/oarbot_blue_collision_avoidance_2d.yaml"/>
         </node>
     </group>
 

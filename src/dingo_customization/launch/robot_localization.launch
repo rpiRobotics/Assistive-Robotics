@@ -1,0 +1,14 @@
+<launch>
+  <arg name="robot_namespace"       default="$(optenv DINGO_CUSTOM_NAME d)"/>
+  <!-- Generate the tf_prefix from the namespace -->
+  <arg name="tf_prefix" default="$(eval optenv('TF_PREFIX', arg('robot_namespace') + '_tf_'))" />
+
+    <!-- EKF localization -->
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
+    <rosparam command="load" file="$(find assistive_launch)/config/dingo_robot_localization.yaml" />
+    <rosparam param="world_frame"      subst_value="true">map</rosparam>
+    <rosparam param="map_frame"        subst_value="true">map</rosparam>
+    <rosparam param="odom_frame"       subst_value="true">$(arg tf_prefix)odom</rosparam>
+    <rosparam param="base_link_frame"  subst_value="true">$(arg tf_prefix)base_link</rosparam>
+  </node>
+</launch>

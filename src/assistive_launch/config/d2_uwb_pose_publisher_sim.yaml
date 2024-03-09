@@ -1,0 +1,21 @@
+tf_world_frame: "map"
+pub_pose_topic_name: "pose_uwb"
+
+sub_uwb_tag_1_topic_name: "uwb/tag_1_serial_ranging"
+sub_uwb_tag_2_topic_name: "uwb/tag_2_serial_ranging"
+
+# If you update the ids here, for correct descriptions also update /etc/ros/setup.bash of the physical robot.
+uwb_tag_1_id: '2' 
+uwb_tag_2_id: '3' 
+
+# If you update the x y z positions below, also update /etc/ros/setup.bash of the physical robot for correct description update.
+tag_1_x: -0.008
+tag_1_y: -0.22
+
+tag_2_x: 0.008
+tag_2_y: 0.22
+
+tag_z_height: 0.314
+
+uwb_meas_std: [0.5, 0.5, 1.0] # comes from uwb sensor readings data # [x,y,rotz]
+expected_uwb_rate: 10.0
