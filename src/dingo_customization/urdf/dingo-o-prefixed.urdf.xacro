@@ -213,7 +213,7 @@
   <!-- Right uwb tag -->
   <xacro:uwb_tag tag_num="1" robot_prefix="${robot_prefix}"> 
     <!-- <origin xyz="$(optenv DINGO_UWB_TAG_1_OFFSET 0 -0.22 0.1)" rpy="0 0 0"/> -->
-    <origin xyz="$(optenv DINGO_UWB_TAG_1_OFFSET 0 -0.22 0.1)" rpy="${PI/2} ${PI/2} 0"/>
+    <origin xyz="$(optenv DINGO_UWB_TAG_1_OFFSET 0 -0.22 0.1)" rpy="${PI/2} ${-PI/2} 0"/>
   </xacro:uwb_tag>
 
   <!-- Left uwb tag -->
@@ -283,7 +283,7 @@
         <geometry>
             <mesh filename="package://dingo_customization/meshes/pvc_riser_aruco_mount.STL"/>
         </geometry>
-        <material name="white_acrylic" />
+        <material name="light_grey" />
       </visual>
     
       <collision>
@@ -323,7 +323,7 @@
         <geometry>
             <mesh filename="package://dingo_customization/meshes/pvc_riser_uwb_mount.STL"/>
         </geometry>
-        <material name="light_grey" />
+        <material name="white_acrylic" />
       </visual>
     
       <collision>
