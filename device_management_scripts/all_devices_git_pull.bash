@@ -18,13 +18,16 @@ done
 git_pull_computers() {
     local config_file=$1
     source "$config_file"
-    local git_pull_script="${config_file##*/}_git_pull.bash"
+
+    # Extract the base name without the .sh extension and append "_git_pull.bash"
+    local base_name=$(basename "$config_file" .sh)
+    local git_pull_script="${base_name}_git_pull.bash"
 
     for i in "${!HOSTS[@]}"; do
         echo "---------------------------------------------"
         echo "Git pulling for ${USERNAMES[i]}@${HOSTS[i]}"
 
-        SCRIPT="bash ~/catkin_ws_assistive/device_management_scripts/git_pull_scripts/$git_pull_script"
+        local SCRIPT="bash ~/catkin_ws_assistive/device_management_scripts/git_pull_scripts/$git_pull_script"
 
         ssh-keygen -f "$HOME/.ssh/known_hosts" -R "${HOSTS[i]}"
 
