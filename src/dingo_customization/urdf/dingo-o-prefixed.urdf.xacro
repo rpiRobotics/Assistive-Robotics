@@ -231,7 +231,7 @@
         <geometry>
             <mesh filename="package://dingo_customization/meshes/pvc_riser.STL"/>
         </geometry>
-        <!-- <material name="white" /> -->
+        <material name="light_grey" />
       </visual>
     
       <collision>
@@ -280,7 +280,7 @@
         <geometry>
             <mesh filename="package://dingo_customization/meshes/pvc_riser_aruco_mount.STL"/>
         </geometry>
-        <!-- <material name="white" /> -->
+        <material name="light_grey" />
       </visual>
     
       <collision>
@@ -320,7 +320,7 @@
         <geometry>
             <mesh filename="package://dingo_customization/meshes/pvc_riser_uwb_mount.STL"/>
         </geometry>
-        <!-- <material name="white" /> -->
+        <material name="light_grey" />
       </visual>
     
       <collision>
