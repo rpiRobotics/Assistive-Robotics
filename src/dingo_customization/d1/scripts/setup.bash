@@ -54,6 +54,6 @@ export DINGO_IMU_MICROSTRAIN_PARENT="${TF_PREFIX}imu_link"
 export DINGO_UWB_TAGS=true
 # below values are specified just for the description, uwb reading nodes have their own yaml files.
 export DINGO_UWB_TAG_1_ID="1DB8" # right
-export DINGO_UWB_TAG_1_OFFSET="0.177 -0.27 0.543175" # wrt mid mount in the description
+export DINGO_UWB_TAG_1_OFFSET="0.177 -0.24 0.543175" # wrt mid mount in the description
 export DINGO_UWB_TAG_2_ID="DA36" # left
-export DINGO_UWB_TAG_2_OFFSET="0.143 0.27 0.543175" # wrt mid mount in the description
+export DINGO_UWB_TAG_2_OFFSET="0.143 0.24 0.543175" # wrt mid mount in the description
