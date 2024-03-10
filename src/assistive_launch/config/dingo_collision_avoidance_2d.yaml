@@ -6,7 +6,7 @@ enable_collision_avoidance_dynamic: true # dynamic collision avoidance with lase
 number_of_robots: 2
 
 in_cmd_vel_topic_name: "cmd_vel_base" # subscribed
-out_cmd_vel_topic_name: "cmd_vel_base_safer" # "cmd_vel_base_safer" # published  
+out_cmd_vel_topic_name: "cmd_vel_safer" # "cmd_vel_base_safer" # published  
 
 tf_world_frame_id: "map" # "world_floor"
 tf_mobile_base_frame_id: "base_link"
