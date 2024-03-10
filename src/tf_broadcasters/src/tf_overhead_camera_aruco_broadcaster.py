@@ -136,7 +136,7 @@ class ArucoRobots2Floor():
         self.height = None
 
         self.tf_rgb_camera_frame_id = rospy.get_param ("~tf_rgb_camera_frame_id", "cage_rgb_camera_link")
-        self.tf_world_floor_frame_id = rospy.get_param("~tf_world_floor_frame_id", "world_floor")
+        self.tf_world_floor_frame_id = rospy.get_param("~tf_world_floor_frame_id", "map")
         self.robot_bases_tf_prefix = rospy.get_param("~robot_bases_tf_prefix", "")
         self.robot_bases_tf_postfix = rospy.get_param("~robot_bases_tf_postfix", "_base")
 

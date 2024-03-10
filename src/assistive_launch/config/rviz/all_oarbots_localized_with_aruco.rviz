@@ -355,7 +355,7 @@ Visualization Manager:
           Value: true
         sensor:
           Value: false
-        world_floor:
+        map:
           Value: true
       Marker Scale: 0.5
       Name: TF
@@ -1340,7 +1340,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: world_floor
+    Fixed Frame: map
     Frame Rate: 30
   Name: root
   Tools:

@@ -43,7 +43,8 @@ in the URDF. See dingo_description/urdf/accessories.urdf.xacro.
 
   <!-- Launch Obstacle Detector -->
   <include file="$(find dingo_customization)/launch/obstacle_detector.launch">
-    <arg name="fixed_frame_id" value="world_floor"/>
+    <!-- <arg name="fixed_frame_id" value="world_floor"/> -->
+    <arg name="fixed_frame_id" value="map"/>
   </include>
 
 

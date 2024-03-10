@@ -12,7 +12,7 @@ control_ball_center: [-0.4, -0.25, 0.50] # wrt. kinova arm base
 control_ball_radius: 0.25 # meters
 
 
-tf_world_frame_id: "world_floor"
+tf_world_frame_id: "map" # "world_floor"
 tf_mobile_base_frame_id: "d2_tf_base_link"
 tf_arm_base_frame_id: "root_left_arm" 
 

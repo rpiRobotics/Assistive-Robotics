@@ -5,7 +5,8 @@
   <!-- Generate the tf_prefix from the namespace -->
   <arg name="tf_prefix" default="$(eval optenv('TF_PREFIX', arg('robot_namespace') + '_tf_'))" />
 
-  <arg name="fixed_frame_id" default="world_floor"/>
+  <!-- <arg name="fixed_frame_id" default="world_floor"/> -->
+  <arg name="fixed_frame_id" default="map"/>
 
   <node name="nodelet_manager" pkg="nodelet" type="nodelet" args="manager" output="screen">
     <param name="num_worker_threads" value="10"/>

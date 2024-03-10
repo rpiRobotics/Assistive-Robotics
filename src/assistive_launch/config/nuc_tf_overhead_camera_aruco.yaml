@@ -15,7 +15,7 @@ path_to_extrinsic_parameters: '~/catkin_ws_assistive/src/assistive_launch/vision
 path_to_aruco_tags_info: '~/catkin_ws_assistive/src/assistive_launch/vision_parameters/aruco_tags_info3.csv'
 
 tf_rgb_camera_frame_id: 'cage_rgb_camera_link' # "cage_": is the prefix defined in kinect launching, "rgb_camera_link": default kinect rgb camera frame name
-tf_world_floor_frame_id: 'world_floor'
+tf_world_floor_frame_id: "map" # 'world_floor'
 robot_bases_tf_prefix: '' # should end with "_", eg. 'robots_'
 robot_bases_tf_postfix: '_tf_base_link' # should start with "_", eg. '_base'
 

@@ -112,5 +112,5 @@ tf_interaction_point_frame_name: 'j2n6s300_left_end_effector' # 'interaction_poi
 tf_absolute_task_frame_name: 'j2n6s300_left_end_effector'
 tf_relative_task_frame_name: 'j2n6s300_right_end_effector'
 tf_carried_obj_frame_name: 'j2n6s300_left_end_effector'
-tf_world_frame_name: 'world_floor'
+tf_world_frame_name: 'map' # 'world_floor'
 

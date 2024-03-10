@@ -37,16 +37,15 @@
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
     <rosparam command="load" file="$(find assistive_launch)/config/dingo_robot_localization.yaml" />
 
-    <!-- <rosparam param="world_frame"      subst_value="true">map</rosparam> -->
+    <rosparam param="world_frame"      subst_value="true">map</rosparam>
+    <rosparam param="map_frame"        subst_value="true">map</rosparam>
+    <rosparam param="odom_frame"       subst_value="true">$(arg tf_prefix)odom</rosparam>
+    <rosparam param="base_link_frame"  subst_value="true">$(arg tf_prefix)base_link</rosparam>
+  
+    <!-- <rosparam param="world_frame"      subst_value="true">world_floor</rosparam> -->
     <!-- <rosparam param="map_frame"        subst_value="true">map</rosparam> -->
     <!-- <rosparam param="odom_frame"       subst_value="true">$(arg tf_prefix)odom</rosparam> -->
     <!-- <rosparam param="base_link_frame"  subst_value="true">$(arg tf_prefix)base_link</rosparam> -->
-  
-    <rosparam param="world_frame"      subst_value="true">world_floor</rosparam>
-    <rosparam param="map_frame"        subst_value="true">map</rosparam>
-    <!-- <rosparam param="odom_frame"       subst_value="true">world_floor</rosparam> -->
-    <rosparam param="odom_frame"       subst_value="true">$(arg tf_prefix)odom</rosparam>
-    <rosparam param="base_link_frame"  subst_value="true">$(arg tf_prefix)base_link</rosparam>
 
     <rosparam param="pose1"  subst_value="true">/nuc/Pose_$(arg tf_prefix)base_link</rosparam>
   </node>
