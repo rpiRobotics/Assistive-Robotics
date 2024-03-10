@@ -6,10 +6,9 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /PoseWithCovariance1
-        - /PoseWithCovariance2
-        - /Camera1
-        - /RobotModel1/Status1
+        - /OverheadCam-Model1/Status1
+        - /d1-RobotModel1
+        - /d1-Obstacles1
       Splitter Ratio: 0.5
     Tree Height: 1696
   - Class: rviz/Selection
@@ -29,7 +28,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: Camera
+    SyncSource: LaserScan
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -87,7 +86,7 @@ Visualization Manager:
       Enabled: true
       Head Length: 0.30000001192092896
       Head Radius: 0.10000000149011612
-      Name: PoseWithCovariance
+      Name: Aruco-PoseWithCovariance-d1
       Queue Size: 10
       Shaft Length: 1
       Shaft Radius: 0.05000000074505806
@@ -118,7 +117,7 @@ Visualization Manager:
       Enabled: true
       Head Length: 0.30000001192092896
       Head Radius: 0.10000000149011612
-      Name: PoseWithCovariance
+      Name: Aruco-PoseWithCovariance-d2
       Queue Size: 10
       Shaft Length: 1
       Shaft Radius: 0.05000000074505806
@@ -130,7 +129,7 @@ Visualization Manager:
       Enabled: false
       Image Rendering: background and overlay
       Image Topic: /nuc/rgb/image_rect_color
-      Name: Camera
+      Name: OverheadCamera
       Overlay Alpha: 0.5
       Queue Size: 2
       Transport Hint: raw
@@ -141,6 +140,8 @@ Visualization Manager:
         Axes: true
         Grid: true
         PoseWithCovariance: true
+        RobotModel: true
+        TF: true
         Value: true
       Zoom Factor: 1
     - Alpha: 1
@@ -168,7 +169,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-      Name: RobotModel
+      Name: OverheadCam-Model
       Robot Description: /nuc/azure_description
       TF Prefix: ""
       Update Interval: 0
@@ -193,7 +194,61 @@ Visualization Manager:
           Value: true
         cage_rgb_camera_link:
           Value: true
-        world_floor:
+        d1_tf_arm_mount:
+          Value: true
+        d1_tf_base_link:
+          Value: true
+        d1_tf_chassis_link:
+          Value: true
+        d1_tf_front_b_mount:
+          Value: true
+        d1_tf_front_bumper_mount:
+          Value: true
+        d1_tf_front_c_mount:
+          Value: true
+        d1_tf_front_laser:
+          Value: true
+        d1_tf_front_laser_mount:
+          Value: true
+        d1_tf_front_left_wheel_link:
+          Value: true
+        d1_tf_front_mount:
+          Value: true
+        d1_tf_front_right_wheel_link:
+          Value: true
+        d1_tf_imu_link:
+          Value: true
+        d1_tf_microstrain_link:
+          Value: true
+        d1_tf_mid_mount:
+          Value: true
+        d1_tf_odom:
+          Value: true
+        d1_tf_rear_b_mount:
+          Value: true
+        d1_tf_rear_c_mount:
+          Value: true
+        d1_tf_rear_laser:
+          Value: true
+        d1_tf_rear_laser_mount:
+          Value: true
+        d1_tf_rear_left_wheel_link:
+          Value: true
+        d1_tf_rear_mount:
+          Value: true
+        d1_tf_rear_right_wheel_link:
+          Value: true
+        d1_tf_robot_arm_riser_aruco_mount_link:
+          Value: true
+        d1_tf_robot_arm_riser_link:
+          Value: true
+        d1_tf_robot_arm_riser_uwb_mount_link:
+          Value: true
+        d1_tf_uwb_tag_1_link:
+          Value: true
+        d1_tf_uwb_tag_2_link:
+          Value: true
+        map:
           Value: true
       Marker Alpha: 1
       Marker Scale: 1
@@ -211,15 +266,226 @@ Visualization Manager:
             cage_imu_link:
               {}
             cage_rgb_camera_link:
-              world_floor:
-                {}
+              map:
+                d1_tf_odom:
+                  d1_tf_base_link:
+                    d1_tf_chassis_link:
+                      d1_tf_front_bumper_mount:
+                        {}
+                      d1_tf_front_left_wheel_link:
+                        {}
+                      d1_tf_front_right_wheel_link:
+                        {}
+                      d1_tf_imu_link:
+                        d1_tf_microstrain_link:
+                          {}
+                      d1_tf_mid_mount:
+                        d1_tf_front_c_mount:
+                          d1_tf_front_b_mount:
+                            d1_tf_front_mount:
+                              d1_tf_front_laser_mount:
+                                d1_tf_front_laser:
+                                  {}
+                            d1_tf_robot_arm_riser_aruco_mount_link:
+                              {}
+                            d1_tf_robot_arm_riser_link:
+                              d1_tf_arm_mount:
+                                {}
+                            d1_tf_robot_arm_riser_uwb_mount_link:
+                              {}
+                        d1_tf_rear_c_mount:
+                          d1_tf_rear_b_mount:
+                            d1_tf_rear_mount:
+                              d1_tf_rear_laser_mount:
+                                d1_tf_rear_laser:
+                                  {}
+                        d1_tf_uwb_tag_1_link:
+                          {}
+                        d1_tf_uwb_tag_2_link:
+                          {}
+                      d1_tf_rear_left_wheel_link:
+                        {}
+                      d1_tf_rear_right_wheel_link:
+                        {}
       Update Interval: 0
       Value: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        d1_tf_arm_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_chassis_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_front_b_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_front_bumper_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_front_c_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_front_laser:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_front_laser_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_front_left_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_front_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_front_right_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_microstrain_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_mid_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_rear_b_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_rear_c_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_rear_laser:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_rear_laser_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_rear_left_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_rear_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_rear_right_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_robot_arm_riser_aruco_mount_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_robot_arm_riser_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_robot_arm_riser_uwb_mount_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_uwb_tag_1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_uwb_tag_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: d1-RobotModel
+      Robot Description: d1/robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Circles color: 170; 0; 0
+      Class: Obstacles
+      Enabled: true
+      Margin color: 0; 170; 0
+      Name: d1-Obstacles
+      Opacity: 0.75
+      Queue Size: 10
+      Segments color: 170; 170; 0
+      Segments thickness: 0.029999999329447746
+      Topic: /d1/obstacles
+      Unreliable: false
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/LaserScan
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: false
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: LaserScan
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.009999999776482582
+      Style: Flat Squares
+      Topic: /d1/scan
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: world_floor
+    Fixed Frame: map
     Frame Rate: 30
   Name: root
   Tools:
@@ -243,7 +509,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 9.635454177856445
+      Distance: 15.481522560119629
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -251,27 +517,27 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 1.9431488513946533
-        Y: 0.5505620241165161
-        Z: 0.48880743980407715
+        X: 1.77362060546875
+        Y: 2.3590598106384277
+        Z: -0.3525840640068054
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6053985953330994
+      Pitch: 0.825398862361908
       Target Frame: <Fixed Frame>
-      Yaw: 1.1203782558441162
+      Yaw: 1.3403807878494263
     Saved: ~
 Window Geometry:
-  Camera:
-    collapsed: false
   Displays:
     collapsed: false
   Height: 2206
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000005e900000798fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b000000b000fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000b0fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000006e000007980000018200fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000c00430061006d00650072006100000002dc0000052a0000002600ffffff000000010000015f00000798fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000006e000007980000013200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e1000001970000000300000ea00000005efc0100000002fb0000000800540069006d0065010000000000000ea0000006dc00fffffffb0000000800540069006d00650100000000000004500000000000000000000007400000079800000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  OverheadCamera:
+    collapsed: false
+  QMainWindow State: 000000ff00000000fd0000000400000000000005e900000798fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b000000b000fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000b0fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000006e000007980000018200fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000001c004f007600650072006800650061006400430061006d00650072006100000002dc0000052a0000002600ffffff000000010000015f00000798fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000006e000007980000013200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e1000001970000000300000ea00000005efc0100000002fb0000000800540069006d0065010000000000000ea0000006dc00fffffffb0000000800540069006d00650100000000000004500000000000000000000007400000079800000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
