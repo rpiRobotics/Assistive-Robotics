@@ -11,7 +11,7 @@
 
 
     <!-- <node pkg="rosbag" type="record" name="rosbag_record_pose"
-        args="record -o /home/nuc/rosbag_records/ /nuc/Pose_oarbot_silver_base /nuc/Pose_oarbot_blue_base " /> -->
+        args="record -o /home/nuc/rosbag_records/ /nuc/Pose_d2_tf_base_link /nuc/Pose_d1_tf_base_link " /> -->
 
 </group>
 </launch>

@@ -102,8 +102,8 @@ tf_end_effector_frame_names:
   - 'j2n6s300_left_end_effector'
   - 'j2n6s300_right_end_effector'
 tf_robot_base_frame_names: 
-  - 'oarbot_silver_base'
-  - 'oarbot_blue_base' # 'j2n6s300_left_link_base'
+  - 'd2_tf_base_link' # 'oarbot_silver_base'
+  - 'd1_tf_base_link' # 'oarbot_blue_base' # 'j2n6s300_left_link_base'
 tf_arm_base_frame_names: 
   - 'j2n6s300_left_link_base'
   - 'j2n6s300_right_link_base'
