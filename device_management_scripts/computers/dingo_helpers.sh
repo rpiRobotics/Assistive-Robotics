@@ -1,16 +1,19 @@
 HOSTS=(
     "192.168.1.102" 
-    "192.168.1.104")
+    "192.168.1.104"
+    )
 USERNAMES=(
     "oarbot_blue"
-    "oarbot_silver") 
+    "oarbot_silver"
+    ) 
 PASSWORDS=(
     "1234" 
-    "1234")
+    "1234"
+    )
 ROS_VERSION_NAMES=(
     "melodic"
     "melodic"
-)
+    )
 # Specify the packages to be built in these computers
 CATKIN_WHITELIST_PACKAGES=(
     "assistive_msgs"

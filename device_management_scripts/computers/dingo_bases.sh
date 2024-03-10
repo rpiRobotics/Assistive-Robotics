@@ -1,16 +1,19 @@
 HOSTS=(
     "192.168.1.101" 
-    "192.168.1.103")
+    "192.168.1.103"
+    )
 USERNAMES=(
     "administrator" 
-    "administrator")
+    "administrator"
+    )
 PASSWORDS=(
     "clearpath" 
-    "clearpath")
+    "clearpath"
+    )
 ROS_VERSION_NAMES=(
     "noetic"
     "noetic"
-)
+    )
 # Specify the packages to be built in these computers
 CATKIN_WHITELIST_PACKAGES=(
     "assistive_msgs"
