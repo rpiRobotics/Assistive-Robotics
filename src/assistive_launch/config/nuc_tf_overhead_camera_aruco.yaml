@@ -17,7 +17,7 @@ path_to_aruco_tags_info: '~/catkin_ws_assistive/src/assistive_launch/vision_para
 tf_rgb_camera_frame_id: 'cage_rgb_camera_link' # "cage_": is the prefix defined in kinect launching, "rgb_camera_link": default kinect rgb camera frame name
 tf_world_floor_frame_id: 'world_floor'
 robot_bases_tf_prefix: '' # should end with "_", eg. 'robots_'
-robot_bases_tf_postfix: '_base' # should start with "_", eg. '_base'
+robot_bases_tf_postfix: '_tf_base_link' # should start with "_", eg. '_base'
 
 pose_covariance_diagonal: [1.0e-1, 1.0e-1, 1.0e-1,      5.0e-3, 5.0e-3, 5.0e-3] # [x,y,z,rotx,roty,rotz]
 tf_broadcast_enable: false
