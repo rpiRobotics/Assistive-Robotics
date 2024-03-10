@@ -52,4 +52,4 @@ CATKIN_WHITELIST_PACKAGES=(
 )
 ROBOT_NAMES=(
     "d1" 
-    "d2")
+    "d2") # Only needed to update the dingo_customization related stuff.

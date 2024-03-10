@@ -461,7 +461,7 @@ At each robot equipped with the UWB tags, this step is required to read data fro
 Determine the USB serial ports of the UWB tags by unplugging and re-pluggin the USB cables of the tags and using this command:
 
 ```
-ls /dev/input/by-path/
+ls /dev/serial/by-path/
 ```
 
 The determined port should be something like this:

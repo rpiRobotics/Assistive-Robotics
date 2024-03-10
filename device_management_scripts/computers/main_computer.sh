@@ -49,3 +49,13 @@ CATKIN_WHITELIST_PACKAGES=(
 
 # export MY_IP=192.168.1.100; export MY_USERNAME=burak; export MY_PASSWORD=1q2w3e; export MY_ROS_VERSION_NAME=noetic;
 # export WHITELIST_PACKAGES="assistive_msgs;assistive_gui;assistive_launch;rokubi_kinova_adapter;obstacle_detector;assistive_controllers;oarbot_control;vel_controller;dingo_customization;kinova_gazebo;kinova_control;kinova_msgs;kinova_arm_moveit_demo;kinova_driver;kinova_description;kinova_bringup;kinova_helper;kinova_demo;uwb_gazebo_plugin;uwb_pose_publisher;uwb_reader;tf2;tf_broadcasters;topic_tf_transformers;lab_gazebo;RVizMeshVisualizer;rviz_ortho_view_controller;rosbag_editor"
+
+# Non-built packages:
+# "tablet_arduino_talker"
+# "force_torque_tools"
+# "force_torque_sensor_calib"
+# "gravity_compensation"
+# "dingo_base"
+# "azure_kinect_ros_driver"
+# "j2n6s300_moveit_config"
+# "j2n6s300_ikfast"

@@ -92,7 +92,7 @@ Visualization Manager:
       Shaft Length: 1
       Shaft Radius: 0.05000000074505806
       Shape: Arrow
-      Topic: /nuc/Pose_d1_base
+      Topic: /nuc/Pose_d1_tf_base_link
       Unreliable: false
       Value: true
     - Alpha: 1
@@ -123,7 +123,7 @@ Visualization Manager:
       Shaft Length: 1
       Shaft Radius: 0.05000000074505806
       Shape: Arrow
-      Topic: /nuc/Pose_d2_base
+      Topic: /nuc/Pose_d2_tf_base_link
       Unreliable: false
       Value: true
     - Class: rviz/Camera
