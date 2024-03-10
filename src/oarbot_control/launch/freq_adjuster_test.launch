@@ -3,7 +3,7 @@
 	<arg name="node_name" default="freq_adjuster"/>		
 	
     <node name="$(arg node_name)" pkg="$(arg pkg_name)" type="$(arg node_name).py" output="screen">
-		<rosparam command="load" file="$(find assistive_launch)/config/dingo_freq_adjuster.yaml"/>
+		<rosparam file="$(find assistive_launch)/config/dingo_freq_adjuster.yaml"/>
     </node>
     
 </launch>
