@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>   
 <group ns="oarbot_blue">
-    <machine name="oarbot-blue-P15" address="192.168.1.102" env-loader="$(find assistive_launch)/scripts/env_oarbot_blue.sh" user="oarbot_blue" password="1234"  default="true"/>
+    <machine name="oarbot-blue-P15" address="192.168.1.102" env-loader="/home/oarbot_blue/catkin_ws_assistive/src/assistive_launch/scripts/env_oarbot_blue.sh" user="oarbot_blue" password="1234"  default="true"/>
 
     <arg name="prefix_for_tf" default="j2n6s300_right" />  <!-- Applies to both kinova arm and the kinect -->
 
