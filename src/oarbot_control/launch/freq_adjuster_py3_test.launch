@@ -1,0 +1,9 @@
+<launch>
+	<arg name="pkg_name" default="oarbot_control"/>
+	<arg name="node_name" default="freq_adjuster_py3"/>		
+	
+    <node name="$(arg node_name)" pkg="$(arg pkg_name)" type="$(arg node_name).py" output="screen">
+		<rosparam file="$(find assistive_launch)/config/dingo_freq_adjuster.yaml"/>
+    </node>
+    
+</launch>
