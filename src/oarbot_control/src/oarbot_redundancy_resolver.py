@@ -56,7 +56,7 @@ import sensor_msgs.msg # for JointState
 import std_msgs.msg # for Float64 to show constrained r value 
 import visualization_msgs.msg # for Marker to show control constraint ball marker on rviz for debug purposes
 
-from oarbot_moveit import Oarbot
+from oarbot_kinematics import Oarbot
 import general_robotics_toolbox as rox
 from qpsolvers import solve_qp
 
