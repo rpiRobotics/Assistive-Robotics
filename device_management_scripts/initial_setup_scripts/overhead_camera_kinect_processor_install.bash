@@ -49,7 +49,7 @@ echo $MY_PASSWORD | sudo -S apt-get install -y ros-$MY_ROS_VERSION_NAME-imu-pipe
 # echo $MY_PASSWORD | sudo -S apt-get install -y ros-$MY_ROS_VERSION_NAME-navigation; # for navigation stack
 # echo $MY_PASSWORD | sudo -S apt-get install -y ros-$MY_ROS_VERSION_NAME-visualization-tutorials; # rviz python bindings.
 echo $MY_PASSWORD | sudo -S apt-get install -y python-cvxopt; # TODO
-echo $MY_PASSWORD | sudo -S apt-get install -y python3-cvxopt; # TODO
+# echo $MY_PASSWORD | sudo -S apt-get install -y python3-cvxopt; # TODO
 # echo $MY_PASSWORD | sudo -S apt-get install -y python3-pip;
 echo $MY_PASSWORD | sudo -S apt-get install -y python-pip;
 # echo $MY_PASSWORD | sudo -S apt-get install -y python3-dev; # TODO
