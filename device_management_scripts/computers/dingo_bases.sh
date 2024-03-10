@@ -27,7 +27,7 @@ CATKIN_WHITELIST_PACKAGES=(
     "vel_controller"
     "dingo_base"
     "dingo_customization"
-    # "Azure_Kinect_ROS_Driver"
+    # "azure_kinect_ros_driver"
     # "kinova_gazebo"
     # "kinova_control"
     # "kinova_msgs"
