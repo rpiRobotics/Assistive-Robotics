@@ -18,8 +18,8 @@ arm_only_open_loop_command_topics:
   - "/oarbot_blue/cmd_vel_arm"
 
 base_only_open_loop_command_topics:
-  - "/oarbot_silver/cmd_vel_base"
-  - "/oarbot_blue/cmd_vel_base"
+  - "/d2/cmd_vel_base"
+  - "/d1/cmd_vel_base"
 
 arm_joint_angles_action_address:
   - '/oarbot_silver/j2n6s300_left_driver/joints_action/joint_angles' # For oarbot silver, left
@@ -34,8 +34,8 @@ arm_fingers_action_address:
   - '/oarbot_blue/j2n6s300_right_driver/fingers_action/finger_positions' # For oarbot blue, right
 
 obstacle_avoidance_service_address:
-  - '/oarbot_silver/toggle_collision_avoidance'
-  - '/oarbot_blue/toggle_collision_avoidance'
+  - '/d2/toggle_collision_avoidance'
+  - '/d1/toggle_collision_avoidance'
 
 body_joint_following_service_address:
   - '/oarbot_silver/toggle_body_joint_following'

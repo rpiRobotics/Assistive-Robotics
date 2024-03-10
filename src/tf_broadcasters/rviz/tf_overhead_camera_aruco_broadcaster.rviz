@@ -7,8 +7,7 @@ Panels:
         - /Global Options1
         - /Status1
         - /OverheadCam-Model1/Status1
-        - /d1-RobotModel1
-        - /d1-Obstacles1
+        - /Polygon1
       Splitter Ratio: 0.5
     Tree Height: 1696
   - Class: rviz/Selection
@@ -143,6 +142,7 @@ Visualization Manager:
         RobotModel: true
         TF: true
         Value: true
+        oarbot_blue-RobotModel: true
       Zoom Factor: 1
     - Alpha: 1
       Class: rviz/RobotModel
@@ -176,80 +176,12 @@ Visualization Manager:
       Value: true
       Visual Enabled: true
     - Class: rviz/TF
-      Enabled: true
+      Enabled: false
       Filter (blacklist): ""
       Filter (whitelist): ""
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        cage_camera_base:
-          Value: true
-        cage_camera_body:
-          Value: true
-        cage_camera_visor:
-          Value: true
-        cage_depth_camera_link:
-          Value: true
-        cage_imu_link:
-          Value: true
-        cage_rgb_camera_link:
-          Value: true
-        d1_tf_arm_mount:
-          Value: true
-        d1_tf_base_link:
-          Value: true
-        d1_tf_chassis_link:
-          Value: true
-        d1_tf_front_b_mount:
-          Value: true
-        d1_tf_front_bumper_mount:
-          Value: true
-        d1_tf_front_c_mount:
-          Value: true
-        d1_tf_front_laser:
-          Value: true
-        d1_tf_front_laser_mount:
-          Value: true
-        d1_tf_front_left_wheel_link:
-          Value: true
-        d1_tf_front_mount:
-          Value: true
-        d1_tf_front_right_wheel_link:
-          Value: true
-        d1_tf_imu_link:
-          Value: true
-        d1_tf_microstrain_link:
-          Value: true
-        d1_tf_mid_mount:
-          Value: true
-        d1_tf_odom:
-          Value: true
-        d1_tf_rear_b_mount:
-          Value: true
-        d1_tf_rear_c_mount:
-          Value: true
-        d1_tf_rear_laser:
-          Value: true
-        d1_tf_rear_laser_mount:
-          Value: true
-        d1_tf_rear_left_wheel_link:
-          Value: true
-        d1_tf_rear_mount:
-          Value: true
-        d1_tf_rear_right_wheel_link:
-          Value: true
-        d1_tf_robot_arm_riser_aruco_mount_link:
-          Value: true
-        d1_tf_robot_arm_riser_link:
-          Value: true
-        d1_tf_robot_arm_riser_uwb_mount_link:
-          Value: true
-        d1_tf_uwb_tag_1_link:
-          Value: true
-        d1_tf_uwb_tag_2_link:
-          Value: true
-        map:
-          Value: true
       Marker Alpha: 1
       Marker Scale: 1
       Name: TF
@@ -257,58 +189,9 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        cage_camera_base:
-          cage_camera_body:
-            {}
-          cage_camera_visor:
-            {}
-          cage_depth_camera_link:
-            cage_imu_link:
-              {}
-            cage_rgb_camera_link:
-              map:
-                d1_tf_odom:
-                  d1_tf_base_link:
-                    d1_tf_chassis_link:
-                      d1_tf_front_bumper_mount:
-                        {}
-                      d1_tf_front_left_wheel_link:
-                        {}
-                      d1_tf_front_right_wheel_link:
-                        {}
-                      d1_tf_imu_link:
-                        d1_tf_microstrain_link:
-                          {}
-                      d1_tf_mid_mount:
-                        d1_tf_front_c_mount:
-                          d1_tf_front_b_mount:
-                            d1_tf_front_mount:
-                              d1_tf_front_laser_mount:
-                                d1_tf_front_laser:
-                                  {}
-                            d1_tf_robot_arm_riser_aruco_mount_link:
-                              {}
-                            d1_tf_robot_arm_riser_link:
-                              d1_tf_arm_mount:
-                                {}
-                            d1_tf_robot_arm_riser_uwb_mount_link:
-                              {}
-                        d1_tf_rear_c_mount:
-                          d1_tf_rear_b_mount:
-                            d1_tf_rear_mount:
-                              d1_tf_rear_laser_mount:
-                                d1_tf_rear_laser:
-                                  {}
-                        d1_tf_uwb_tag_1_link:
-                          {}
-                        d1_tf_uwb_tag_2_link:
-                          {}
-                      d1_tf_rear_left_wheel_link:
-                        {}
-                      d1_tf_rear_right_wheel_link:
-                        {}
+        {}
       Update Interval: 0
-      Value: true
+      Value: false
     - Alpha: 1
       Class: rviz/RobotModel
       Collision Enabled: false
@@ -441,6 +324,127 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        j2n6s300_right_adapter:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        j2n6s300_right_end_effector:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        j2n6s300_right_ft_robot_side_connector:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        j2n6s300_right_gripper:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        j2n6s300_right_gripper_adapter:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_link_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_link_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_link_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_link_4:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_link_5:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_link_6:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_link_base:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_link_finger_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_link_finger_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_link_finger_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_link_finger_tip_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_link_finger_tip_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_link_finger_tip_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_mounting:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_robot_side:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        j2n6s300_right_wrench:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        root_right_arm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+      Name: oarbot_blue-RobotModel
+      Robot Description: oarbot_blue/robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
     - Circles color: 170; 0; 0
       Class: Obstacles
       Enabled: true
@@ -481,6 +485,15 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: false
+    - Alpha: 1
+      Class: rviz/Polygon
+      Color: 25; 255; 0
+      Enabled: false
+      Name: Polygon
+      Queue Size: 10
+      Topic: /d1/viz_base_obs_dist_hard_thres
+      Unreliable: false
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -509,7 +522,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 15.481522560119629
+      Distance: 5.954135894775391
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -517,17 +530,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 1.77362060546875
-        Y: 2.3590598106384277
-        Z: -0.3525840640068054
+        X: 1.6147252321243286
+        Y: 2.677886486053467
+        Z: 0.06433826684951782
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.825398862361908
+      Pitch: 0.7552034854888916
       Target Frame: <Fixed Frame>
-      Yaw: 1.3403807878494263
+      Yaw: 2.2603700160980225
     Saved: ~
 Window Geometry:
   Displays:
