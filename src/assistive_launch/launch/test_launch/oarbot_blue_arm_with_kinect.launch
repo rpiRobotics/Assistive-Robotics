@@ -29,7 +29,7 @@
         <arg name="tf_prefix"         value="$(arg prefix_for_tf)_" />   <!-- Prefix added to tf frame IDs. It typically contains a trailing '_' unless empty. -->
         <arg name="overwrite_robot_description" value="false" />         <!-- Flag to publish a standalone azure_description instead of the default robot_descrition parameter-->
         <arg name="depth_registration" value="false" doc="Hardware depth registration" />
-        <arg name="num_worker_threads" value="4" doc="Worker threads for the nodelet manager" />
+        <arg name="num_worker_threads" value="8" doc="Worker threads for the nodelet manager" />
         <!-- Driver settings -->
         <!-- Note: Point cloud processing in the driver will use the factory calibration and is therefore disabled.
                     The colour and depth images are processed via 'rgbd_launch' and point clouds are generated via

@@ -1,11 +1,16 @@
 <?xml version="1.0"?>
 <launch>
 <group ns="oarbot_silver">
-	<machine name="oarbot-silver-P15" address="192.168.1.101" env-loader="/home/oarbot_silver/catkin_ws_assistive/src/assistive_launch/scripts/env_oarbot_silver.sh" user="oarbot_silver" password="1234" default="true"/>
+	<machine name="oarbot-silver-P15" address="192.168.1.104" env-loader="/home/oarbot_silver/catkin_ws_assistive/src/assistive_launch/scripts/env_oarbot_silver.sh" user="oarbot_silver" password="1234" default="true"/>
 
     <arg name="prefix_for_tf" default="j2n6s300_left" />  <!-- Applies to both kinova arm and the kinect -->
-        
-<!-- Launch Kinova Arm -->
+
+    <!-- Launch TF broadcaster btw Mobile Base and the Arm base -->
+    <node name="tf_mobile_base_arm_base_broadcaster" pkg="tf_broadcasters" type="tf_mobile_base_arm_base_broadcaster.py" output="screen">
+        <rosparam file="$(find assistive_launch)/config/oarbot_silver_tf_mobile_base_arm_base.yaml"/>
+    </node>
+
+    <!-- Launch Kinova Arm -->
     <include file="$(find assistive_launch)/launch/test_launch/oarbot_silver_kinova_robot.launch">
         <arg name="use_urdf" value="true"/>
         <arg name="kinova_robotType" value="j2n6s300" />
@@ -24,7 +29,7 @@
         <arg name="tf_prefix"         value="$(arg prefix_for_tf)_" />   <!-- Prefix added to tf frame IDs. It typically contains a trailing '_' unless empty. -->
         <arg name="overwrite_robot_description" value="false" />         <!-- Flag to publish a standalone azure_description instead of the default robot_descrition parameter-->
         <arg name="depth_registration" value="false" doc="Hardware depth registration" />
-        <arg name="num_worker_threads" value="4" doc="Worker threads for the nodelet manager" />
+        <arg name="num_worker_threads" value="8" doc="Worker threads for the nodelet manager" />
         <!-- Driver settings -->
         <!-- Note: Point cloud processing in the driver will use the factory calibration and is therefore disabled.
                     The colour and depth images are processed via 'rgbd_launch' and point clouds are generated via
