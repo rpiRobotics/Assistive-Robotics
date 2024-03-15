@@ -1,6 +1,6 @@
 Panels:
   - Class: rviz/Displays
-    Help Height: 0
+    Help Height: 138
     Name: Displays
     Property Tree Widget:
       Expanded:
@@ -10,12 +10,10 @@ Panels:
         - /TF1/Tree1
         - /DepthCloud-OarbotBlue1/Auto Size1
         - /DepthCloud-OarbotSilver1/Auto Size1
-        - /Odometry-OarbotBlue1/Shape1
-        - /Odometry-OarbotSilver1/Shape1
-        - /TF-body-raw1/Frames1
+        - /Odometry d21/Shape1
         - /TF-body-fused1/Frames1
-      Splitter Ratio: 0.8172645568847656
-    Tree Height: 1796
+      Splitter Ratio: 0.4436229169368744
+    Tree Height: 1873
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -31,10 +29,9 @@ Panels:
     Name: Views
     Splitter Ratio: 0.5
   - Class: rviz/Time
-    Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: Camera
+    SyncSource: LaserScan d2
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -61,21 +58,79 @@ Visualization Manager:
       Reference Frame: <Fixed Frame>
       Value: true
     - Alpha: 1
-      Class: rviz/Polygon
-      Color: 252; 175; 62
+      Class: rviz/Axes
       Enabled: true
-      Name: Polygon Workspace Oarbot_Silver
-      Topic: /oarbot_silver/viz_oarbot_silver_workspace_polygon
+      Length: 1
+      Name: Axes
+      Radius: 0.10000000149011612
+      Reference Frame: <Fixed Frame>
+      Show Trail: false
+      Value: true
+    - Class: rviz/Camera
+      Enabled: false
+      Image Rendering: background
+      Image Topic: /nuc/rgb/image_rect_color
+      Name: OverheadCamera Nuc
+      Overlay Alpha: 0.5
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: false
+      Visibility:
+        Aruco PoseWithCovariance d1: true
+        Aruco PoseWithCovariance d2: true
+        Axes: true
+        DepthCloud-OarbotBlue: true
+        DepthCloud-OarbotSilver: true
+        Grid: true
+        LaserScan d1: true
+        LaserScan d2: true
+        Marker /oarbot_blue_RedundancyResolverBall: true
+        Marker /oarbot_silver_RedundancyResolverBall: true
+        Obstacles d1: true
+        Obstacles d2: true
+        Odometry d1: true
+        Odometry d2: true
+        Odometry-Human: true
+        OverheadCamera Nuc: true
+        Polygon Workspace Oarbot_Blue (d1): true
+        Polygon Workspace Oarbot_Silver (d2): true
+        Polygon d1 obstacles BASE: true
+        Polygon d1 obstacles HARD thres: true
+        Polygon d1 obstacles SOFT thres: true
+        Polygon d2 obstacles BASE: true
+        Polygon d2 obstacles HARD thres: true
+        Polygon d2 obstacles SOFT thres: true
+        RobotModel-CageCamera: true
+        RobotModel-OarbotBlue: true
+        RobotModel-OarbotBlueCamera: true
+        RobotModel-OarbotSilver: true
+        RobotModel-OarbotSilverCamera: true
+        RobotModel-d1: true
+        RobotModel-d2: true
+        TF: true
+        TF-body-fused: true
+        TF-body-raw: true
+        Value: true
+      Zoom Factor: 1.100000023841858
+    - Alpha: 1
+      Class: rviz/Polygon
+      Color: 164; 0; 0
+      Enabled: true
+      Name: Polygon Workspace Oarbot_Silver (d2)
+      Queue Size: 10
+      Topic: /d2/viz_workspace_polygon
       Unreliable: false
       Value: true
     - Alpha: 1
       Class: rviz/Polygon
-      Color: 239; 41; 41
-      Enabled: false
-      Name: Polygon Workspace Oarbot_Blue
-      Topic: /oarbot_blue/viz_oarbot_blue_workspace_polygon
+      Color: 164; 0; 0
+      Enabled: true
+      Name: Polygon Workspace Oarbot_Blue (d1)
+      Queue Size: 10
+      Topic: /d1/viz_workspace_polygon
       Unreliable: false
-      Value: false
+      Value: true
     - Class: rviz/TF
       Enabled: true
       Filter (blacklist): ""
@@ -83,8 +138,6 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        body_joint_neck:
-          Value: false
         cage_camera_base:
           Value: false
         cage_camera_body:
@@ -97,6 +150,114 @@ Visualization Manager:
           Value: false
         cage_rgb_camera_link:
           Value: true
+        d1_tf_arm_mount:
+          Value: false
+        d1_tf_base_link:
+          Value: true
+        d1_tf_chassis_link:
+          Value: false
+        d1_tf_front_b_mount:
+          Value: false
+        d1_tf_front_bumper_mount:
+          Value: false
+        d1_tf_front_c_mount:
+          Value: false
+        d1_tf_front_laser:
+          Value: false
+        d1_tf_front_laser_mount:
+          Value: false
+        d1_tf_front_left_wheel_link:
+          Value: false
+        d1_tf_front_mount:
+          Value: false
+        d1_tf_front_right_wheel_link:
+          Value: false
+        d1_tf_imu_link:
+          Value: false
+        d1_tf_microstrain_link:
+          Value: false
+        d1_tf_mid_mount:
+          Value: false
+        d1_tf_odom:
+          Value: false
+        d1_tf_rear_b_mount:
+          Value: false
+        d1_tf_rear_c_mount:
+          Value: false
+        d1_tf_rear_laser:
+          Value: false
+        d1_tf_rear_laser_mount:
+          Value: false
+        d1_tf_rear_left_wheel_link:
+          Value: false
+        d1_tf_rear_mount:
+          Value: false
+        d1_tf_rear_right_wheel_link:
+          Value: false
+        d1_tf_robot_arm_riser_aruco_mount_link:
+          Value: false
+        d1_tf_robot_arm_riser_link:
+          Value: false
+        d1_tf_robot_arm_riser_uwb_mount_link:
+          Value: false
+        d1_tf_uwb_tag_1_link:
+          Value: false
+        d1_tf_uwb_tag_2_link:
+          Value: false
+        d2_tf_arm_mount:
+          Value: false
+        d2_tf_base_link:
+          Value: true
+        d2_tf_chassis_link:
+          Value: false
+        d2_tf_front_b_mount:
+          Value: false
+        d2_tf_front_bumper_mount:
+          Value: false
+        d2_tf_front_c_mount:
+          Value: false
+        d2_tf_front_laser:
+          Value: false
+        d2_tf_front_laser_mount:
+          Value: false
+        d2_tf_front_left_wheel_link:
+          Value: false
+        d2_tf_front_mount:
+          Value: false
+        d2_tf_front_right_wheel_link:
+          Value: false
+        d2_tf_imu_link:
+          Value: false
+        d2_tf_microstrain_link:
+          Value: false
+        d2_tf_mid_mount:
+          Value: false
+        d2_tf_odom:
+          Value: false
+        d2_tf_rear_b_mount:
+          Value: false
+        d2_tf_rear_c_mount:
+          Value: false
+        d2_tf_rear_laser:
+          Value: false
+        d2_tf_rear_laser_mount:
+          Value: false
+        d2_tf_rear_left_wheel_link:
+          Value: false
+        d2_tf_rear_mount:
+          Value: false
+        d2_tf_rear_right_wheel_link:
+          Value: false
+        d2_tf_robot_arm_riser_aruco_mount_link:
+          Value: false
+        d2_tf_robot_arm_riser_link:
+          Value: false
+        d2_tf_robot_arm_riser_uwb_mount_link:
+          Value: false
+        d2_tf_uwb_tag_1_link:
+          Value: false
+        d2_tf_uwb_tag_2_link:
+          Value: false
         j2n6s300_left_adapter:
           Value: false
         j2n6s300_left_body_joint_ankle_left:
@@ -164,7 +325,7 @@ Visualization Manager:
         j2n6s300_left_body_joint_wrist_right:
           Value: false
         j2n6s300_left_camera_base:
-          Value: true
+          Value: false
         j2n6s300_left_camera_body:
           Value: false
         j2n6s300_left_camera_visor:
@@ -176,7 +337,7 @@ Visualization Manager:
         j2n6s300_left_ft_robot_side_connector:
           Value: false
         j2n6s300_left_gripper:
-          Value: true
+          Value: false
         j2n6s300_left_gripper_adapter:
           Value: false
         j2n6s300_left_gripper_com:
@@ -214,7 +375,7 @@ Visualization Manager:
         j2n6s300_left_rgb_camera_link:
           Value: false
         j2n6s300_left_robot_side:
-          Value: true
+          Value: false
         j2n6s300_left_wrench:
           Value: false
         j2n6s300_right_adapter:
@@ -284,7 +445,7 @@ Visualization Manager:
         j2n6s300_right_body_joint_wrist_right:
           Value: false
         j2n6s300_right_camera_base:
-          Value: true
+          Value: false
         j2n6s300_right_camera_body:
           Value: false
         j2n6s300_right_camera_visor:
@@ -296,7 +457,7 @@ Visualization Manager:
         j2n6s300_right_ft_robot_side_connector:
           Value: false
         j2n6s300_right_gripper:
-          Value: true
+          Value: false
         j2n6s300_right_gripper_adapter:
           Value: false
         j2n6s300_right_gripper_com:
@@ -337,26 +498,13 @@ Visualization Manager:
           Value: false
         j2n6s300_right_wrench:
           Value: false
-        oarbot_blue_base:
-          Value: true
-        oarbot_blue_imu_sensor:
-          Value: false
-        oarbot_blue_laser_scanner_2d_sensor:
-          Value: true
-        oarbot_silver_base:
-          Value: true
-        oarbot_silver_imu_sensor:
-          Value: false
-        oarbot_silver_laser_scanner_2d_sensor:
-          Value: true
-        root_left_arm:
-          Value: true
-        root_right_arm:
-          Value: true
-        sensor:
-          Value: false
         map:
           Value: true
+        root_left_arm:
+          Value: false
+        root_right_arm:
+          Value: false
+      Marker Alpha: 1
       Marker Scale: 0.5
       Name: TF
       Show Arrows: false
@@ -372,224 +520,289 @@ Visualization Manager:
             cage_imu_link:
               {}
             cage_rgb_camera_link:
-              world_floor:
-                body_joint_neck:
-                  {}
-                oarbot_blue_base:
-                  oarbot_blue_imu_sensor:
-                    sensor:
-                      {}
-                  oarbot_blue_laser_scanner_2d_sensor:
-                    {}
-                  root_right_arm:
-                    j2n6s300_right_link_base:
-                      j2n6s300_right_link_1:
-                        j2n6s300_right_link_2:
-                          j2n6s300_right_link_3:
-                            j2n6s300_right_link_4:
-                              j2n6s300_right_link_5:
-                                j2n6s300_right_ft_robot_side_connector:
-                                  j2n6s300_right_robot_side:
-                                    j2n6s300_right_adapter:
-                                      j2n6s300_right_mounting:
-                                        j2n6s300_right_wrench:
-                                          j2n6s300_right_gripper_adapter:
-                                            j2n6s300_right_gripper:
-                                              {}
-                                            j2n6s300_right_link_6:
-                                              j2n6s300_right_end_effector:
-                                                j2n6s300_right_camera_base:
-                                                  j2n6s300_right_camera_body:
-                                                    {}
-                                                  j2n6s300_right_camera_visor:
-                                                    {}
-                                                  j2n6s300_right_depth_camera_link:
-                                                    j2n6s300_right_body_joint_ankle_left:
-                                                      {}
-                                                    j2n6s300_right_body_joint_ankle_right:
-                                                      {}
-                                                    j2n6s300_right_body_joint_clavicle_left:
-                                                      {}
-                                                    j2n6s300_right_body_joint_clavicle_right:
-                                                      {}
-                                                    j2n6s300_right_body_joint_ear_left:
-                                                      {}
-                                                    j2n6s300_right_body_joint_ear_right:
-                                                      {}
-                                                    j2n6s300_right_body_joint_elbow_left:
-                                                      {}
-                                                    j2n6s300_right_body_joint_elbow_right:
-                                                      {}
-                                                    j2n6s300_right_body_joint_eye_left:
-                                                      {}
-                                                    j2n6s300_right_body_joint_eye_right:
-                                                      {}
-                                                    j2n6s300_right_body_joint_foot_left:
-                                                      {}
-                                                    j2n6s300_right_body_joint_foot_right:
-                                                      {}
-                                                    j2n6s300_right_body_joint_hand_left:
-                                                      {}
-                                                    j2n6s300_right_body_joint_hand_right:
-                                                      {}
-                                                    j2n6s300_right_body_joint_handtip_left:
-                                                      {}
-                                                    j2n6s300_right_body_joint_handtip_right:
-                                                      {}
-                                                    j2n6s300_right_body_joint_head:
-                                                      {}
-                                                    j2n6s300_right_body_joint_hip_left:
-                                                      {}
-                                                    j2n6s300_right_body_joint_hip_right:
-                                                      {}
-                                                    j2n6s300_right_body_joint_knee_left:
-                                                      {}
-                                                    j2n6s300_right_body_joint_knee_right:
-                                                      {}
-                                                    j2n6s300_right_body_joint_neck:
-                                                      {}
-                                                    j2n6s300_right_body_joint_nose:
-                                                      {}
-                                                    j2n6s300_right_body_joint_pelvis:
-                                                      {}
-                                                    j2n6s300_right_body_joint_shoulder_left:
-                                                      {}
-                                                    j2n6s300_right_body_joint_shoulder_right:
-                                                      {}
-                                                    j2n6s300_right_body_joint_spine_chest:
-                                                      {}
-                                                    j2n6s300_right_body_joint_spine_navel:
-                                                      {}
-                                                    j2n6s300_right_body_joint_thumb_left:
-                                                      {}
-                                                    j2n6s300_right_body_joint_thumb_right:
-                                                      {}
-                                                    j2n6s300_right_body_joint_wrist_left:
-                                                      {}
-                                                    j2n6s300_right_body_joint_wrist_right:
-                                                      {}
-                                                    j2n6s300_right_imu_link:
-                                                      {}
-                                                    j2n6s300_right_rgb_camera_link:
-                                                      {}
-                                              j2n6s300_right_link_finger_1:
-                                                j2n6s300_right_link_finger_tip_1:
-                                                  {}
-                                              j2n6s300_right_link_finger_2:
-                                                j2n6s300_right_link_finger_tip_2:
-                                                  {}
-                                              j2n6s300_right_link_finger_3:
-                                                j2n6s300_right_link_finger_tip_3:
-                                                  {}
-                                          j2n6s300_right_gripper_com:
-                                            {}
-                oarbot_silver_base:
-                  oarbot_silver_imu_sensor:
-                    {}
-                  oarbot_silver_laser_scanner_2d_sensor:
-                    {}
-                  root_left_arm:
-                    j2n6s300_left_link_base:
-                      j2n6s300_left_link_1:
-                        j2n6s300_left_link_2:
-                          j2n6s300_left_link_3:
-                            j2n6s300_left_link_4:
-                              j2n6s300_left_link_5:
-                                j2n6s300_left_ft_robot_side_connector:
-                                  j2n6s300_left_robot_side:
-                                    j2n6s300_left_adapter:
-                                      j2n6s300_left_mounting:
-                                        j2n6s300_left_wrench:
-                                          j2n6s300_left_gripper_adapter:
-                                            j2n6s300_left_gripper:
-                                              {}
-                                            j2n6s300_left_link_6:
-                                              j2n6s300_left_end_effector:
-                                                j2n6s300_left_camera_base:
-                                                  j2n6s300_left_camera_body:
-                                                    {}
-                                                  j2n6s300_left_camera_visor:
-                                                    {}
-                                                  j2n6s300_left_depth_camera_link:
-                                                    j2n6s300_left_body_joint_ankle_left:
-                                                      {}
-                                                    j2n6s300_left_body_joint_ankle_right:
-                                                      {}
-                                                    j2n6s300_left_body_joint_clavicle_left:
-                                                      {}
-                                                    j2n6s300_left_body_joint_clavicle_right:
-                                                      {}
-                                                    j2n6s300_left_body_joint_ear_left:
-                                                      {}
-                                                    j2n6s300_left_body_joint_ear_right:
-                                                      {}
-                                                    j2n6s300_left_body_joint_elbow_left:
-                                                      {}
-                                                    j2n6s300_left_body_joint_elbow_right:
-                                                      {}
-                                                    j2n6s300_left_body_joint_eye_left:
-                                                      {}
-                                                    j2n6s300_left_body_joint_eye_right:
-                                                      {}
-                                                    j2n6s300_left_body_joint_foot_left:
-                                                      {}
-                                                    j2n6s300_left_body_joint_foot_right:
-                                                      {}
-                                                    j2n6s300_left_body_joint_hand_left:
-                                                      {}
-                                                    j2n6s300_left_body_joint_hand_right:
-                                                      {}
-                                                    j2n6s300_left_body_joint_handtip_left:
-                                                      {}
-                                                    j2n6s300_left_body_joint_handtip_right:
-                                                      {}
-                                                    j2n6s300_left_body_joint_head:
-                                                      {}
-                                                    j2n6s300_left_body_joint_hip_left:
-                                                      {}
-                                                    j2n6s300_left_body_joint_hip_right:
-                                                      {}
-                                                    j2n6s300_left_body_joint_knee_left:
-                                                      {}
-                                                    j2n6s300_left_body_joint_knee_right:
-                                                      {}
-                                                    j2n6s300_left_body_joint_neck:
-                                                      {}
-                                                    j2n6s300_left_body_joint_nose:
-                                                      {}
-                                                    j2n6s300_left_body_joint_pelvis:
-                                                      {}
-                                                    j2n6s300_left_body_joint_shoulder_left:
-                                                      {}
-                                                    j2n6s300_left_body_joint_shoulder_right:
-                                                      {}
-                                                    j2n6s300_left_body_joint_spine_chest:
-                                                      {}
-                                                    j2n6s300_left_body_joint_spine_navel:
-                                                      {}
-                                                    j2n6s300_left_body_joint_thumb_left:
-                                                      {}
-                                                    j2n6s300_left_body_joint_thumb_right:
-                                                      {}
-                                                    j2n6s300_left_body_joint_wrist_left:
-                                                      {}
-                                                    j2n6s300_left_body_joint_wrist_right:
-                                                      {}
-                                                    j2n6s300_left_imu_link:
-                                                      {}
-                                                    j2n6s300_left_rgb_camera_link:
-                                                      {}
-                                              j2n6s300_left_link_finger_1:
-                                                j2n6s300_left_link_finger_tip_1:
-                                                  {}
-                                              j2n6s300_left_link_finger_2:
-                                                j2n6s300_left_link_finger_tip_2:
-                                                  {}
-                                              j2n6s300_left_link_finger_3:
-                                                j2n6s300_left_link_finger_tip_3:
-                                                  {}
-                                          j2n6s300_left_gripper_com:
-                                            {}
+              map:
+                d1_tf_odom:
+                  d1_tf_base_link:
+                    d1_tf_chassis_link:
+                      d1_tf_front_bumper_mount:
+                        {}
+                      d1_tf_front_left_wheel_link:
+                        {}
+                      d1_tf_front_right_wheel_link:
+                        {}
+                      d1_tf_imu_link:
+                        d1_tf_microstrain_link:
+                          {}
+                      d1_tf_mid_mount:
+                        d1_tf_front_c_mount:
+                          d1_tf_front_b_mount:
+                            d1_tf_front_mount:
+                              d1_tf_front_laser_mount:
+                                d1_tf_front_laser:
+                                  {}
+                            d1_tf_robot_arm_riser_aruco_mount_link:
+                              {}
+                            d1_tf_robot_arm_riser_link:
+                              d1_tf_arm_mount:
+                                root_right_arm:
+                                  j2n6s300_right_link_base:
+                                    j2n6s300_right_link_1:
+                                      j2n6s300_right_link_2:
+                                        j2n6s300_right_link_3:
+                                          j2n6s300_right_link_4:
+                                            j2n6s300_right_link_5:
+                                              j2n6s300_right_ft_robot_side_connector:
+                                                j2n6s300_right_robot_side:
+                                                  j2n6s300_right_adapter:
+                                                    j2n6s300_right_mounting:
+                                                      j2n6s300_right_wrench:
+                                                        j2n6s300_right_gripper_adapter:
+                                                          j2n6s300_right_gripper:
+                                                            {}
+                                                          j2n6s300_right_link_6:
+                                                            j2n6s300_right_end_effector:
+                                                              j2n6s300_right_camera_base:
+                                                                j2n6s300_right_camera_body:
+                                                                  {}
+                                                                j2n6s300_right_camera_visor:
+                                                                  {}
+                                                                j2n6s300_right_depth_camera_link:
+                                                                  j2n6s300_right_body_joint_ankle_left:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_ankle_right:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_clavicle_left:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_clavicle_right:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_ear_left:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_ear_right:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_elbow_left:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_elbow_right:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_eye_left:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_eye_right:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_foot_left:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_foot_right:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_hand_left:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_hand_right:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_handtip_left:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_handtip_right:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_head:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_hip_left:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_hip_right:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_knee_left:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_knee_right:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_neck:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_nose:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_pelvis:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_shoulder_left:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_shoulder_right:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_spine_chest:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_spine_navel:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_thumb_left:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_thumb_right:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_wrist_left:
+                                                                    {}
+                                                                  j2n6s300_right_body_joint_wrist_right:
+                                                                    {}
+                                                                  j2n6s300_right_imu_link:
+                                                                    {}
+                                                                  j2n6s300_right_rgb_camera_link:
+                                                                    {}
+                                                            j2n6s300_right_link_finger_1:
+                                                              j2n6s300_right_link_finger_tip_1:
+                                                                {}
+                                                            j2n6s300_right_link_finger_2:
+                                                              j2n6s300_right_link_finger_tip_2:
+                                                                {}
+                                                            j2n6s300_right_link_finger_3:
+                                                              j2n6s300_right_link_finger_tip_3:
+                                                                {}
+                                                        j2n6s300_right_gripper_com:
+                                                          {}
+                            d1_tf_robot_arm_riser_uwb_mount_link:
+                              {}
+                        d1_tf_rear_c_mount:
+                          d1_tf_rear_b_mount:
+                            d1_tf_rear_mount:
+                              d1_tf_rear_laser_mount:
+                                d1_tf_rear_laser:
+                                  {}
+                        d1_tf_uwb_tag_1_link:
+                          {}
+                        d1_tf_uwb_tag_2_link:
+                          {}
+                      d1_tf_rear_left_wheel_link:
+                        {}
+                      d1_tf_rear_right_wheel_link:
+                        {}
+                d2_tf_odom:
+                  d2_tf_base_link:
+                    d2_tf_chassis_link:
+                      d2_tf_front_bumper_mount:
+                        {}
+                      d2_tf_front_left_wheel_link:
+                        {}
+                      d2_tf_front_right_wheel_link:
+                        {}
+                      d2_tf_imu_link:
+                        d2_tf_microstrain_link:
+                          {}
+                      d2_tf_mid_mount:
+                        d2_tf_front_c_mount:
+                          d2_tf_front_b_mount:
+                            d2_tf_front_mount:
+                              d2_tf_front_laser_mount:
+                                d2_tf_front_laser:
+                                  {}
+                            d2_tf_robot_arm_riser_aruco_mount_link:
+                              {}
+                            d2_tf_robot_arm_riser_link:
+                              d2_tf_arm_mount:
+                                root_left_arm:
+                                  j2n6s300_left_link_base:
+                                    j2n6s300_left_link_1:
+                                      j2n6s300_left_link_2:
+                                        j2n6s300_left_link_3:
+                                          j2n6s300_left_link_4:
+                                            j2n6s300_left_link_5:
+                                              j2n6s300_left_ft_robot_side_connector:
+                                                j2n6s300_left_robot_side:
+                                                  j2n6s300_left_adapter:
+                                                    j2n6s300_left_mounting:
+                                                      j2n6s300_left_wrench:
+                                                        j2n6s300_left_gripper_adapter:
+                                                          j2n6s300_left_gripper:
+                                                            {}
+                                                          j2n6s300_left_link_6:
+                                                            j2n6s300_left_end_effector:
+                                                              j2n6s300_left_camera_base:
+                                                                j2n6s300_left_camera_body:
+                                                                  {}
+                                                                j2n6s300_left_camera_visor:
+                                                                  {}
+                                                                j2n6s300_left_depth_camera_link:
+                                                                  j2n6s300_left_body_joint_ankle_left:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_ankle_right:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_clavicle_left:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_clavicle_right:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_ear_left:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_ear_right:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_elbow_left:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_elbow_right:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_eye_left:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_eye_right:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_foot_left:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_foot_right:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_hand_left:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_hand_right:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_handtip_left:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_handtip_right:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_head:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_hip_left:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_hip_right:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_knee_left:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_knee_right:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_neck:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_nose:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_pelvis:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_shoulder_left:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_shoulder_right:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_spine_chest:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_spine_navel:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_thumb_left:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_thumb_right:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_wrist_left:
+                                                                    {}
+                                                                  j2n6s300_left_body_joint_wrist_right:
+                                                                    {}
+                                                                  j2n6s300_left_imu_link:
+                                                                    {}
+                                                                  j2n6s300_left_rgb_camera_link:
+                                                                    {}
+                                                            j2n6s300_left_link_finger_1:
+                                                              j2n6s300_left_link_finger_tip_1:
+                                                                {}
+                                                            j2n6s300_left_link_finger_2:
+                                                              j2n6s300_left_link_finger_tip_2:
+                                                                {}
+                                                            j2n6s300_left_link_finger_3:
+                                                              j2n6s300_left_link_finger_tip_3:
+                                                                {}
+                                                        j2n6s300_left_gripper_com:
+                                                          {}
+                            d2_tf_robot_arm_riser_uwb_mount_link:
+                              {}
+                        d2_tf_rear_c_mount:
+                          d2_tf_rear_b_mount:
+                            d2_tf_rear_mount:
+                              d2_tf_rear_laser_mount:
+                                d2_tf_rear_laser:
+                                  {}
+                        d2_tf_uwb_tag_1_link:
+                          {}
+                        d2_tf_uwb_tag_2_link:
+                          {}
+                      d2_tf_rear_left_wheel_link:
+                        {}
+                      d2_tf_rear_right_wheel_link:
+                        {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -619,6 +832,270 @@ Visualization Manager:
           Value: true
       Name: RobotModel-CageCamera
       Robot Description: /nuc/azure_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        d1_tf_arm_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_chassis_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_front_b_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_front_bumper_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_front_c_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_front_laser:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_front_laser_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_front_left_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_front_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_front_right_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_microstrain_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_mid_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_rear_b_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_rear_c_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_rear_laser:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_rear_laser_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_rear_left_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_rear_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d1_tf_rear_right_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_robot_arm_riser_aruco_mount_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_robot_arm_riser_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_robot_arm_riser_uwb_mount_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_uwb_tag_1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d1_tf_uwb_tag_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel-d1
+      Robot Description: /d1/robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        d2_tf_arm_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_chassis_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d2_tf_front_b_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_front_bumper_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_front_c_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_front_laser:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_front_laser_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d2_tf_front_left_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d2_tf_front_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_front_right_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d2_tf_imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_microstrain_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_mid_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_rear_b_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_rear_c_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_rear_laser:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_rear_laser_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d2_tf_rear_left_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d2_tf_rear_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_rear_right_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d2_tf_robot_arm_riser_aruco_mount_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d2_tf_robot_arm_riser_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d2_tf_robot_arm_riser_uwb_mount_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d2_tf_uwb_tag_1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        d2_tf_uwb_tag_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel-d2
+      Robot Description: /d2/robot_description
       TF Prefix: ""
       Update Interval: 0
       Value: true
@@ -1021,51 +1498,119 @@ Visualization Manager:
       Class: rviz/Polygon
       Color: 245; 121; 0
       Enabled: true
-      Name: Polygon oarbot_blue_obs_HARD_thres
-      Topic: /oarbot_blue/viz_oarbot_blue_base_obs_dist_hard_thres
+      Name: Polygon d1 obstacles HARD thres
+      Queue Size: 10
+      Topic: /d1/viz_base_obs_dist_hard_thres
       Unreliable: false
       Value: true
     - Alpha: 1
       Class: rviz/Polygon
       Color: 25; 255; 0
       Enabled: true
-      Name: Polygon oarbot_blue_obs_SOFT_thres
-      Topic: /oarbot_blue/viz_oarbot_blue_base_obs_dist_thres
+      Name: Polygon d1 obstacles SOFT thres
+      Queue Size: 10
+      Topic: /d1/viz_base_obs_dist_thres
       Unreliable: false
       Value: true
     - Alpha: 1
       Class: rviz/Polygon
       Color: 239; 41; 41
       Enabled: true
-      Name: Polygon oarbot_blue_base
-      Topic: /oarbot_blue/viz_oarbot_blue_robots_oarbot_blue_base
+      Name: Polygon d1 obstacles BASE
+      Queue Size: 10
+      Topic: /d1/viz_robots_d1_tf_base_link
       Unreliable: false
       Value: true
     - Alpha: 1
       Class: rviz/Polygon
       Color: 245; 121; 0
       Enabled: true
-      Name: Polygon oarbot_silver_obs_HARD_thres
-      Topic: /oarbot_silver/viz_oarbot_silver_base_obs_dist_hard_thres
+      Name: Polygon d2 obstacles HARD thres
+      Queue Size: 10
+      Topic: /d2/viz_base_obs_dist_hard_thres
       Unreliable: false
       Value: true
     - Alpha: 1
       Class: rviz/Polygon
       Color: 25; 255; 0
       Enabled: true
-      Name: Polygon oarbot_silver_obs_SOFT_thres
-      Topic: /oarbot_silver/viz_oarbot_silver_base_obs_dist_thres
+      Name: Polygon d2 obstacles SOFT thres
+      Queue Size: 10
+      Topic: /d2/viz_base_obs_dist_thres
       Unreliable: false
       Value: true
     - Alpha: 1
       Class: rviz/Polygon
       Color: 239; 41; 41
       Enabled: true
-      Name: Polygon oarbot_silver_base
-      Topic: /oarbot_silver/viz_oarbot_silver_robots_oarbot_silver_base
+      Name: Polygon d2 obstacles BASE
+      Queue Size: 10
+      Topic: /d2/viz_robots_d2_tf_base_link
       Unreliable: false
       Value: true
-    - Angle Tolerance: 0.10000000149011612
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz/PoseWithCovariance
+      Color: 255; 25; 0
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: false
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: Aruco PoseWithCovariance d1
+      Queue Size: 10
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Arrow
+      Topic: /nuc/Pose_d1_tf_base_link
+      Unreliable: false
+      Value: false
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz/PoseWithCovariance
+      Color: 255; 25; 0
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: false
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: Aruco PoseWithCovariance d2
+      Queue Size: 10
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Arrow
+      Topic: /nuc/Pose_d2_tf_base_link
+      Unreliable: false
+      Value: false
+    - Angle Tolerance: 0
       Class: rviz/Odometry
       Covariance:
         Orientation:
@@ -1082,10 +1627,11 @@ Visualization Manager:
           Scale: 1
           Value: true
         Value: true
-      Enabled: true
+      Enabled: false
       Keep: 1
-      Name: Odometry-OarbotBlue
-      Position Tolerance: 0.10000000149011612
+      Name: Odometry d1
+      Position Tolerance: 0
+      Queue Size: 10
       Shape:
         Alpha: 1
         Axes Length: 0.10000000149011612
@@ -1096,10 +1642,10 @@ Visualization Manager:
         Shaft Length: 1
         Shaft Radius: 0.05000000074505806
         Value: Axes
-      Topic: /oarbot_blue/odometry/filtered
+      Topic: /d1/odometry/filtered
       Unreliable: false
-      Value: true
-    - Angle Tolerance: 0.10000000149011612
+      Value: false
+    - Angle Tolerance: 0
       Class: rviz/Odometry
       Covariance:
         Orientation:
@@ -1116,10 +1662,11 @@ Visualization Manager:
           Scale: 1
           Value: true
         Value: true
-      Enabled: true
+      Enabled: false
       Keep: 1
-      Name: Odometry-OarbotSilver
-      Position Tolerance: 0.10000000149011612
+      Name: Odometry d2
+      Position Tolerance: 0
+      Queue Size: 10
       Shape:
         Alpha: 1
         Axes Length: 0.10000000149011612
@@ -1130,9 +1677,9 @@ Visualization Manager:
         Shaft Length: 1
         Shaft Radius: 0.05000000074505806
         Value: Axes
-      Topic: /oarbot_silver/odometry/filtered
+      Topic: /d2/odometry/filtered
       Unreliable: false
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -1149,14 +1696,14 @@ Visualization Manager:
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: LaserScan-OarbotBlue
+      Name: LaserScan d1
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.019999999552965164
+      Size (m): 0.029999999329447746
       Style: Flat Squares
-      Topic: /oarbot_blue/scan_2d
+      Topic: /d1/scan
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
@@ -1170,86 +1717,47 @@ Visualization Manager:
       Axis: Z
       Channel Name: intensity
       Class: rviz/LaserScan
-      Color: 138; 226; 52
+      Color: 78; 154; 6
       Color Transformer: FlatColor
       Decay Time: 0
       Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: LaserScan-OarbotSilver
+      Name: LaserScan d2
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.019999999552965164
+      Size (m): 0.029999999329447746
       Style: Flat Squares
-      Topic: /oarbot_silver/scan_2d
+      Topic: /d2/scan
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
       Value: false
-    - Class: rviz/Camera
-      Enabled: false
-      Image Rendering: background
-      Image Topic: /nuc/rgb/image_raw
-      Name: Camera
-      Overlay Alpha: 0.5
-      Queue Size: 2
-      Transport Hint: raw
-      Unreliable: false
-      Value: false
-      Visibility:
-        DepthCloud-OarbotBlue: true
-        DepthCloud-OarbotSilver: true
-        Grid: true
-        LaserScan-OarbotBlue: true
-        LaserScan-OarbotSilver: true
-        Marker /oarbot_blue_RedundancyResolverBall: true
-        Marker /oarbot_silver_RedundancyResolverBall: true
-        Obstacles-OarbotBlue: true
-        Obstacles-OarbotSilver: true
-        Odometry-Human: true
-        Odometry-OarbotBlue: true
-        Odometry-OarbotSilver: true
-        Polygon Workspace Oarbot_Blue: true
-        Polygon Workspace Oarbot_Silver: true
-        Polygon oarbot_blue_base: true
-        Polygon oarbot_blue_obs_HARD_thres: true
-        Polygon oarbot_blue_obs_SOFT_thres: true
-        Polygon oarbot_silver_base: true
-        Polygon oarbot_silver_obs_HARD_thres: true
-        Polygon oarbot_silver_obs_SOFT_thres: true
-        RobotModel-CageCamera: true
-        RobotModel-OarbotBlue: true
-        RobotModel-OarbotBlueCamera: true
-        RobotModel-OarbotSilver: true
-        RobotModel-OarbotSilverCamera: true
-        TF: true
-        TF-body-fused: true
-        TF-body-raw: true
-        Value: true
-      Zoom Factor: 1.100000023841858
     - Circles color: 170; 0; 0
       Class: Obstacles
       Enabled: false
       Margin color: 0; 170; 0
-      Name: Obstacles-OarbotBlue
-      Opacity: 0.5
+      Name: Obstacles d1
+      Opacity: 0.75
+      Queue Size: 10
       Segments color: 170; 170; 0
       Segments thickness: 0.05000000074505806
-      Topic: /oarbot_blue/obstacles
+      Topic: /d1/obstacles
       Unreliable: false
       Value: false
     - Circles color: 170; 0; 0
       Class: Obstacles
       Enabled: false
       Margin color: 0; 170; 0
-      Name: Obstacles-OarbotSilver
-      Opacity: 0.5
+      Name: Obstacles d2
+      Opacity: 0.75
+      Queue Size: 10
       Segments color: 170; 170; 0
       Segments thickness: 0.05000000074505806
-      Topic: /oarbot_silver/obstacles
+      Topic: /d2/obstacles
       Unreliable: false
       Value: false
     - Angle Tolerance: 0.10000000149011612
@@ -1273,6 +1781,7 @@ Visualization Manager:
       Keep: 1
       Name: Odometry-Human
       Position Tolerance: 0.10000000149011612
+      Queue Size: 10
       Shape:
         Alpha: 1
         Axes Length: 0.20000000298023224
@@ -1289,6 +1798,30 @@ Visualization Manager:
     - Class: rviz/TF
       Enabled: true
       Filter (blacklist): ""
+      Filter (whitelist): body_joint_neck
+      Frame Timeout: 15
+      Frames:
+        All Enabled: false
+        j2n6s300_left_body_joint_neck:
+          Value: false
+        j2n6s300_right_body_joint_neck:
+          Value: false
+      Marker Alpha: 1
+      Marker Scale: 1
+      Name: TF-body-fused
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        j2n6s300_left_body_joint_neck:
+          {}
+        j2n6s300_right_body_joint_neck:
+          {}
+      Update Interval: 0
+      Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Filter (blacklist): ""
       Filter (whitelist): j2n6s300_left_body_joint_neck|j2n6s300_right_body_joint_neck
       Frame Timeout: 15
       Frames:
@@ -1297,6 +1830,7 @@ Visualization Manager:
           Value: true
         j2n6s300_right_body_joint_neck:
           Value: true
+      Marker Alpha: 1
       Marker Scale: 0.5
       Name: TF-body-raw
       Show Arrows: false
@@ -1309,36 +1843,9 @@ Visualization Manager:
           {}
       Update Interval: 0
       Value: true
-    - Class: rviz/TF
-      Enabled: true
-      Filter (blacklist): ""
-      Filter (whitelist): body_joint_neck
-      Frame Timeout: 15
-      Frames:
-        All Enabled: false
-        body_joint_neck:
-          Value: true
-        j2n6s300_left_body_joint_neck:
-          Value: false
-        j2n6s300_right_body_joint_neck:
-          Value: false
-      Marker Scale: 1
-      Name: TF-body-fused
-      Show Arrows: true
-      Show Axes: true
-      Show Names: true
-      Tree:
-        body_joint_neck:
-          {}
-        j2n6s300_left_body_joint_neck:
-          {}
-        j2n6s300_right_body_joint_neck:
-          {}
-      Update Interval: 0
-      Value: true
   Enabled: true
   Global Options:
-    Background Color: 48; 48; 48
+    Background Color: 255; 255; 255
     Default Light: true
     Fixed Frame: map
     Frame Rate: 30
@@ -1364,35 +1871,35 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 6.797774314880371
+      Distance: 5.553845405578613
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
+      Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.47133976221084595
-        Y: 1.7632063627243042
-        Z: 0.8498096466064453
+        X: 1.722685694694519
+        Y: 2.6150009632110596
+        Z: -0.07828892767429352
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5047978758811951
+      Pitch: 0.5597983598709106
       Target Frame: <Fixed Frame>
-      Value: Orbit (rviz)
-      Yaw: 0.7831313610076904
+      Yaw: 2.2981412410736084
     Saved: ~
 Window Geometry:
-  Camera:
-    collapsed: false
   Displays:
     collapsed: false
-  Height: 2049
+  Height: 2206
   Hide Left Dock: false
   Hide Right Dock: true
-  QMainWindow State: 000000ff00000000fd00000004000000000000043e000007acfc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b000000b000fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df0000018500000105fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afc00000027000007ac000001bc01000039fa000000010100000002fb0000000c00430061006d0065007200610100000000ffffffff000000a500fffffffb000000100044006900730070006c006100790073010000000000000748000001f700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c000002610000000100000205000006ecfc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000009f000006ec0000013200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000eb600000355fc0100000001fb0000000a00560069006500770073030000004e00000080000002e1000001970000000300000eb600000060fc0100000002fb0000000800540069006d0065000000000000000eb6000008d800fffffffb0000000800540069006d0065010000000000000450000000000000000000000a68000007ac00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730000000000ffffffff0000000000000000
+  OverheadCamera Nuc:
+    collapsed: false
+  QMainWindow State: 000000ff00000000fd00000004000000000000033700000849fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b000000b000fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df0000018500000105fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c0061007900730100000027000008490000018200fffffffb00000024004f007600650072006800650061006400430061006d0065007200610020004e007500630000000570000003000000002600fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c000002610000000100000205000006ecfc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000009f000006ec0000013200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000eb600000355fc0100000001fb0000000a00560069006500770073030000004e00000080000002e1000001970000000300000eb600000060fc0100000002fb0000000800540069006d0065000000000000000eb6000006dc00fffffffb0000000800540069006d0065010000000000000450000000000000000000000b5d0000084900000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730000000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -1401,6 +1908,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: true
-  Width: 3762
-  X: 78
-  Y: 55
+  Width: 3744
+  X: 0
+  Y: 54

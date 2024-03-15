@@ -194,11 +194,42 @@ sudo apt-get install ros-melodic-rgbd-launch
 cd ~/catkin_ws_assistive/src
 git clone https://github.com/burakaksoy/Azure_Kinect_ROS_Driver.git
 cd ..
-catkin_make -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;assistive_launch;tablet_arduino_talker'
-#(or catkin_make --force_cmake -DCATKIN_BLACKLIST_PACKAGES='assistive_gui;assistive_launch;tablet_arduino_talker')
+catkin_make -DCATKIN_WHITELIST_PACKAGES='azure_kinect_ros_driver'
 source ~/.bashrc
 source ~/catkin_ws_assistive/devel/setup.bash
 ```
+
+#### Troubleshooting:
+    
+If you see this kind of error during the `catkin_make` command execution:
+
+```
+    Finding K4A SDK binaries
+    CMake Error at Azure_Kinect_ROS_Driver/cmake/Findk4a.cmake:22 (message):
+    Error: Azure Kinect SDK Version numbers contain exactly 3 components
+    (major.minor.rev).  Requested number of components: 2
+    Call Stack (most recent call first):
+    /usr/local/share/cmake-3.18/Modules/CMakeFindDependencyMacro.cmake:47 (find_package)
+    /usr/lib/cmake/k4abt/k4abtConfig.cmake:3 (find_dependency)
+    Azure_Kinect_ROS_Driver/cmake/Findk4abt.cmake:35 (find_package)
+    Azure_Kinect_ROS_Driver/CMakeLists.txt:94 (find_package)
+
+    -- Configuring incomplete, errors occurred!
+```
+
+Change 2 components in the version number given in this line of file `/usr/lib/cmake/k4abt/k4abtConfig.cmake` from this:
+
+```
+find_dependency(k4a 1.3 REQUIRED)
+```
+
+to this:
+```
+find_dependency(k4a 1.3.0 REQUIRED)
+```
+and try again the `catkin_make` command above. 
+
+*For more information about this issue see: [https://github.com/microsoft/Azure_Kinect_ROS_Driver/issues/143](https://github.com/microsoft/Azure_Kinect_ROS_Driver/issues/143)*
 
 ### Adjusting Default launch parameters for Azure Kinect
 

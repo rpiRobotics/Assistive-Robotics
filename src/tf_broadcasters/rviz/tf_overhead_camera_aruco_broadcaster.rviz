@@ -5,10 +5,9 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /Status1
         - /OverheadCam-Model1/Status1
         - /Polygon1
-      Splitter Ratio: 0.5
+      Splitter Ratio: 0.4935842454433441
     Tree Height: 1696
   - Class: rviz/Selection
     Name: Selection
@@ -135,14 +134,22 @@ Visualization Manager:
       Unreliable: false
       Value: false
       Visibility:
-        "": true
+        Aruco-PoseWithCovariance-d1: true
+        Aruco-PoseWithCovariance-d2: true
         Axes: true
         Grid: true
-        PoseWithCovariance: true
-        RobotModel: true
+        OverheadCam-Model: true
+        Polygon: true
         TF: true
         Value: true
+        d1-LaserScan: true
+        d1-Obstacles: true
+        d1-RobotModel: true
+        d2-LaserScan: true
+        d2-Obstacles: true
+        d2-RobotModel: true
         oarbot_blue-RobotModel: true
+        oarbot_silver-RobotModel: true
       Zoom Factor: 1
     - Alpha: 1
       Class: rviz/RobotModel
@@ -334,113 +341,156 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        j2n6s300_right_adapter:
+        d2_tf_arm_mount:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        j2n6s300_right_end_effector:
+        d2_tf_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        j2n6s300_right_ft_robot_side_connector:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        j2n6s300_right_gripper:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        j2n6s300_right_gripper_adapter:
+        d2_tf_chassis_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        j2n6s300_right_link_1:
+        d2_tf_front_b_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_front_bumper_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_front_c_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_front_laser:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_front_laser_mount:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        j2n6s300_right_link_2:
+        d2_tf_front_left_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        j2n6s300_right_link_3:
+        d2_tf_front_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_front_right_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        j2n6s300_right_link_4:
+        d2_tf_imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_microstrain_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_mid_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_rear_b_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_rear_c_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_rear_laser:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_rear_laser_mount:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        j2n6s300_right_link_5:
+        d2_tf_rear_left_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        j2n6s300_right_link_6:
+        d2_tf_rear_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        d2_tf_rear_right_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        j2n6s300_right_link_base:
+        d2_tf_robot_arm_riser_aruco_mount_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        j2n6s300_right_link_finger_1:
+        d2_tf_robot_arm_riser_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        j2n6s300_right_link_finger_2:
+        d2_tf_robot_arm_riser_uwb_mount_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        j2n6s300_right_link_finger_3:
+        d2_tf_uwb_tag_1_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        j2n6s300_right_link_finger_tip_1:
+        d2_tf_uwb_tag_2_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        j2n6s300_right_link_finger_tip_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_link_finger_tip_3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_mounting:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_robot_side:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        j2n6s300_right_wrench:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        root_right_arm:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
+      Name: d2-RobotModel
+      Robot Description: d2/robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
       Name: oarbot_blue-RobotModel
       Robot Description: oarbot_blue/robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+      Name: oarbot_silver-RobotModel
+      Robot Description: oarbot_silver/robot_description
       TF Prefix: ""
       Update Interval: 0
       Value: true
@@ -453,10 +503,22 @@ Visualization Manager:
       Opacity: 0.75
       Queue Size: 10
       Segments color: 170; 170; 0
-      Segments thickness: 0.029999999329447746
+      Segments thickness: 0.10000000149011612
       Topic: /d1/obstacles
       Unreliable: false
       Value: true
+    - Circles color: 170; 0; 0
+      Class: Obstacles
+      Enabled: false
+      Margin color: 0; 170; 0
+      Name: d2-Obstacles
+      Opacity: 0.75
+      Queue Size: 10
+      Segments color: 170; 170; 0
+      Segments thickness: 0.10000000149011612
+      Topic: /d2/obstacles
+      Unreliable: false
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -473,7 +535,7 @@ Visualization Manager:
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: LaserScan
+      Name: d1-LaserScan
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
@@ -486,12 +548,40 @@ Visualization Manager:
       Use rainbow: true
       Value: false
     - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/LaserScan
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: false
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: d2-LaserScan
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.009999999776482582
+      Style: Flat Squares
+      Topic: /d2/scan
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: false
+    - Alpha: 1
       Class: rviz/Polygon
       Color: 25; 255; 0
       Enabled: false
       Name: Polygon
       Queue Size: 10
-      Topic: /d1/viz_base_obs_dist_hard_thres
+      Topic: /d1/viz_robots_d1_tf_base_link
       Unreliable: false
       Value: false
   Enabled: true
@@ -522,7 +612,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 5.122392654418945
+      Distance: 9.027405738830566
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -530,17 +620,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 2.357018232345581
-        Y: 3.3050146102905273
-        Z: 0.3210623562335968
+        X: 1.7440617084503174
+        Y: 2.834796905517578
+        Z: 0.7358424663543701
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6202044486999512
+      Pitch: 0.8052045702934265
       Target Frame: <Fixed Frame>
-      Yaw: 1.870357632637024
+      Yaw: 1.0453648567199707
     Saved: ~
 Window Geometry:
   Displays:
@@ -550,7 +640,7 @@ Window Geometry:
   Hide Right Dock: true
   OverheadCamera:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000002c600000798fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b000000b000fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000b0fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000006e000007980000018200fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000001c004f007600650072006800650061006400430061006d00650072006100000002dc0000052a0000002600ffffff000000010000015f00000798fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000006e000007980000013200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e1000001970000000300000ea00000005efc0100000002fb0000000800540069006d0065010000000000000ea0000006dc00fffffffb0000000800540069006d0065010000000000000450000000000000000000000bce0000079800000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000049300000798fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b000000b000fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000b0fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000006e000007980000018200fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000001c004f007600650072006800650061006400430061006d00650072006100000002dc0000052a0000002600ffffff000000010000015f00000798fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000006e000007980000013200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e1000001970000000300000ea00000005efc0100000002fb0000000800540069006d0065010000000000000ea0000006dc00fffffffb0000000800540069006d0065010000000000000450000000000000000000000a010000079800000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
