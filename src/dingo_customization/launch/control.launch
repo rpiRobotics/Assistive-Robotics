@@ -71,11 +71,11 @@
   </node>
 
   <!-- Launch Oarbot Collision Avoider -->
-  <node name="collision_avoidance_2d" pkg="oarbot_control" type="collision_avoidance_2d.py">
+  <!-- <node name="collision_avoidance_2d" pkg="oarbot_control" type="collision_avoidance_2d.py">
     <rosparam  command="load" file="$(find assistive_launch)/config/dingo_collision_avoidance_2d.yaml"/>
 
     <rosparam param="tf_world_frame_id"         subst_value="true">map</rosparam>
     <rosparam param="tf_mobile_base_frame_id"   subst_value="true">$(arg tf_prefix)base_link</rosparam>
-  </node>
+  </node> -->
 
 </launch>
