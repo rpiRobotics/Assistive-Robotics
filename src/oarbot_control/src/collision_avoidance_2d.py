@@ -576,10 +576,6 @@ class CollisionAvoidance2D():
             pt_on_obj =  np.squeeze(np.asarray(nearest_pts[1].coords)) # closest point on the obstacle object # array([x, y])
             dist = self.mobile_base_polygons[self.index].distance(polygon) # distance between the obstacle object and the robot # float
             if dist > 0.0:
-                print ("pt_on_self: ", pt_on_self)
-                print ("pt_on_obj: ", pt_on_obj)
-                print ("dist: ", dist)
-
                 unit_vect = (pt_on_self - pt_on_obj) / dist # unit vector from obstacle object to the robot # array([x, y]) 
 
                 # factor is btw [0,1]; 
@@ -623,10 +619,6 @@ class CollisionAvoidance2D():
             pt_on_obj =  np.squeeze(np.asarray(nearest_pts[1].coords)) # closest point on the obstacle object # array([x, y])
             dist = self.mobile_base_polygons[self.index].distance(polygon) # distance between the obstacle object and the robot # float
             if dist > 0.0:
-                print ("pt_on_self: ", pt_on_self)
-                print ("pt_on_obj: ", pt_on_obj)
-                print ("dist: ", dist)
-
                 unit_vect = (pt_on_self - pt_on_obj) / dist # unit vector from obstacle object to the robot # array([x, y]) 
                 
 
@@ -728,10 +720,6 @@ class CollisionAvoidance2D():
             pt_on_obj =  np.squeeze(np.asarray(nearest_pts[1].coords)) # closest point on the obstacle object # array([x, y])
             dist = self.mobile_base_polygons[self.index].distance(polygon) # distance between the obstacle object and the robot # float
             if dist > 0.0:
-                print ("pt_on_self: ", pt_on_self)
-                print ("pt_on_obj: ", pt_on_obj)
-                print ("dist: ", dist)
-
                 unit_vect = (pt_on_self - pt_on_obj) / dist # unit vector from obstacle object to the robot # array([x, y]) 
 
                 # factor is btw [0,1]; 
@@ -775,10 +763,6 @@ class CollisionAvoidance2D():
             pt_on_obj =  np.squeeze(np.asarray(nearest_pts[1].coords)) # closest point on the obstacle object # array([x, y])
             dist = self.mobile_base_polygons[self.index].distance(polygon) # distance between the obstacle object and the robot # float
             if dist > 0.0:
-                print ("pt_on_self: ", pt_on_self)
-                print ("pt_on_obj: ", pt_on_obj)
-                print ("dist: ", dist)
-
                 unit_vect = (pt_on_self - pt_on_obj) / dist # unit vector from obstacle object to the robot # array([x, y]) 
 
                 # factor is btw [0,1]; 
