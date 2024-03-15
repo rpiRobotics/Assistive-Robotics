@@ -374,7 +374,7 @@ class CollisionAvoidance2D():
                         collision_polygon = self.obs_dist_hard_thres_polygon.intersection(laser_obstacle)
 
                         if collision_polygon.geom_type == 'MultiPolygon':
-                            for obj in collision_polygon:
+                            for obj in collision_polygon.geoms:
                                 if obj.geom_type == 'Polygon':
                                     if not self.is_convex_polygon(list(obj.exterior.coords)[:-1]):
                                         # rospy.logerr("Hard threshold non-convex obstacle for hitting laser scanner obstacle is triggered!!")
@@ -395,7 +395,7 @@ class CollisionAvoidance2D():
 
                     else:
                         if collision_polygon.geom_type == 'MultiPolygon':
-                            for obj in collision_polygon:
+                            for obj in collision_polygon.geoms:
                                 if obj.geom_type == 'Polygon':
                                     if not self.is_convex_polygon(list(obj.exterior.coords)[:-1]):
                                         # rospy.logerr("Soft threshold non-convex obstacle for hitting other robots is triggered!!")
@@ -444,7 +444,7 @@ class CollisionAvoidance2D():
                 collision_polygon = self.obs_dist_hard_thres_polygon.difference(self.workspace_polygon)
 
                 if collision_polygon.geom_type == 'MultiPolygon':
-                    for obj in collision_polygon:
+                    for obj in collision_polygon.geoms:
                         if obj.geom_type == 'Polygon':
                             if not self.is_convex_polygon(list(obj.exterior.coords)[:-1]):
                                 # rospy.logerr("Hard threshold non-convex obstacle for workspace is triggered!!")
@@ -470,7 +470,7 @@ class CollisionAvoidance2D():
 
             else:
                 if collision_polygon.geom_type == 'MultiPolygon':
-                    for obj in collision_polygon:
+                    for obj in collision_polygon.geoms:
                         if obj.geom_type == 'Polygon':
                             if not self.is_convex_polygon(list(obj.exterior.coords)[:-1]):
                                 # rospy.logerr("Soft threshold non-convex obstacle!!")
@@ -510,7 +510,7 @@ class CollisionAvoidance2D():
                         collision_polygon = self.obs_dist_hard_thres_polygon.intersection(self.mobile_base_polygons[i])
 
                         if collision_polygon.geom_type == 'MultiPolygon':
-                            for obj in collision_polygon:
+                            for obj in collision_polygon.geoms:
                                 if obj.geom_type == 'Polygon':
                                     if not self.is_convex_polygon(list(obj.exterior.coords)[:-1]):
                                         # rospy.logerr("Hard threshold non-convex obstacle for hitting other robots is triggered!!")
@@ -535,7 +535,7 @@ class CollisionAvoidance2D():
 
                     else:
                         if collision_polygon.geom_type == 'MultiPolygon':
-                            for obj in collision_polygon:
+                            for obj in collision_polygon.geoms:
                                 if obj.geom_type == 'Polygon':
                                     if not self.is_convex_polygon(list(obj.exterior.coords)[:-1]):
                                         # rospy.logerr("Soft threshold non-convex obstacle for hitting other robots is triggered!!")
