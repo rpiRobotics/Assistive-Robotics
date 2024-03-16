@@ -5,7 +5,7 @@ Author: Burak Aksoy
 Node: tf_mobile_base_arm_base_broadcaster
 Description:
     Broadcasts to tf2 the trasformation between the Kinova arm's base (root) frame
-    'root_left_arm' or 'root_right_arm' (specified in oarbot_xxx_arm_with_kinect.launch)
+    'root_left_arm' or 'root_right_arm' (specified in oarbot_xxx_arm_with_ft.launch)
     and mobile robot's base (root frame)
     'oarbot_silver_base' or 'oarbot_blue_base' 
     ("_base" part is specified in nuc_tf_overhead_camera_aruco.yaml, 

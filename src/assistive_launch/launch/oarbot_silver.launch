@@ -4,9 +4,14 @@
 	<machine name="oarbot-silver-P15" address="192.168.1.104" env-loader="/home/oarbot_silver/catkin_ws_assistive/src/assistive_launch/scripts/env_oarbot_silver.sh" user="oarbot_silver" password="1234" default="true"/>
 
     <!-- Launch Kinova Arm with Kinect + Corresponding TF broadcasters, including Body Joint Broadcaster -->
-    <include file="$(find assistive_launch)/launch/test_launch/oarbot_silver_arm_with_kinect.launch">
+    <include file="$(find assistive_launch)/launch/test_launch/oarbot_silver_arm_with_ft.launch">
         <!-- <arg name="prefix_for_tf" value="j2n6s300_left" />  Applies to both kinova arm and the kinect -->
     </include>
+
+    <!-- NOTE: SINCE KINECT FAILS FREQUENTLY, IT'S LAUNCH IS MANUALLY DONE AT ANOTHER TAB -->
+    <!-- <include file="$(find assistive_launch)/launch/test_launch/oarbot_silver_kinect.launch"> -->
+        <!-- <arg name="prefix_for_tf" value="j2n6s300_left" />  Applies to both kinova arm and the kinect -->
+    <!-- </include> -->
 
     <!-- Overall Robot twist mux -->
     <group ns="oarbot_silver">
