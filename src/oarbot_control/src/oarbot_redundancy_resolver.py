@@ -178,60 +178,61 @@ class OarbotRedundancyResolver():
         des_cmd = np.array([msg.angular.x,msg.angular.y,msg.angular.z,msg.linear.x,msg.linear.y,msg.linear.z])
         des_cmd = np.reshape(des_cmd,(6,1))
 
-        # Start constructing 10 DoF oarbot current joint array considering Base as 4 DoF and Arm as 6 DoF
-        # Construct arm joint angles from subscribed joint states
-        joint_array_arm = np.asfarray(self.joint_state_arm.position) # Get arm joint angles from joint states
-        joint_array_arm = joint_array_arm[self.joint_arm_start_index:self.joint_arm_start_index+6] # Discard the joints for fingers
-        joint_array_arm -= self.bot.q_zeros_arm # subtract the user manual zero angles of the arm from the current joint angles
+        if self.joint_state_arm is not None:
+            # Start constructing 10 DoF oarbot current joint array considering Base as 4 DoF and Arm as 6 DoF
+            # Construct arm joint angles from subscribed joint states
+            joint_array_arm = np.asfarray(self.joint_state_arm.position) # Get arm joint angles from joint states
+            joint_array_arm = joint_array_arm[self.joint_arm_start_index:self.joint_arm_start_index+6] # Discard the joints for fingers
+            joint_array_arm -= self.bot.q_zeros_arm # subtract the user manual zero angles of the arm from the current joint angles
 
-        try:
-            # Construct the base joint angles from tf info
-            # First get the transforms between the world and the mobile base (for x y theta) and mobile base to arm base (for z)
-            # returns type geometry_msgs.msg.TransformStamped
-            self.T_world2mobile_base = self.tfBuffer.lookup_transform(
-                self.tf_world_frame_id, 
-                self.tf_mobile_base_frame_id, 
-                rospy.Time()) # in world frame 
-            self.T_mobile_base2arm_base = self.tfBuffer.lookup_transform(
-                self.tf_mobile_base_frame_id, 
-                self.tf_arm_base_frame_id,  
-                rospy.Time()) # in mobile base frame 
+            try:
+                # Construct the base joint angles from tf info
+                # First get the transforms between the world and the mobile base (for x y theta) and mobile base to arm base (for z)
+                # returns type geometry_msgs.msg.TransformStamped
+                self.T_world2mobile_base = self.tfBuffer.lookup_transform(
+                    self.tf_world_frame_id, 
+                    self.tf_mobile_base_frame_id, 
+                    rospy.Time()) # in world frame 
+                self.T_mobile_base2arm_base = self.tfBuffer.lookup_transform(
+                    self.tf_mobile_base_frame_id, 
+                    self.tf_arm_base_frame_id,  
+                    rospy.Time()) # in mobile base frame 
 
-            # X and Y are trivial to obtain
-            x = self.T_world2mobile_base.transform.translation.x
-            y = self.T_world2mobile_base.transform.translation.y
+                # X and Y are trivial to obtain
+                x = self.T_world2mobile_base.transform.translation.x
+                y = self.T_world2mobile_base.transform.translation.y
 
-            # Theta is not so trival, need to find the euler angles for heading angle of mobile base
-            # Construct the quaternion from the tf first
-            qw = self.T_world2mobile_base.transform.rotation.w # Scalar part of quaternion
-            qx = self.T_world2mobile_base.transform.rotation.x
-            qy = self.T_world2mobile_base.transform.rotation.y
-            qz = self.T_world2mobile_base.transform.rotation.z
-            # Euler XYZ
-            # orientation_error = tf_conversions.transformations.euler_from_quaternion(q_orientation_error)
-            roll_x, pitch_y, yaw_z = self.euler_from_quaternion(qx, qy, qz, qw) # in radians
-            # Z is trivial as well, but requires to substract the min base height to find the modeled joint angle
-            z =  self.T_mobile_base2arm_base.transform.translation.z - self.base_z_low_limit
-            joint_array_base = np.asfarray([x, y, yaw_z, z])
+                # Theta is not so trival, need to find the euler angles for heading angle of mobile base
+                # Construct the quaternion from the tf first
+                qw = self.T_world2mobile_base.transform.rotation.w # Scalar part of quaternion
+                qx = self.T_world2mobile_base.transform.rotation.x
+                qy = self.T_world2mobile_base.transform.rotation.y
+                qz = self.T_world2mobile_base.transform.rotation.z
+                # Euler XYZ
+                # orientation_error = tf_conversions.transformations.euler_from_quaternion(q_orientation_error)
+                roll_x, pitch_y, yaw_z = self.euler_from_quaternion(qx, qy, qz, qw) # in radians
+                # Z is trivial as well, but requires to substract the min base height to find the modeled joint angle
+                z =  self.T_mobile_base2arm_base.transform.translation.z - self.base_z_low_limit
+                joint_array_base = np.asfarray([x, y, yaw_z, z])
 
-            # Finally construct 10x1 joint array vector
-            joint_array = np.append(joint_array_base,joint_array_arm)
+                # Finally construct 10x1 joint array vector
+                joint_array = np.append(joint_array_base,joint_array_arm)
 
-            self.arm_cmd, self.base_cmd = self.splitLaw(des_cmd,joint_array)
+                self.arm_cmd, self.base_cmd = self.splitLaw(des_cmd,joint_array)
 
-            # Finally since the velocity command is ready to send to base and the arm, set the flags to sent
-            self.time_last_cmd_vel = rospy.Time.now().to_sec()
-            self.velocity_command_sent_arm = False
-            self.velocity_command_sent_base = False
-        except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
-            # Put a warning which says that the transformation could not found
-            warn_msg = 'Waiting to find the transformation from %s to %s, OR transformation from %s to %s' \
-                    % ( self.tf_world_frame_id, self.tf_mobile_base_frame_id, 
-                        self.tf_mobile_base_frame_id, self.tf_arm_base_frame_id)
-            # rospy.logwarn(warn_msg)
-            self.logger.log(warn_msg,
-                            log_type='warning', 
-                            min_period=1.0) 
+                # Finally since the velocity command is ready to send to base and the arm, set the flags to sent
+                self.time_last_cmd_vel = rospy.Time.now().to_sec()
+                self.velocity_command_sent_arm = False
+                self.velocity_command_sent_base = False
+            except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
+                # Put a warning which says that the transformation could not found
+                warn_msg = 'Waiting to find the transformation from %s to %s, OR transformation from %s to %s' \
+                        % ( self.tf_world_frame_id, self.tf_mobile_base_frame_id, 
+                            self.tf_mobile_base_frame_id, self.tf_arm_base_frame_id)
+                # rospy.logwarn(warn_msg)
+                self.logger.log(warn_msg,
+                                log_type='warning', 
+                                min_period=1.0) 
 
     def splitLaw(self, des_cmd, q):
         """
