@@ -248,7 +248,7 @@ class BodySingleJointFollower():
             #                 % (self.tf_robot_base_frame_name, self.tf_end_effector_frame_name))
             self.logger.log(msg,
                             log_type='error', 
-                            min_period=1.0) 
+                            min_period=2.0) 
             return False
 
 
@@ -264,7 +264,7 @@ class BodySingleJointFollower():
             # rospy.logwarn('TFs_body_follower: Waiting to find the transformations') 
             self.logger.log('TFs_body_follower: Waiting to find the transformations',
                             log_type='warning', 
-                            min_period=1.0) 
+                            min_period=2.0) 
             return False
 
 
@@ -279,7 +279,7 @@ class BodySingleJointFollower():
             # rospy.logwarn('TFs_admittance: Waiting to find the transformations') 
             self.logger.log('TFs_admittance: Waiting to find the transformations',
                             log_type='warning', 
-                            min_period=1.0) 
+                            min_period=2.0) 
             return False
 
 
@@ -461,14 +461,14 @@ class BodySingleJointFollower():
             # rospy.logwarn("Follower generates high linear acceleration!")
             self.logger.log("Follower generates high linear acceleration!",
                             log_type='warning', 
-                            min_period=1.0) 
+                            min_period=2.0) 
             # Normalize the acceleration
             a_lin *= (self.max_lin_acc / a_lin_norm) 
         if a_ang_norm > self.max_ang_acc:
             # rospy.logwarn("Follower generates high angular acceleration!")
             self.logger.log("Follower generates high angular acceleration!",
                             log_type='warning', 
-                            min_period=1.0) 
+                            min_period=2.0) 
             # Normalize the acceleration
             a_ang *= (self.max_ang_acc / a_ang_norm) 
 
@@ -490,14 +490,14 @@ class BodySingleJointFollower():
             # rospy.logwarn("Follower generates high linear velocity!")
             self.logger.log("Follower generates high linear velocity!",
                             log_type='warning', 
-                            min_period=1.0) 
+                            min_period=2.0) 
             # Normalize the velocity
             v_lin *= (self.max_lin_vel / v_lin_norm) 
         if v_ang_norm > self.max_ang_vel:
             # rospy.logwarn("Follower generates high angular velocity!")
             self.logger.log("Follower generates high angular velocity!",
                             log_type='warning', 
-                            min_period=1.0) 
+                            min_period=2.0) 
             # Normalize the velocity
             v_ang *= (self.max_ang_vel / v_ang_norm) 
 
