@@ -5,6 +5,8 @@
 
 # SOURCE: https://gist.github.com/planetceres/917840478e1e4d45f8373667630e51a0
 
+# Also see the derived script: https://github.com/netinvent/usb_resetter for system level quick installation
+
 # USB 3.1 Only
 for port in $(lspci | grep xHCI | cut -d' ' -f1); do
     echo -n "0000:${port}"| sudo tee /sys/bus/pci/drivers/xhci_hcd/unbind;

@@ -67,6 +67,7 @@ pip install shapely; # needed to calculate the swarm footprint polygon and costm
 pip install matplotlib==3.7.3;
 # pip install ortools==9.7.2996;
 pip install general-robotics-toolbox;
+echo $MY_PASSWORD | sudo -S pip install usb_resetter; # useful to prevent physically unplugging and plugging back USB cables on the robots
 
 # KINECT, KINOVA ARM, AND SENSORS RELATED
 if ! grep -q '^deb .*https://packages.microsoft.com/ubuntu/18.04/prod' /etc/apt/sources.list /etc/apt/sources.list.d/*; then
