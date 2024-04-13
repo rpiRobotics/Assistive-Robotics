@@ -86,7 +86,7 @@ echo $MY_PASSWORD | sudo -S pip3 install usb_resetter; # useful to prevent physi
 # # sudo apt-get --purge --reinstall install libk4abt1.1-dev # If something goes wrong
 # echo $MY_PASSWORD | sudo apt-get install -y k4a-tools;
 # # sudo apt-get --purge --reinstall install k4a-tools # If something goes wrong
-# echo $MY_PASSWORD | sudo apt-get install -y ros-$MY_ROS_VERSION_NAME-rgbd-launch;
+echo $MY_PASSWORD | sudo apt-get install -y ros-$MY_ROS_VERSION_NAME-rgbd-launch;
 # cd /etc/udev/rules.d;
 # echo $MY_PASSWORD | sudo wget https://raw.githubusercontent.com/microsoft/Azure-Kinect-Sensor-SDK/develop/scripts/99-k4a.rules;
 echo $MY_PASSWORD | sudo wget https://raw.githubusercontent.com/Kinovarobotics/kinova-ros/$MY_ROS_VERSION_NAME-devel/kinova_driver/udev/10-kinova-arm.rules;
@@ -130,7 +130,7 @@ cd src;
 git clone https://github.com/burakaksoy/AssistiveRobot-SimulationFiles.git; # only on DESKTOP
 git clone https://github.com/burakaksoy/RVizMeshVisualizer.git; # only on DESKTOP
 git clone https://github.com/burakaksoy/uwb_gazebo_plugin; # only on DESKTOP
-# git clone https://github.com/burakaksoy/Azure_Kinect_ROS_Driver.git;
+git clone https://github.com/burakaksoy/Azure_Kinect_ROS_Driver.git; 
 git clone https://github.com/burakaksoy/kinova-ros.git kinova-ros;
 git clone https://github.com/rpiRobotics/obstacle_detector.git;
 git clone --branch throttle-tf-repeated-data-error https://github.com/burakaksoy/geometry2.git; # to fix tf repeating data warning flooding
