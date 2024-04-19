@@ -6,19 +6,21 @@ gnome-terminal --tab --title="NUC" --command "bash -c \"source ~/.bashrc; roslau
 
 gnome-terminal --tab --title="TABLET" --command "bash -c \"source ~/.bashrc; roslaunch assistive_launch ui_tablet.launch; exec bash\"";
 
-# Launch Oarbot arm systems 
-gnome-terminal --tab --title="Oarbot_BLUE" --command "bash -c \"source ~/.bashrc; roslaunch assistive_launch oarbot_blue.launch; exec bash\"";
-
-gnome-terminal --tab --title="Oarbot_SILVER" --command "bash -c \"source ~/.bashrc; roslaunch assistive_launch oarbot_silver.launch; exec bash\"";
-
-sleep 4s;
-
+## Launch Oarbot arm KINECT systems 
 # Launch KINECTS on the wrists of the arms
 gnome-terminal --tab --title="Oarbot_BLUE_Kinect" --command "bash -c \"source ~/.bashrc; roslaunch assistive_launch oarbot_blue_kinect.launch; exec bash\"";
+sleep 1s;
+# Launch KINECTS on the wrists of the arms
+gnome-terminal --tab --title="Oarbot_SILVER_Kinect" --command "bash -c \"source ~/.bashrc; roslaunch assistive_launch oarbot_silver_kinect.launch; exec bash\"";
+sleep 1s;
 
-gnome-terminal --tab --title="Oarbot_SILVER_Kinect" --command "bash -c \"source ~/.bashrc; roslaunch assistive_launch oarbot_silver.launch; exec bash\"";
-
+# Launch OARBOT BLUE
+gnome-terminal --tab --title="Oarbot_BLUE" --command "bash -c \"source ~/.bashrc; roslaunch assistive_launch oarbot_blue.launch; exec bash\"";
 sleep 4s;
+# Launch OARBOT SILVER
+gnome-terminal --tab --title="Oarbot_SILVER" --command "bash -c \"source ~/.bashrc; roslaunch assistive_launch oarbot_silver.launch; exec bash\"";
+sleep 4s;
+
 
 #
 gnome-terminal --tab --title="MASTER" --command "bash -c \"source ~/.bashrc; roslaunch assistive_launch master_human_localization_ekf.launch; exec bash\"";
