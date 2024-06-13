@@ -54,3 +54,6 @@ CATKIN_WHITELIST_PACKAGES=(
     # "rviz_ortho_view_controller"
     # "rosbag_editor"
 )
+
+
+# export WHITELIST_PACKAGES="assistive_msgs;assistive_gui;assistive_launch;rokubi_kinova_adapter;force_torque_tools;force_torque_sensor_calib;gravity_compensation;tf_to_fake_imu;assistive_controllers;oarbot_control;azure_kinect_ros_driver;kinova_gazebo;kinova_control;kinova_msgs;j2n6s300_ikfast;kinova_driver;kinova_description;kinova_bringup;kinova_helper;kinova_demo;tf_broadcasters"

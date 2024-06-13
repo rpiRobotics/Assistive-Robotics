@@ -8,8 +8,8 @@ tf_arm_base_frame_name: 'j2n6s300_right_link_base'
 
 pub_rate: 110.0 # It is a must to be 100 Hz for Kinova arm (If higher kinova can continue to move after the the command sendings stops bcs of the queue size)
 
-wrench_external_topic_name: 'j2n6s300_right_driver/out/tool_wrench_filtered'
-wrench_control_topic_name: 'j2n6s300_right_driver/tool_wrench_control'
+wrench_external_topic_name: 'ft_sensor/j2n6s300_right/ft_sensor_readings/wrench_compensated_in_arm_base' # 'j2n6s300_right_driver/out/tool_wrench_filtered'
+wrench_control_topic_name: 'tool_wrench_control' # 'j2n6s300_right_driver/tool_wrench_control'
 
 enable_body_joint_following: false
 toggle_body_joint_following_service_name: "toggle_body_joint_following"

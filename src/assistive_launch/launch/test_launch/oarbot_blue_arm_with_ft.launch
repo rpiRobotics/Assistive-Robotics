@@ -70,5 +70,22 @@
         <remap from="imu_gravity_compensation/ft_zeroed" to="ft_sensor/$(arg prefix_for_tf)/ft_sensor_readings/wrench_zeroed" />
         <remap from="imu_gravity_compensation/ft_compensated" to="ft_sensor/$(arg prefix_for_tf)/ft_sensor_readings/wrench_compensated" /> 
     </node>
+
+    <!-- /oarbot_blue/ft_sensor/j2n6s300_right/ft_sensor_readings/wrench_compensated -->
+    <!-- /oarbot_silver/ft_sensor/j2n6s300_left/ft_sensor_readings/wrench_compensated -->
+
+    <!-- Launch Wrench Transformer Node. -->
+    <!-- We need it because the body_single_joint_follower expects the wrench represented in the arm base frame -->
+    <!-- Then, it transforms the force component to the robot base and torque component to the end effector -->
+    <!-- With this node we transform the wrench frame from the FT sensor wrench frame to the arm base frame -->
+    <!-- IF THE WRENCH IS NOT COMING FROM THE FT SENSOR, AND COMING FROM THE TORQUE DERIVED WRENCH FROM KINOVA ITSELF, THIS NODE IS NOT NEEDED -->
+    <node type="wrench_transformer_node.py" name="wrench_transformer_node" pkg="topic_tf_transformers" output="screen">
+        <!-- <rosparam command="load" file="/home/burak/ez_cmd_vel_multi_dingo.yaml" subst_value="true" /> -->
+        <rosparam param="wrench_topic_name_in"  subst_value="True">ft_sensor/$(arg prefix_for_tf)/ft_sensor_readings/wrench_compensated</rosparam>
+        <rosparam param="wrench_topic_name_out" subst_value="True">ft_sensor/$(arg prefix_for_tf)/ft_sensor_readings/wrench_compensated_in_arm_base</rosparam>
+        <rosparam param="tf_a_frame_name"       subst_value="True">$(arg prefix_for_tf)_wrench</rosparam>
+        <rosparam param="tf_b_frame_name"       subst_value="True">$(arg tf_prefix)_link_base</rosparam>
+        <rosparam param="pub_rate"              subst_value="True">100.0</rosparam>
+    </node>
 </group>
 </launch>
