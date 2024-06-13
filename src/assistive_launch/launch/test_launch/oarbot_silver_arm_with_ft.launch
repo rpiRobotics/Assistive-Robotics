@@ -79,7 +79,7 @@
     <!-- Then, it transforms the force component to the robot base and torque component to the end effector -->
     <!-- With this node we transform the wrench frame from the FT sensor wrench frame to the arm base frame -->
     <!-- IF THE WRENCH IS NOT COMING FROM THE FT SENSOR, AND COMING FROM THE TORQUE DERIVED WRENCH FROM KINOVA ITSELF, THIS NODE IS NOT NEEDED -->
-    <node type="wrench_transformer_node.py" name="wrench_transformer_node" pkg="topic_tf_transformers" output="screen">
+    <node type="wrench_transformer_node_py2.py" name="wrench_transformer_node" pkg="topic_tf_transformers" output="screen">
         <!-- <rosparam command="load" file="/home/burak/ez_cmd_vel_multi_dingo.yaml" subst_value="true" /> -->
         <rosparam param="wrench_topic_name_in"  subst_value="True">ft_sensor/$(arg prefix_for_tf)/ft_sensor_readings/wrench_compensated</rosparam>
         <rosparam param="wrench_topic_name_out" subst_value="True">ft_sensor/$(arg prefix_for_tf)/ft_sensor_readings/wrench_compensated_in_arm_base</rosparam>
