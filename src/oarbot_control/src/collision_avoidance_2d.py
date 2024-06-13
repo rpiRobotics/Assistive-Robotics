@@ -33,14 +33,10 @@ from shapely.ops import triangulate
 import numpy as np
 import math
 
-from rospy_log_controller import LogController
-
 class CollisionAvoidance2D():
     def __init__(self):
 
         rospy.init_node('collision_avoidance_2d', anonymous=True)
-
-        self.logger = LogController() # To Manage the maximum rate of rospy log data
 
         # Published topic names 
         self.out_cmd_vel_topic_name = rospy.get_param("~out_cmd_vel_topic_name")
@@ -215,16 +211,10 @@ class CollisionAvoidance2D():
                         % (self.tf_mobile_base_frame_id, self.tf_world_frame_id, self.all_tf_mobile_base_frame_ids[i])
 
                 # rospy.logwarn(msg)
-                # self.logger.log(msg,
-                #                 log_type='warning', 
-                #                 min_period=1.0)
                 rospy.logwarn_throttle(1.0, msg + " (throttled to 1.0s)")
 
                 # reset the saved TFs to None
                 # rospy.logwarn('Collision Avoidance 2D: Resetting the saved TF list')
-                # self.logger.log('Collision Avoidance 2D: Resetting the saved TF list',
-                #                 log_type='warning', 
-                #                 min_period=1.0)
                 rospy.logwarn_throttle(1.0, "Collision Avoidance 2D: Resetting the saved TF list (throttled to 1.0s)")
                 
                 for i in range(self.num_of_robots):
@@ -608,9 +598,6 @@ class CollisionAvoidance2D():
                 torques.append(torque)
             else:
                 # rospy.logwarn("Soft threshold Obstacle collided with the robot!!")
-                # self.logger.log("Soft threshold Obstacle collided with the robot!!",
-                #                 log_type='warning', 
-                #                 min_period=1.0)
                 rospy.logwarn_throttle(1.0, "Soft threshold Obstacle collided with the robot!! (throttled to 1.0s)")
 
         forces_dynamic = []
@@ -653,9 +640,6 @@ class CollisionAvoidance2D():
                 torques_dynamic.append(torque)
             else:
                 # rospy.logwarn("Soft threshold Obstacle from Laser Scanner collided with the robot!!")
-                # self.logger.log("Soft threshold Obstacle from Laser Scanner collided with the robot!!",
-                #                 log_type='warning', 
-                #                 min_period=2.0)
                 rospy.logwarn_throttle(2.0, "Soft threshold Obstacle from Laser Scanner collided with the robot!! (throttled to 2.0s)")
 
         # forces_dynamic = np.array(forces_dynamic)
@@ -754,9 +738,6 @@ class CollisionAvoidance2D():
                 torques.append(torque)
             else:
                 # rospy.logwarn("Obstacle collided with the robot!!")
-                # self.logger.log("Obstacle collided with the robot!!",
-                #                 log_type='warning', 
-                #                 min_period=1.0)
                 rospy.logwarn_throttle(1.0, "Obstacle collided with the robot!! (throttled to 1.0s)")
 
         forces_dynamic = []
@@ -798,9 +779,6 @@ class CollisionAvoidance2D():
                 torques_dynamic.append(torque)
             else:
                 # rospy.logwarn("Obstacle from Laser Scanner collided with the robot!!")
-                # self.logger.log("Obstacle from Laser Scanner collided with the robot!!",
-                #                 log_type='warning', 
-                #                 min_period=2.0)
                 rospy.logwarn_throttle(2.0, "Obstacle from Laser Scanner collided with the robot!! (throttled to 2.0s)")
 
         # forces_dynamic = np.array(forces_dynamic)

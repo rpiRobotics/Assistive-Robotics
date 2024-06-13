@@ -40,13 +40,9 @@ import tf_conversions
 #  tf_conversions.transformations.euler_from_quaternion(Q_eg)
 import tf.transformations 
 
-from rospy_log_controller import LogController
-
 class BodySingleJointFollower():
     def __init__(self):
         rospy.init_node('body_single_joint_follower', anonymous=True)
-
-        self.logger = LogController() # To Manage the maximum rate of rospy log data
 
         self.is_following_started = False
 
@@ -246,9 +242,6 @@ class BodySingleJointFollower():
 
             # rospy.logerr("TFs_common: Waiting to find the transformation from %s to %s" 
             #                 % (self.tf_robot_base_frame_name, self.tf_end_effector_frame_name))
-            # self.logger.log(msg,
-            #                 log_type='error', 
-            #                 min_period=2.0) 
             rospy.logerr_throttle(2.0, msg+" (throttled to 2s)")
             return False
 
@@ -263,9 +256,6 @@ class BodySingleJointFollower():
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
             # rospy.logwarn('TFs_body_follower: Waiting to find the transformations') 
-            # self.logger.log('TFs_body_follower: Waiting to find the transformations',
-            #                 log_type='warning', 
-            #                 min_period=2.0) 
             rospy.logwarn_throttle(2.0, "TFs_body_follower: Waiting to find the transformations (throttled to 2s)")
             return False
 
@@ -279,9 +269,6 @@ class BodySingleJointFollower():
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
             # rospy.logwarn('TFs_admittance: Waiting to find the transformations') 
-            # self.logger.log('TFs_admittance: Waiting to find the transformations',
-            #                 log_type='warning', 
-            #                 min_period=2.0) 
             rospy.logwarn_throttle(2.0, "TFs_admittance: Waiting to find the transformations (throttled to 2s)")
             return False
 
@@ -462,17 +449,11 @@ class BodySingleJointFollower():
     
         if a_lin_norm > self.max_lin_acc:
             # rospy.logwarn("Follower generates high linear acceleration!")
-            # self.logger.log("Follower generates high linear acceleration!",
-            #                 log_type='warning', 
-            #                 min_period=2.0) 
             rospy.logwarn_throttle(2.0, "Follower generates high linear acceleration! (throttled to 2s)")
             # Normalize the acceleration
             a_lin *= (self.max_lin_acc / a_lin_norm) 
         if a_ang_norm > self.max_ang_acc:
             # rospy.logwarn("Follower generates high angular acceleration!")
-            # self.logger.log("Follower generates high angular acceleration!",
-            #                 log_type='warning', 
-            #                 min_period=2.0) 
             rospy.logwarn_throttle(2.0, "Follower generates high angular acceleration! (throttled to 2s)")
             # Normalize the acceleration
             a_ang *= (self.max_ang_acc / a_ang_norm) 
@@ -493,17 +474,11 @@ class BodySingleJointFollower():
     
         if v_lin_norm > self.max_lin_vel:
             # rospy.logwarn("Follower generates high linear velocity!")
-            # self.logger.log("Follower generates high linear velocity!",
-            #                 log_type='warning', 
-            #                 min_period=2.0) 
             rospy.logwarn_throttle(2.0, "Follower generates high linear velocity! (throttled to 2s)")
             # Normalize the velocity
             v_lin *= (self.max_lin_vel / v_lin_norm) 
         if v_ang_norm > self.max_ang_vel:
             # rospy.logwarn("Follower generates high angular velocity!")
-            # self.logger.log("Follower generates high angular velocity!",
-            #                 log_type='warning', 
-            #                 min_period=2.0) 
             rospy.logwarn_throttle(2.0, "Follower generates high angular velocity! (throttled to 2s)")
             # Normalize the velocity
             v_ang *= (self.max_ang_vel / v_ang_norm) 
