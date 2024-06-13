@@ -36,11 +36,26 @@
         <!-- <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_arm_ft.yaml"/> -->
     <!-- </node> -->
 
+    <!-- Start the fake_imu_publisher node (USE WHEN KINECT or ANOTHER DEVICE IS NOT PROVIDING IMU) -->
+    <node name="fake_imu_publisher" pkg="tf_to_fake_imu" type="fake_imu_publisher_node" output="screen">
+        <param name="imu_topic_name_out" value="$(arg prefix_for_tf)_fake_kinect_imu" />
+        <param name="tf_world_frame_id" value="map" />
+        <param name="tf_mobile_frame_id" value="$(arg prefix_for_tf)_wrench" />
+        <param name="gravity" value="[0.0, 0.0, -9.81]" />
+        <param name="rate" value="100" />
+    </node>
+
     <!-- imu transformer node for ft sensor-->
     <node name="imu_transformer" pkg="imu_transformer" type="imu_transformer_node">
         <param name="target_frame" type="string" value="$(arg prefix_for_tf)_wrench"/>
         <!-- remap for subscription -->
-        <remap from="imu_in/data" to="$(arg prefix_for_tf)_kinect_imu"/>
+
+        <!-- If Kinect Provides the IMU msg -->
+        <!-- <remap from="imu_in/data" to="$(arg prefix_for_tf)_kinect_imu"/> -->
+        
+        <!-- If Fake IMU is used to provide IMU msg -->
+        <remap from="imu_in/data" to="$(arg prefix_for_tf)_fake_kinect_imu"/>
+        
         <!-- remap for publishing -->
         <remap from="imu_out/data" to="$(arg prefix_for_tf)_ft_imu"/>
     </node>

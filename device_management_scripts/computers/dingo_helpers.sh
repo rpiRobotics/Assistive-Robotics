@@ -24,6 +24,7 @@ CATKIN_WHITELIST_PACKAGES=(
     "force_torque_tools"
     "force_torque_sensor_calib"
     "gravity_compensation"
+    "tf_to_fake_imu"
     # "obstacle_detector"
     "assistive_controllers"
     "oarbot_control"
