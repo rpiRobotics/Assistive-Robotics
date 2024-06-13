@@ -84,7 +84,7 @@
         <rosparam param="wrench_topic_name_in"  subst_value="True">ft_sensor/$(arg prefix_for_tf)/ft_sensor_readings/wrench_compensated</rosparam>
         <rosparam param="wrench_topic_name_out" subst_value="True">ft_sensor/$(arg prefix_for_tf)/ft_sensor_readings/wrench_compensated_in_arm_base</rosparam>
         <rosparam param="tf_a_frame_name"       subst_value="True">$(arg prefix_for_tf)_wrench</rosparam>
-        <rosparam param="tf_b_frame_name"       subst_value="True">$(arg tf_prefix)_link_base</rosparam>
+        <rosparam param="tf_b_frame_name"       subst_value="True">$(arg prefix_for_tf)_link_base</rosparam>
         <rosparam param="pub_rate"              subst_value="True">100.0</rosparam>
     </node>
 </group>
