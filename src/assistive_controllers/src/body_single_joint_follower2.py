@@ -193,8 +193,11 @@ class BodySingleJointFollower():
     def followJoint(self, event=None):
         # Find the transform between the specified joint and the end effector
         self.is_ok_tf_common = self.look_tfs_for_common()
-        self.is_ok_tf_body_follower = self.look_tfs_for_body_follower()
-        self.is_ok_tf_admittance = self.look_tfs_for_admittance()
+        
+        if self.enable_body_joint_following:
+            self.is_ok_tf_body_follower = self.look_tfs_for_body_follower()
+        if self.enable_admittance:
+            self.is_ok_tf_admittance = self.look_tfs_for_admittance()
 
         if not self.is_ok_tf_common:
             # Do not command the robot since the transformation could not found
