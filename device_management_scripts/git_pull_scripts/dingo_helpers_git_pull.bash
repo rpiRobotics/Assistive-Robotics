@@ -28,8 +28,8 @@ git reset --hard; git pull;
 # cd ~/catkin_ws_assistive/src/rosbag_editor
 # git reset --hard; git pull;
 
-# cd ~/catkin_ws_assistive/src/topic_tf_transformers
-# git reset --hard; git pull;
+cd ~/catkin_ws_assistive/src/topic_tf_transformers
+git reset --hard; git pull;
 
 cd ~/catkin_ws_assistive/src/bota_rokubi_ft_sensor/force_torque_tools;
 git reset --hard; git pull;

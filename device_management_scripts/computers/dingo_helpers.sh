@@ -48,7 +48,7 @@ CATKIN_WHITELIST_PACKAGES=(
     # "uwb_reader"
     # "tf2"
     "tf_broadcasters"
-    # "topic_tf_transformers"
+    "topic_tf_transformers"
     # "lab_gazebo"
     # "RVizMeshVisualizer"
     # "rviz_ortho_view_controller"
@@ -56,4 +56,4 @@ CATKIN_WHITELIST_PACKAGES=(
 )
 
 
-# export WHITELIST_PACKAGES="assistive_msgs;assistive_gui;assistive_launch;rokubi_kinova_adapter;force_torque_tools;force_torque_sensor_calib;gravity_compensation;tf_to_fake_imu;assistive_controllers;oarbot_control;azure_kinect_ros_driver;kinova_gazebo;kinova_control;kinova_msgs;j2n6s300_ikfast;kinova_driver;kinova_description;kinova_bringup;kinova_helper;kinova_demo;tf_broadcasters"
+# export WHITELIST_PACKAGES="assistive_msgs;assistive_gui;assistive_launch;rokubi_kinova_adapter;force_torque_tools;force_torque_sensor_calib;gravity_compensation;tf_to_fake_imu;assistive_controllers;oarbot_control;azure_kinect_ros_driver;kinova_gazebo;kinova_control;kinova_msgs;j2n6s300_ikfast;kinova_driver;kinova_description;kinova_bringup;kinova_helper;kinova_demo;tf_broadcasters;topic_tf_transformers"
