@@ -475,9 +475,10 @@ class ArucoRobots2Floor():
             # rospy.logwarn("--------------- ALL --- %s seconds ---" % (time.time() - start_time0))
         else:
             # rospy.logwarn("No robot could be detected, waiting to detect..")
-            self.logger.log("No robot could be detected, waiting to detect..",
-                            log_type='warning', 
-                            min_period=2.0) 
+            # self.logger.log("No robot could be detected, waiting to detect..",
+            #                 log_type='warning', 
+            #                 min_period=2.0) 
+            rospy.logwarn_throttle(2.0, "No robot could be detected, waiting to detect.. (Throttled to 2.0s)")
 
 
 

@@ -230,9 +230,10 @@ class OarbotRedundancyResolver():
                         % ( self.tf_world_frame_id, self.tf_mobile_base_frame_id, 
                             self.tf_mobile_base_frame_id, self.tf_arm_base_frame_id)
                 # rospy.logwarn(warn_msg)
-                self.logger.log(warn_msg,
-                                log_type='warning', 
-                                min_period=1.0) 
+                # self.logger.log(warn_msg,
+                #                 log_type='warning', 
+                #                 min_period=1.0)
+                rospy.logwarn(1.0, warn_msg + "(Throttled to 1.0s)")
 
     def splitLaw(self, des_cmd, q):
         """
