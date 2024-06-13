@@ -233,7 +233,7 @@ class OarbotRedundancyResolver():
                 # self.logger.log(warn_msg,
                 #                 log_type='warning', 
                 #                 min_period=1.0)
-                rospy.logwarn(1.0, warn_msg + "(Throttled to 1.0s)")
+                rospy.logwarn_throttle(1.0, warn_msg + "(Throttled to 1.0s)")
 
     def splitLaw(self, des_cmd, q):
         """
