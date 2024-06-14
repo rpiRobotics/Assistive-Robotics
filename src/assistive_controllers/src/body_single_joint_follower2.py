@@ -574,26 +574,25 @@ class BodySingleJointFollower():
         # response = empty_service(empty_req)  # Call the service with the empty request
 
         if req.data:
-            try:
-                rospy.loginfo("Calling the service to reset the FT sensor bias")
+            # try:
+            #     # rospy.loginfo("Calling the service to reset the FT sensor bias")
                 
-                rospy.wait_for_service(self.reset_ft_bias_service_address, timeout=1.0)
-                service = rospy.ServiceProxy(self.reset_ft_bias_service_address, Empty)
-                request = EmptyRequest()  # Create an empty request object (not necessary but shown for completeness)
-                response = service(request)  # Call the service with the empty request
-                # print("Service called successfully")
+            #     # rospy.wait_for_service(self.reset_ft_bias_service_address, timeout=1.0)
+            #     # service = rospy.ServiceProxy(self.reset_ft_bias_service_address, Empty)
+            #     # request = EmptyRequest()  # Create an empty request object (not necessary but shown for completeness)
+            #     # response = service(request)  # Call the service with the empty request
                 
-                rospy.sleep(1.0) # Wait for the bias to be reset
+            #     # rospy.sleep(1.0) # Wait for the bias to be reset
                 
                 self.enable_admittance = True
                 rospy.loginfo("Enable admittance control")
                 
-            except rospy.ServiceException as e:
-                rospy.logerr("Service call to reset the FT sensor bias failed: %s" % e)
-                return SetBoolResponse(False, "The admittance toggle was not successful")   
-            except rospy.ROSException as e:
-                rospy.logerr(f"Failed to contact service: {self.reset_ft_bias_service_address}")
-                return SetBoolResponse(False, "The admittance toggle was not successful")   
+            # except rospy.ServiceException as e:
+            #     rospy.logerr("Service call to reset the FT sensor bias failed: %s" % e)
+            #     return SetBoolResponse(False, "The admittance toggle was not successful")   
+            # except rospy.ROSException as e:
+            #     rospy.logerr(f"Failed to contact service: {self.reset_ft_bias_service_address}")
+            #     return SetBoolResponse(False, "The admittance toggle was not successful")   
 
         else:
             self.enable_admittance = False
