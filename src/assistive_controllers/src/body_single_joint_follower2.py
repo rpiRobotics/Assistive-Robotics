@@ -576,12 +576,13 @@ class BodySingleJointFollower():
         if req.data:
             try:
                 rospy.loginfo("Calling the service to reset the FT sensor bias")
-                # rospy.wait_for_service(self.reset_ft_bias_service_address, timeout=1.0)
-                # service = rospy.ServiceProxy(self.reset_ft_bias_service_address, Empty)
-                # request = EmptyRequest()  # Create an empty request object (not necessary but shown for completeness)
-                # response = service(request)  # Call the service with the empty request
                 
-                # rospy.sleep(1.0) # Wait for the bias to be reset
+                rospy.wait_for_service(self.reset_ft_bias_service_address, timeout=1.0)
+                service = rospy.ServiceProxy(self.reset_ft_bias_service_address, Empty)
+                request = EmptyRequest()  # Create an empty request object (not necessary but shown for completeness)
+                response = service(request)  # Call the service with the empty request
+                
+                rospy.sleep(1.0) # Wait for the bias to be reset
                 self.enable_admittance = True
                 rospy.loginfo("Enable admittance control")
                 
