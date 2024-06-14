@@ -11,10 +11,12 @@ pub_rate: 110.0 # It is a must to be 100 Hz for Kinova arm (If higher kinova can
 wrench_external_topic_name: 'ft_sensor/j2n6s300_left/ft_sensor_readings/wrench_compensated_in_arm_base' # 'j2n6s300_left_driver/out/tool_wrench_filtered'
 wrench_control_topic_name: 'tool_wrench_control'  # 'j2n6s300_left_driver/tool_wrench_control'
 
-enable_body_joint_following: false
+enable_body_joint_following: false # initial state 
 toggle_body_joint_following_service_name: "toggle_body_joint_following"
-enable_admittance: false
+enable_admittance: false # initial state
 toggle_admittance_service_name: "toggle_admittance"
+
+reset_ft_bias_service_address: "imu_gravity_compensation/calibrate_bias" # it is a service to zero the bias of the force torque sensor readings, provided by the gravity_compensation package. Hence the type is std_srvs/Empty based on the service definition of gravity_compensation package.
 
 reset_desired_body_pose_service_name: "reset_desired_body_pose"
 

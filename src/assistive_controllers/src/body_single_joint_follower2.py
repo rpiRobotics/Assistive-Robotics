@@ -32,6 +32,7 @@ import geometry_msgs.msg
 
 import kinova_msgs.msg
 
+from std_srvs.srv import Empty, EmptyRequest, EmptyResponse
 from std_srvs.srv import SetBool, SetBoolRequest, SetBoolResponse
 from std_srvs.srv import Trigger, TriggerRequest, TriggerResponse
 
@@ -78,6 +79,10 @@ class BodySingleJointFollower():
         self.srv_toggle_body_joint_following = rospy.Service(self.toggle_body_joint_following_service_name, SetBool, self.srv_toggle_body_joint_following_cb)
         # Service to toggle the admittance control (enable/disable)
         self.srv_toggle_admittance = rospy.Service(self.toggle_admittance_service_name, SetBool, self.srv_toggle_admittance_cb)
+        
+        # Service to reset the ft bias (It is called from here to reset the bias)
+        self.reset_ft_bias_service_address = rospy.get_param("~reset_ft_bias_service_address", "imu_gravity_compensation/calibrate_bias")
+        # it is a service to zero the bias of the force torque sensor readings, provided by the gravity_compensation package. Hence the type is std_srvs/Empty based on the service definition of gravity_compensation package.
 
 
         self.reset_desired_body_pose_service_name = rospy.get_param("~reset_desired_body_pose_service_name")
@@ -558,9 +563,38 @@ class BodySingleJointFollower():
     def srv_toggle_admittance_cb(self,req):
         assert isinstance(req, SetBoolRequest)
 
+        # try:
+        #     empty_service = rospy.ServiceProxy('/my_empty_service', Empty)  # Create a service proxy
+        #     response = empty_service()  # Call the service
+        #     print("Service called successfully")
+        # except rospy.ServiceException as e:
+        #     print("Service call failed: %s" % e)
+        
+        # empty_req = EmptyRequest()  # Create an empty request object (not necessary but shown for completeness)
+        # response = empty_service(empty_req)  # Call the service with the empty request
+
         if req.data:
-            self.enable_admittance = True
-            rospy.loginfo("Enable admittance control")
+            try:
+                rospy.loginfo("Calling the service to reset the FT sensor bias")
+                
+                rospy.wait_for_service(self.reset_ft_bias_service_address, timeout=1.0)
+                service = rospy.ServiceProxy(self.reset_ft_bias_service_address, Empty)
+                request = EmptyRequest()  # Create an empty request object (not necessary but shown for completeness)
+                response = service(request)  # Call the service with the empty request
+                # print("Service called successfully")
+                
+                time.sleep(1.0) # Wait for the bias to be reset
+                
+                self.enable_admittance = True
+                rospy.loginfo("Enable admittance control")
+                
+            except rospy.ServiceException as e:
+                rospy.logerr("Service call to reset the FT sensor bias failed: %s" % e)
+                return SetBoolResponse(False, "The admittance toggle was not successful")   
+            except rospy.ROSException:
+                rospy.logerr(f"Failed to contact service: {self.reset_ft_bias_service_address}")
+                return SetBoolResponse(False, "The admittance toggle was not successful")   
+
         else:
             self.enable_admittance = False
             rospy.loginfo("Disable admittance control")

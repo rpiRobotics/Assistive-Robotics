@@ -23,8 +23,8 @@ sleep 4s;
 
 
 #
-gnome-terminal --tab --title="MASTER" --command "bash -c \"source ~/.bashrc; roslaunch assistive_launch master_human_localization_ekf.launch; exec bash\"";
-sleep 6s;
+# gnome-terminal --tab --title="MASTER" --command "bash -c \"source ~/.bashrc; roslaunch assistive_launch master_human_localization_ekf.launch; exec bash\"";
+# sleep 6s;
 
 gnome-terminal --tab --title="RVIZ" --command "bash -c \"source ~/.bashrc; rosrun rviz rviz -d ~/catkin_ws_assistive/src/assistive_launch/config/rviz/all_oarbots_localized_with_aruco.rviz; exec bash\"";
 sleep 3s;
