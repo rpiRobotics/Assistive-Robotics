@@ -40,8 +40,8 @@ D_ang_z: 10.0
 K_admittance_lin_x: 0.3
 K_admittance_lin_y: 0.3
 K_admittance_lin_z: 0.3
-K_admittance_ang_x: 0.8
-K_admittance_ang_y: 0.8
+K_admittance_ang_x: 0.0 # 0.8
+K_admittance_ang_y: 0.4 # 0.8
 K_admittance_ang_z: 0.8
 
 M_lin_x: 1.0

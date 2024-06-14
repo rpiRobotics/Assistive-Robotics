@@ -457,12 +457,12 @@ class BodySingleJointFollower():
     
         if a_lin_norm > self.max_lin_acc:
             # rospy.logwarn("Follower generates high linear acceleration!")
-            rospy.logwarn_throttle(2.0, "Follower generates high linear acceleration! (throttled to 2s)")
+            rospy.logwarn_throttle(20.0, "Follower generates high linear acceleration! (throttled to 20s)")
             # Normalize the acceleration
             a_lin *= (self.max_lin_acc / a_lin_norm) 
         if a_ang_norm > self.max_ang_acc:
             # rospy.logwarn("Follower generates high angular acceleration!")
-            rospy.logwarn_throttle(2.0, "Follower generates high angular acceleration! (throttled to 2s)")
+            rospy.logwarn_throttle(20.0, "Follower generates high angular acceleration! (throttled to 20s)")
             # Normalize the acceleration
             a_ang *= (self.max_ang_acc / a_ang_norm) 
 
@@ -482,12 +482,12 @@ class BodySingleJointFollower():
     
         if v_lin_norm > self.max_lin_vel:
             # rospy.logwarn("Follower generates high linear velocity!")
-            rospy.logwarn_throttle(2.0, "Follower generates high linear velocity! (throttled to 2s)")
+            rospy.logwarn_throttle(20.0, "Follower generates high linear velocity! (throttled to 20s)")
             # Normalize the velocity
             v_lin *= (self.max_lin_vel / v_lin_norm) 
         if v_ang_norm > self.max_ang_vel:
             # rospy.logwarn("Follower generates high angular velocity!")
-            rospy.logwarn_throttle(2.0, "Follower generates high angular velocity! (throttled to 2s)")
+            rospy.logwarn_throttle(20.0, "Follower generates high angular velocity! (throttled to 20s)")
             # Normalize the velocity
             v_ang *= (self.max_ang_vel / v_ang_norm) 
 
@@ -562,16 +562,6 @@ class BodySingleJointFollower():
 
     def srv_toggle_admittance_cb(self,req):
         assert isinstance(req, SetBoolRequest)
-
-        # try:
-        #     empty_service = rospy.ServiceProxy('/my_empty_service', Empty)  # Create a service proxy
-        #     response = empty_service()  # Call the service
-        #     print("Service called successfully")
-        # except rospy.ServiceException as e:
-        #     print("Service call failed: %s" % e)
-        
-        # empty_req = EmptyRequest()  # Create an empty request object (not necessary but shown for completeness)
-        # response = empty_service(empty_req)  # Call the service with the empty request
 
         if req.data:
             try:
