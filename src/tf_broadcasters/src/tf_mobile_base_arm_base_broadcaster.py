@@ -58,19 +58,26 @@ class MobileBase2ArmBaseTf():
         self.tf_arm_base_frame_id = rospy.get_param("~tf_arm_base_frame_id", "root_right_arm")
     
         self.mobile_base2arm_base_pose = rospy.get_param("~mobile_base2arm_base_pose") 
+        
+        self.rate = rospy.get_param("~rate", 10.0)
     
         self.z_height = 0.0
         if not self.is_fixed_z:
             rospy.Subscriber(self.z_height_topic_name, geometry_msgs.msg.PointStamped, self.handle_z_height, queue_size=1)
 
-        # self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
-        self.tf_broadcaster_static = tf2_ros.StaticTransformBroadcaster() # Create a static tf broadcster for rbg camera and the world frame
-        self.publish_rgb2world_floor_tf_static()
+        self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
+        
+        # Setup a timer to call publish_tf at a regular interval
+        self.timer = rospy.Timer(rospy.Duration(1.0/self.rate), self.timer_callback) 
+        
+    def timer_callback(self, event):
+        self.publish_tf() 
     
     def handle_z_height(self,msg):
         self.z_height = msg.point.z
+        self.publish_tf()  # Update immediately upon receiving new z height
 
-    def publish_rgb2world_floor_tf_static(self):
+    def publish_tf(self):
         t = geometry_msgs.msg.TransformStamped()
         t.header.stamp = rospy.Time.now()
 
@@ -80,18 +87,13 @@ class MobileBase2ArmBaseTf():
         t.transform.translation.x = self.mobile_base2arm_base_pose['position']['x']
         t.transform.translation.y = self.mobile_base2arm_base_pose['position']['y']
         t.transform.translation.z = self.mobile_base2arm_base_pose['position']['z'] + self.z_height
-        
-        # # Convert R rotation matrix to quaternion
-        # rot_mat = np.eye(4)
-        # rot_mat[:3,:3] = rot_mat
-        # q = tf_conversions.transformations.quaternion_from_matrix(rot_mat)
 
         t.transform.rotation.x = self.mobile_base2arm_base_pose['orientation']['x']
         t.transform.rotation.y = self.mobile_base2arm_base_pose['orientation']['y']
         t.transform.rotation.z = self.mobile_base2arm_base_pose['orientation']['z']
         t.transform.rotation.w = self.mobile_base2arm_base_pose['orientation']['w']
 
-        self.tf_broadcaster_static.sendTransform(t)
+        self.tf_broadcaster.sendTransform(t)
 
 if __name__ == '__main__':
     mobileBase2ArmBaseTf = MobileBase2ArmBaseTf()

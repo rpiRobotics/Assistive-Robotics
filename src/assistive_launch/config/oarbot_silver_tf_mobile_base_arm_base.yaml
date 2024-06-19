@@ -3,6 +3,8 @@ is_fixed_z: True
 tf_mobile_base_frame_id: 'd2_tf_arm_mount'
 tf_arm_base_frame_id: 'root_left_arm'
 
+rate: 10 # Hz for the tf broadcaster, default is 10 Hz
+
 mobile_base2arm_base_pose:
   orientation:
     x: 0.0
