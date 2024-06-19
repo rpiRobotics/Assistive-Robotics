@@ -58,7 +58,7 @@ class Kinect2BodyAllJointsTf():
             self.pubs_PoseWithCovarianceStamped[joint_name] =  publisher
 
         self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
-        rospy.Subscriber(self.kinect_body_tracking_data_topic_name, visualization_msgs.msg.MarkerArray, self.handle_joint_pose)
+        rospy.Subscriber(self.kinect_body_tracking_data_topic_name, visualization_msgs.msg.MarkerArray, self.handle_joint_pose, queue_size=1)
         pass
 
     def handle_joint_pose(self, msg):

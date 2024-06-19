@@ -40,7 +40,7 @@ class Kinect2BodySingleJointTf():
         self.parent_frame_id = rospy.get_param("~tf_camera_frame_id", "depth_camera_link")
 
         self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
-        rospy.Subscriber(self.kinect_body_tracking_data_topic_name, visualization_msgs.msg.MarkerArray, self.handle_joint_pose)
+        rospy.Subscriber(self.kinect_body_tracking_data_topic_name, visualization_msgs.msg.MarkerArray, self.handle_joint_pose, queue_size=1)
         pass
 
     def handle_joint_pose(self, msg):

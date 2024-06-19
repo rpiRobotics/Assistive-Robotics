@@ -502,7 +502,7 @@ class SWARMGUI(QtWidgets.QMainWindow):
         self.moveswarmframebutton = swarm_button(self.Moveswarmframe,self.open_loop_swarm_command_topic)
         self.buttons.append(self.moveswarmbutton)
         self.buttons.append(self.moveswarmframebutton)
-        rospy.Subscriber(self.input_command_topic, Twist, self.offset_callback)
+        rospy.Subscriber(self.input_command_topic, Twist, self.offset_callback, queue_size=1)
         
         for i in range(self.number_of_bots):
             #led=LEDIndicator()

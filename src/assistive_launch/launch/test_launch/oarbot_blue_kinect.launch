@@ -55,15 +55,17 @@
 
     </include>
 
-    <!-- Launch Kinect Body TF broadcasters -->
+    <!-- Launch Kinova Arm to Kinect Static TF broadcasters -->
     <node name="tf_arm_camera_broadcaster" pkg="tf_broadcasters" type="tf_arm_camera_broadcaster.py" output="screen">
         <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_arm_camera.yaml"/>
     </node>
 
+    <!-- Launch Kinect Body TF broadcasters -->
     <!-- <node name="tf_camera_body_single_joint_broadcaster" pkg="tf_broadcasters" type="tf_camera_body_single_joint_broadcaster.py">
         <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_camera_body_single_joint.yaml"/>
     </node> -->
 
+    <!-- Launch Kinect Body TF broadcasters -->
     <node name="tf_camera_body_all_joints_broadcaster" pkg="tf_broadcasters" type="tf_camera_body_all_joints_broadcaster.py" output="screen">
         <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_camera_body_all_joints.yaml"/>
     </node>
