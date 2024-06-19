@@ -1,4 +1,3 @@
-end_effector_pose_topic_name: 'j2n6s300_right_driver/out/tool_pose'
 tf_end_effector_frame_id: 'j2n6s300_right_end_effector' # it should be same as "$(arg kinova_prefix)_end_effector"
 tf_root_camera_frame_id: 'j2n6s300_right_camera_base'
 
