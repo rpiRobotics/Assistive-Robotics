@@ -59,7 +59,6 @@ class Kinect2BodyAllJointsTf():
 
         self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
         rospy.Subscriber(self.kinect_body_tracking_data_topic_name, visualization_msgs.msg.MarkerArray, self.handle_joint_pose, queue_size=1)
-        pass
 
     def handle_joint_pose(self, msg):
         if len(msg.markers) > 0: # If at least one body is detected 
@@ -103,11 +102,8 @@ class Kinect2BodyAllJointsTf():
                 pose_msg.pose.covariance = covariance
 
                 self.pubs_PoseWithCovarianceStamped[joint_name].publish(pose_msg)
-
-
-
         else:
-            rospy.logerr_once("No body could be detected, waiting to detect..")
+            rospy.logerr_throttle(5, "No body could be detected, waiting to detect..")
 
     def calculate_distance(self,position):
         return np.linalg.norm(np.array([position.x, position.y, position.z])) 
@@ -132,8 +128,8 @@ class Kinect2BodyAllJointsTf():
     def calculate_covariance(self,reliability_score):
         covariance =  np.zeros(36)
 
-        self.covariance_diagonal_max
-        self.covariance_diagonal_min
+        # self.covariance_diagonal_max
+        # self.covariance_diagonal_min
         
         covariance[0]  = self.interpolate_linear(reliability_score,self.covariance_diagonal_min[0],self.covariance_diagonal_max[0]) # x
         covariance[7]  = self.interpolate_linear(reliability_score,self.covariance_diagonal_min[1],self.covariance_diagonal_max[1]) # y

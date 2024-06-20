@@ -60,7 +60,7 @@ class Kinect2BodySingleJointTf():
 
             self.tf_broadcaster.sendTransform(t)
         else:
-            rospy.logerr_once("No body could be detected, waiting to detect..")
+            rospy.logerr_throttle(5,"No body could be detected, waiting to detect..")
         
 
 KINECT_JOINT_DICT = {

@@ -8,7 +8,6 @@ Description:
     and arm's physical wrench frame
     
 Parameters:
-    - TODO
     - tf_arm_frame_id: Arm's physical wrench frame mounted
     - tf_ft_frame_id: FT sensors tf frame that is published
     - arm2ft_pose: 
