@@ -66,7 +66,7 @@
     </node> -->
 
     <!-- Launch Kinect Body TF broadcasters -->
-    <node name="tf_camera_body_all_joints_broadcaster" pkg="tf_broadcasters" type="tf_camera_body_all_joints_broadcaster.py" output="screen">
+    <node name="tf_camera_body_all_joints_broadcaster" pkg="tf_broadcasters" type="tf_camera_body_all_joints_broadcaster" output="screen">
         <rosparam file="$(find assistive_launch)/config/oarbot_blue_tf_camera_body_all_joints.yaml"/>
     </node>
 
