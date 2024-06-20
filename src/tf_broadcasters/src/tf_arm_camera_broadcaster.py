@@ -47,7 +47,7 @@ class Arm2CameraTf():
         self.tf_broadcaster_static = tf2_ros.StaticTransformBroadcaster() # Create a static tf broadcster for rbg camera and the world frame
         self.publish_tf_static()
         
-    def publish_tf_static(self, msg):
+    def publish_tf_static(self):
         t = geometry_msgs.msg.TransformStamped()
         t.header.stamp = rospy.Time.now()
 
