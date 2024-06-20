@@ -88,7 +88,7 @@ public:
 
     void bodyTrackingCallback(const visualization_msgs::MarkerArray& msg) {
         if (msg.markers.empty()) {
-            ROS_ERROR_THROTTLE(5, "No body detected, waiting to detect...");
+            ROS_ERROR_THROTTLE(30, "No body detected, waiting to detect...");
             return;
         }
 
