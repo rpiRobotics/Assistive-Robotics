@@ -56,34 +56,34 @@ std::map<std::string, int> KINECT_JOINT_DICT = {
 
 class Kinect2BodyAllJointsTf {
 public:
-    Kinect2BodyAllJointsTf(){
-        ros::NodeHandle nh;
-        ros::NodeHandle nh_private("~");
-        
-        nh_private.param<std::string>("kinect_body_tracking_data_topic_name", body_tracking_topic_, "/body_tracking_data");
-        nh_private.param<std::string>("tf_camera_frame_id", camera_frame_id_, "depth_camera_link");
-        nh_private.param<std::string>("body_joints_tf_prefix", joints_tf_prefix_, "");
+    Kinect2BodyAllJointsTf(ros::NodeHandle &nh, ros::NodeHandle &nh_local): 
+        nh_(nh), 
+        nh_local_(nh_local)
+    {
+        nh_local_.param<std::string>("kinect_body_tracking_data_topic_name", body_tracking_topic_, "/body_tracking_data");
+        nh_local_.param<std::string>("tf_camera_frame_id", camera_frame_id_, "depth_camera_link");
+        nh_local_.param<std::string>("body_joints_tf_prefix", joints_tf_prefix_, "");
 
         // Create covariance vector with size 36 = 6x6 for (x, y, z, rotation about X axis, rotation about Y axis, rotation about Z axis)
-        nh_private.param<std::vector<double>>("pose_covariance_diagonal_max", covariance_max_, {1., 1., 1., 1., 1., 1.});
-        nh_private.param<std::vector<double>>("pose_covariance_diagonal_min", covariance_min_, {0.1, 0.1, 0.1, 0.1, 0.1, 0.1});
+        nh_local_.param<std::vector<double>>("pose_covariance_diagonal_max", covariance_max_, {1., 1., 1., 1., 1., 1.});
+        nh_local_.param<std::vector<double>>("pose_covariance_diagonal_min", covariance_min_, {0.1, 0.1, 0.1, 0.1, 0.1, 0.1});
         covariance_.resize(36, 0.0); // Initialize the covariance vector with zeros
 
-        nh_private.param<bool>("tf_broadcast_enable", tf_broadcast_enable_, true);
+        nh_local_.param<bool>("tf_broadcast_enable", tf_broadcast_enable_, true);
 
         // Get reliability function parameters m and s
-        nh_private.param("reliability_func_param_m", m_, 0.0);
-        nh_private.param("reliability_func_param_s", s_, 0.42);
+        nh_local_.param("reliability_func_param_m", m_, 0.0);
+        nh_local_.param("reliability_func_param_s", s_, 0.42);
 
         // Initialize pose publishers for each joint
         for (const auto& joint : KINECT_JOINT_DICT) {
             std::string topic_name = "Pose_" + joints_tf_prefix_ + toLower(joint.first);
-            ros::Publisher pub = nh.advertise<geometry_msgs::PoseWithCovarianceStamped>(topic_name, 2);
+            ros::Publisher pub = nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>(topic_name, 2);
             pose_publisher_map_[joint.first] = pub;
         }
 
         tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>();
-        body_tracking_sub_ = nh.subscribe(body_tracking_topic_, 1, &Kinect2BodyAllJointsTf::bodyTrackingCallback, this);
+        body_tracking_sub_ = nh_.subscribe(body_tracking_topic_, 1, &Kinect2BodyAllJointsTf::bodyTrackingCallback, this);
     }
 
     void bodyTrackingCallback(const visualization_msgs::MarkerArray& msg) {
@@ -134,6 +134,9 @@ public:
     }
 
 private:
+    ros::NodeHandle nh_;
+    ros::NodeHandle nh_local_;
+
     std::string body_tracking_topic_;
     std::string camera_frame_id_;
     std::string joints_tf_prefix_;
@@ -172,8 +175,13 @@ private:
 };
 
 int main(int argc, char** argv) {
+    // ros::init(argc, argv, "dlo_simulator_node", ros::init_options::AnonymousName);
     ros::init(argc, argv, "tf_camera_body_all_joints_broadcaster");
-    Kinect2BodyAllJointsTf broadcaster;
+    
+    ros::NodeHandle nh("");
+    ros::NodeHandle nh_local("~");
+
+    Kinect2BodyAllJointsTf broadcaster(nh, nh_local);
     ros::spin();
     return 0;
 }
