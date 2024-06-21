@@ -44,13 +44,13 @@ class Uwb_reader:
         
         ser_bytes = self.ser.readline()
         while not 'dwm>' in ser_bytes:
-            rospy.loginfo('waiting for dwm>')
-            rospy.loginfo(ser_bytes)
+            rospy.loginfo_throttle(10, 'waiting for dwm> (thottled to 10s)')
+            rospy.loginfo_throttle(10, ser_bytes)
             self.ser.write('\r\r')
             ser_bytes = self.ser.readline()
             time.sleep(0.1)
             while(self.ser.in_waiting):
-                rospy.loginfo('waiting for dwm> (ser.in_waiting)')
+                rospy.loginfo_throttle(10, 'waiting for dwm> (ser.in_waiting) (thottled to 10s)')
                 ser_bytes = self.ser.readline()
                 time.sleep(0.1)
 
@@ -66,9 +66,9 @@ class Uwb_reader:
         while not rospy.is_shutdown():
             try:
                 if(self.ser == None):
-                    rospy.loginfo("Trying to reconnect to serial")
+                    rospy.loginfo_throttle(30, "Trying to reconnect to serial (throttled to 30s)")
                     self.ser = serial.Serial(self.serial_port, 115200, timeout=1, xonxoff=True)
-                    rospy.loginfo("Connected to serial")
+                    rospy.loginfo_throttle(30, "Connected to serial (throttled to 30s)")
                     # self.ser.reset_input_buffer()
                     # self.ser.reset_output_buffer()
                     time.sleep(1)
@@ -78,14 +78,14 @@ class Uwb_reader:
                 if(ser_bytes):
                     self.pub.publish(ser_bytes)
                 else:
-                    rospy.logwarn("Serial timeout occured")
+                    rospy.logwarn_throttle(30, "Serial timeout occured (throttled to 30s)")
 
             except serial.serialutil.SerialException:
                 if(not(self.ser == None)):
                     self.ser.close()
                     self.ser = None
-                    rospy.logwarn("Disconnecting from serial")
-                rospy.logwarn("Serial disconnected")
+                    rospy.logwarn_throttle(30, "Disconnecting from serial (throttled to 30s)")
+                rospy.logwarn_throttle(30, "Serial disconnected (throttled to 30s)")
                 time.sleep(0.25)
 
 
