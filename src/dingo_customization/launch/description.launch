@@ -23,5 +23,7 @@
                   uwb_tag_2_id:=$(arg uwb_tag_2_id)
                   " />
 
+  <param name="use_tf_static" value="true"/>
+
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen"/>
 </launch>
