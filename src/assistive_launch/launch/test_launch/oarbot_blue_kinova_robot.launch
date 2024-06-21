@@ -41,17 +41,18 @@
   <!-- Call for Activating manually setup payload and COM estimations  -->
   <!-- <node pkg="rosservice" type="rosservice" name="$(arg kinova_robotName)_rosservice" args="call /oarbot_blue/j2n6s300_right_driver/in/set_torque_control_parameters"/> -->
 
-  <node name="$(arg kinova_robotName)_helper_publisher" pkg="kinova_helper" type="helper_publisher.py" output="screen" cwd="node">
+  <!-- Note: Kinova Helper Publishers are not used when there is an external FT sensor -->
+  <!-- <node name="$(arg kinova_robotName)_helper_publisher" pkg="kinova_helper" type="helper_publisher.py" output="screen" cwd="node">
     <rosparam file="$(find assistive_launch)/config/oarbot_blue_kinova_helper_publisher.yaml"/>
-  </node>
+  </node> -->
 
-  <node name="$(arg kinova_robotName)_wrench_filter" pkg="kinova_helper" type="wrench_filter.py" output="screen" cwd="node">
-    <param name="tool_wrench_topic_name_out" value="$(arg kinova_robotName)_driver/out/tool_wrench_filtered" />
-    <param name="tool_wrench_topic_name_in" value="$(arg kinova_robotName)_driver/out/tool_wrench" />
+  <!-- <node name="$(arg kinova_robotName)_wrench_filter" pkg="kinova_helper" type="wrench_filter.py" output="screen" cwd="node"> -->
+    <!-- <param name="tool_wrench_topic_name_out" value="$(arg kinova_robotName)_driver/out/tool_wrench_filtered" /> -->
+    <!-- <param name="tool_wrench_topic_name_in" value="$(arg kinova_robotName)_driver/out/tool_wrench" /> -->
     
-    <param name="wrench_filter_factor" value="0.1" />
-    <param name="force_dead_zone_thres" value="0.0" /> <!-- 15.0 N to 3.5 -->
-    <param name="torque_dead_zone_thres" value="0.0" /> <!-- 2.0 Nm to 0.75 -->
-  </node>
+    <!-- <param name="wrench_filter_factor" value="0.1" /> -->
+    <!-- <param name="force_dead_zone_thres" value="0.0" /> 15.0 N to 3.5 -->
+    <!-- <param name="torque_dead_zone_thres" value="0.0" /> 2.0 Nm to 0.75 -->
+  <!-- </node> -->
 
 </launch>
