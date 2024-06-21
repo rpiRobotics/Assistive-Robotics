@@ -112,7 +112,7 @@ class BodySingleJointFollower():
                 # For now wait 15 seconds and then start following
                 if (rospy.Time.now().to_sec() - self.initial_time) >= 5.0:
                     self.is_following_started = True
-                    rospy.logwarn_once("FOLLOWING SHOULD START NOW")
+                    rospy.logwarn_throttle(10.0, "FOLLOWING SHOULD START NOW (Throttled to 10.0s)")
 
                 # Save the current Pose as the desired pose btw end effector and the joint to be followed
                 self.T_ee2joint_desired = self.T_ee2joint # in ee frame

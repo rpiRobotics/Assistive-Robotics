@@ -99,7 +99,7 @@ class FreqAdjuster():
             # send zero velocity command (NOt necessary, just dont send anything)
 
             if not self.is_zero_cmd_sent_ever:
-                rospy.logwarn_once("frequency_adjuster node: Zero velocities are sent for the first time")
+                rospy.logwarn_once("frequency_adjuster base node: Zero velocities are sent for the first time")
                 self.is_zero_cmd_sent_ever = True
         else:
             # send the latest velocity command

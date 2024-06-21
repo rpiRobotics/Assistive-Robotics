@@ -118,7 +118,7 @@ class UWBPosePublisher():
         # ids: ids of the anchors
 
         if not valid:
-            rospy.logwarn_once("NOT VALID")
+            rospy.logwarn_throttle(60, "UWB Serial tag 1 reading NOT VALID (throttled to 60s)")
             # rospy.logwarn(str(data))
             self.uwb_tag_1_valid = False
             return
@@ -137,7 +137,7 @@ class UWBPosePublisher():
         valid, anchor_mat, dists, ids = parse_lec_line(data.data)
         
         if not valid:
-            rospy.logwarn_once("NOT VALID")
+            rospy.logwarn_throttle(60, "UWB Serial tag 2 reading NOT VALID (throttled to 60s)")
             # rospy.logwarn(str(data))
             self.uwb_tag_2_valid = False
             return
@@ -223,7 +223,7 @@ class UWBPosePublisher():
             else:
                 rospy.logwarn("Time difference btw. UWB tag readings is too much! Difference=" + str(abs(self.last_uwb_tag_2_time - self.last_uwb_tag_1_time)))
         else:
-            rospy.logwarn_once("At least one of the UWB readings are not valid yet..")
+            rospy.logwarn_throttle(60, "At least one of the UWB readings are not valid yet.. (throttled to 60s)")
     
 
 
