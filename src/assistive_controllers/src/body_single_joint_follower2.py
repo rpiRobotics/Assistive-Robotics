@@ -250,7 +250,7 @@ class BodySingleJointFollower():
 
             # rospy.logerr("TFs_common: Waiting to find the transformation from %s to %s" 
             #                 % (self.tf_robot_base_frame_name, self.tf_end_effector_frame_name))
-            rospy.logerr_throttle(2.0, msg+" (throttled to 2s)")
+            rospy.logerr_throttle(20.0, msg+" (throttled to 20s)")
             return False
 
 
@@ -264,7 +264,7 @@ class BodySingleJointFollower():
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
             # rospy.logwarn('TFs_body_follower: Waiting to find the transformations') 
-            rospy.logwarn_throttle(2.0, "TFs_body_follower: Waiting to find the transformations (throttled to 2s)")
+            rospy.logwarn_throttle(20.0, "TFs_body_follower: Waiting to find the transformations (throttled to 20s)")
             return False
 
 
@@ -277,7 +277,7 @@ class BodySingleJointFollower():
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
             # rospy.logwarn('TFs_admittance: Waiting to find the transformations') 
-            rospy.logwarn_throttle(2.0, "TFs_admittance: Waiting to find the transformations (throttled to 2s)")
+            rospy.logwarn_throttle(20.0, "TFs_admittance: Waiting to find the transformations (throttled to 20s)")
             return False
 
 
