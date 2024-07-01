@@ -423,6 +423,67 @@ network, and the IP address assigned to the robot's computer.
 </details>
 
 <details> 
+    <summary>Disable the WiFi Power Saving</summary>
+
+List the wifi devices with command:
+```
+iw dev
+```
+
+To check the current power management setting of your WiFi interface, use the following command (Assuming the device is `wlp2s0`):
+```
+iw dev wlp2s0 get power_save
+```
+
+To Disable Power Saving Temporarily (Assuming the device is `wlp2s0`):
+```
+sudo iw dev wlp2s0 set power_save off
+```
+
+To Make the disabling permenant, create a Systemd Service:
+```
+sudo nano /etc/systemd/system/wifi-power-management.service
+```
+
+Paste the following:
+```
+[Unit]
+Description=Disable WiFi Power Management
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/iw dev wlp2s0 set power_save off
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Make sure to replace `wlp2s0` with the actual name of your wireless interface.
+
+To enable and start the service:
+```
+sudo systemctl enable wifi-power-management.service
+sudo systemctl start wifi-power-management.service
+```
+
+To verify (Assuming the device is `wlp2s0`):
+```
+iw dev wlp2s0 get power_save
+```
+
+**Note:** I also tried installing `NetworkManager` and edit its config file `sudo nano /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf` by making 
+```
+[connection]
+wifi.powersave = 2
+```
+and then `sudo systemctl restart NetworkManager`. 
+However this did not disable the WiFi power management when I tried to verify with `iw dev wlp2s0 get power_save` command. Therefore I selected to use creating Systemd Service. 
+
+</details>
+
+<details> 
     <summary>Needed Software Customizations on a factory fresh Dingo-O robot</summary>
 
 ## Needed Software Customizations on a factory fresh Dingo-O robot
@@ -577,6 +638,68 @@ Requires a USB-C to USB-A adapter and flash drive
     ```
 
     Disabling wifi power saving reduces the wifi latency by a considerable amount! For more information see [here](https://gist.github.com/jcberthon/ea8cfe278998968ba7c5a95344bc8b55).
+
+    ### For further reducing latency, you can tune the network stack with the following commands:
+
+    ```
+    sudo sysctl -a | grep ipv4
+    sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+    sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+    sudo sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+    sudo sysctl -w net.core.rmem_default=10000000
+    sudo sysctl -w net.core.wmem_default=10000000
+    sudo sysctl -w net.core.rmem_max=16777216
+    sudo sysctl -w net.core.wmem_max=16777216
+    sudo sysctl -w net.ipv4.tcp_low_latency=1  # intended to give preference to low latency over higher throughput; setting =1  # disables IPV4 tcp prequeue processing
+    sudo sysctl -w net.ipv4.tcp_timestamps=0  # Only advised in cases where sack is needed.
+    sudo sysctl -w net.ipv4.tcp_sack=0  # setting to 1 enables selective acknowledgment for IPV4, which requires enabling tcp_timestamps and adds some packet overhead, which you don't need if you don't experience packetloss
+    sudo sysctl -w net.ipv4.tcp_window_scaling=1  # RFC 1323 - support for IPV4 TCP window sizes larger than 64K - generally needed on high bandwidth networks
+    sudo sysctl -w net.ipv4.tcp_reordering=3  # The maximum times an IPV4 packet can be reordered in a TCP packet stream without TCP assuming packet loss and going into slow start.
+    sudo sysctl -w net.ipv4.tcp_fastopen=1  # Enable to send data in the opening SYN packet.
+
+    sudo sysctl -p # to apply the changes without rebooting
+
+    sudo systemctl restart NetworkManager
+    ```
+
+    Note that these changes are not persistent and will be lost after a reboot. To make them persistent, you can add them to the `/etc/sysctl.conf` file as follows:
+
+    ```
+    sudo nano /etc/sysctl.conf
+    ```
+
+    Paste the following:
+    ```
+    net.ipv6.conf.all.disable_ipv6 = 1
+    net.ipv6.conf.default.disable_ipv6 = 1
+    net.ipv6.conf.lo.disable_ipv6 = 1
+    net.core.rmem_default = 10000000
+    net.core.wmem_default = 10000000
+    net.core.rmem_max = 16777216
+    net.core.wmem_max = 16777216
+    net.ipv4.tcp_low_latency = 1  # intended to give preference to low latency over higher throughput; setting =1  # disables IPV4 tcp prequeue processing
+    net.ipv4.tcp_timestamps = 0  # Only advised in cases where sack is needed.
+    net.ipv4.tcp_sack = 0  # setting to 1 enables selective acknowledgment for IPV4, which requires enabling tcp_timestamps and adds some packet overhead, which you don't need if you don't experience packetloss
+    net.ipv4.tcp_window_scaling = 1  # RFC 1323 - support for IPV4 TCP window sizes larger than 64K - generally needed on high bandwidth networks
+    net.ipv4.tcp_reordering = 3  # The maximum times an IPV4 packet can be reordered in a TCP packet stream without TCP assuming packet loss and going into slow start.
+    net.ipv4.tcp_fastopen = 1  # Enable to send data in the opening SYN packet.
+    ```
+
+    After adding the changes to the `/etc/sysctl.conf` file, you can apply them by running the following command:
+
+    ```
+    sudo sysctl -p # to apply the changes without rebooting
+
+    sudo systemctl restart NetworkManager
+    ```
+
+    or you can reboot the machine to apply the changes.
+
+
+    For more information on tuning the network stack, you can refer to the following resources:
+    - [https://serverfault.com/q/623780/1102034] (https://serverfault.com/q/623780/1102034)
+    - [https://www.speedguide.net/articles/linux-tweaking-121] (https://www.speedguide.net/articles/linux-tweaking-121)
+    - [https://itsfoss.com/speed-up-slow-wifi-connection-ubuntu/] (https://itsfoss.com/speed-up-slow-wifi-connection-ubuntu/)
 
 </details>
 
