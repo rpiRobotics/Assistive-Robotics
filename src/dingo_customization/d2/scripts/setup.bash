@@ -51,7 +51,7 @@ export DINGO_IMU_MICROSTRAIN_LINK="${TF_PREFIX}microstrain_link"
 export DINGO_IMU_MICROSTRAIN_PARENT="${TF_PREFIX}imu_link"
 
 # Add UWB tag IDs on the robot (1: RIGHT, 2:LEFT)
-export DINGO_UWB_TAGS=true
+export DINGO_UWB_TAGS=false # true
 # below values are specified just for the description, uwb reading nodes have their own yaml files.
 export DINGO_UWB_TAG_1_ID="2FEB" # right
 export DINGO_UWB_TAG_1_OFFSET="0.177 -0.27 0.543175" # wrt mid mount in the description
