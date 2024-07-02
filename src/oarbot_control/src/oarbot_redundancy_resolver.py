@@ -288,7 +288,7 @@ class OarbotRedundancyResolver():
         Wba = np.diag(np.append(Wb,Wa)) # 10x10
 
         H = np.matmul(J_world2ee_in_armbase.T,J_world2ee_in_armbase) + Wba
-        H = (H+H.T)/2
+        H = (H+H.T)/2.0
 
         f = -np.dot(J_world2ee_in_armbase.T,nu).reshape((len(q),))
         # print("f",f)

@@ -6,6 +6,8 @@ tf_end_effector_frame_name: 'j2n6s300_right_end_effector'
 tf_robot_base_frame_name: 'd1_tf_base_link' #'oarbot_blue_base' # 'j2n6s300_right_link_base'
 tf_arm_base_frame_name: 'j2n6s300_right_link_base'
 
+tf_followed_body_joint_frame_name_goal: 'body_joint_neck_goal_right' # for visualization of the goal position
+
 pub_rate: 100.0 # It is a must to be 100 Hz for Kinova arm (If higher kinova can continue to move after the the command sendings stops bcs of the queue size)
 
 wrench_external_topic_name: 'ft_sensor/j2n6s300_right/ft_sensor_readings/wrench_compensated_in_arm_base' # 'j2n6s300_right_driver/out/tool_wrench_filtered'

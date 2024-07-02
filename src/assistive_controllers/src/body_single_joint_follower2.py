@@ -144,6 +144,8 @@ class BodySingleJointFollower():
 
         # Specified arm base tf frame name 
         self.tf_arm_base_frame_name = rospy.get_param("~tf_arm_base_frame_name", "j2n6s300_link_base")
+        
+        self.tf_followed_body_joint_frame_name_goal = rospy.get_param("~tf_followed_body_joint_frame_name_goal", "body_joint_neck_goal_right")
 
         # TF2 listener
         self.tfBuffer = tf2_ros.Buffer()
@@ -533,7 +535,7 @@ class BodySingleJointFollower():
         t.header.stamp = rospy.Time.now()
 
         t.header.frame_id = self.tf_body_joint_frame_name
-        t.child_frame_id = self.tf_body_joint_frame_name + "_goal"
+        t.child_frame_id = self.tf_followed_body_joint_frame_name_goal
 
         t.transform.translation.x = p_joint2goal[0]
         t.transform.translation.y = p_joint2goal[1]
