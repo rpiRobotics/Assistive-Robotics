@@ -12,6 +12,8 @@ Parameters:
     - TODO
 Subscribes to:
     - tf2
+    - geometry_msgs::WrenchStamped (external): to be used to calculate the applied force
+    - geometry_msgs::WrenchStamped (control): to be used to carry a payload (optional)
 Publishes to:
     - /j2n6s300_driver/in/cartesian_velocity (kinova_msgs::PoseVelocity) 
         or /oarbot_xxx/cmd_vel (geometry_msgs::Twist)
@@ -45,8 +47,6 @@ class BodySingleJointFollower():
     def __init__(self):
         rospy.init_node('body_single_joint_follower', anonymous=True)
 
-        self.is_following_started = False
-
         # Topic name to publish
         self.robot_cartesian_cmd_vel_topic_name = rospy.get_param("~robot_cartesian_cmd_vel_topic_name", "j2n6s300_driver/in/cartesian_velocity")
         # Publishgin msg type (either Geometry_msgs::Twist or kinova_msgs::PoseVelocity)
@@ -71,8 +71,8 @@ class BodySingleJointFollower():
         rospy.Subscriber(self.wrench_external_topic_name, geometry_msgs.msg.WrenchStamped, self.wrench_external_callback , queue_size=1)
         rospy.Subscriber(self.wrench_control_topic_name, geometry_msgs.msg.WrenchStamped, self.wrench_control_callback , queue_size=1)
 
-        self.enable_body_joint_following = rospy.get_param("~enable_body_joint_following", True)
-        self.enable_admittance = rospy.get_param("~enable_admittance", True)
+        self.enable_body_joint_following = rospy.get_param("~enable_body_joint_following", False)
+        self.enable_admittance = rospy.get_param("~enable_admittance", False)
         self.toggle_body_joint_following_service_name = rospy.get_param("~toggle_body_joint_following_service_name")
         self.toggle_admittance_service_name = rospy.get_param("~toggle_admittance_service_name")
         # Service to toggle the body joint following (enable/disable)
@@ -82,7 +82,8 @@ class BodySingleJointFollower():
         
         # Service to reset the ft bias (It is called from here to reset the bias)
         self.reset_ft_bias_service_address = rospy.get_param("~reset_ft_bias_service_address", "imu_gravity_compensation/calibrate_bias")
-        # it is a service to zero the bias of the force torque sensor readings, provided by the gravity_compensation package. Hence the type is std_srvs/Empty based on the service definition of gravity_compensation package.
+        # it is a service to zero the bias of the force torque sensor readings, provided by the gravity_compensation package. 
+        # Hence the type is std_srvs/Empty based on the service definition of gravity_compensation package.
 
 
         self.reset_desired_body_pose_service_name = rospy.get_param("~reset_desired_body_pose_service_name")
@@ -196,14 +197,9 @@ class BodySingleJointFollower():
 
 
     def followJoint(self, event=None):
-        # Find the transform between the specified joint and the end effector
+        # Find the transform between the specified robot base and the end effector
         self.is_ok_tf_common = self.look_tfs_for_common()
         
-        if self.enable_body_joint_following:
-            self.is_ok_tf_body_follower = self.look_tfs_for_body_follower()
-        if self.enable_admittance:
-            self.is_ok_tf_admittance = self.look_tfs_for_admittance()
-
         if not self.is_ok_tf_common:
             # Do not command the robot since the transformation could not found
             self.Vx = 0.0
@@ -213,35 +209,52 @@ class BodySingleJointFollower():
             self.Wy = 0.0
             self.Wz = 0.0
             self.publishPoseVelCmd(self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz)
-
-        else:
-            if not self.is_following_started:
+            return
+        
+        # -------------
+        # Update the other transformations
+        if self.enable_body_joint_following:
+            self.is_ok_tf_body_follower = self.look_tfs_for_body_follower()
+            
+            # Check if the desired poses are set, if not set them
+            if self.T_base2ee_desired is None or self.T_ee2joint_desired is None or self.T_base2joint_desired is None:
                 # Save the current Pose as the desired pose btw end effector and the joint to be followed
                 self.is_ok_tf_body_follower_desired = self.reset_desired_body_pose()
-            
-            if self.is_ok_tf_body_follower and self.is_ok_tf_body_follower_desired and self.enable_body_joint_following:
-                # Calculate the error btw the desired and the current pose
-                position_error, orientation_error = self.poseErrorCalculator()
             else:
-                position_error = [0.0,0.0,0.0]
-                orientation_error = [0.0,0.0,0.0]
+                # Otherwise, the desired poses are updated by the service
+                pass
+            
+        if self.enable_admittance:
+            self.is_ok_tf_admittance = self.look_tfs_for_admittance()
+        # -------------
 
-            # rospy.logwarn("position_error: " + "{:.3f}".format(position_error[0]) + ", {:.3f}".format(position_error[1]) + ", {:.3f}".format(position_error[2])  )
-            # rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
+        # -------------
+        if self.is_ok_tf_body_follower and self.is_ok_tf_body_follower_desired and self.enable_body_joint_following:
+            # Calculate the error btw the desired and the current pose
+            position_error, orientation_error = self.poseErrorCalculator()
+        else:
+            position_error = [0.0,0.0,0.0]
+            orientation_error = [0.0,0.0,0.0]
 
-            # With control law specify the command
-            self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz = self.controlLaw(position_error, orientation_error)
-            # rospy.logwarn("control law result : Vx, Vy, Vz, Wx, Wy, Wz = "+ str([self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz]))
+        # rospy.logwarn("position_error: " + "{:.3f}".format(position_error[0]) + ", {:.3f}".format(position_error[1]) + ", {:.3f}".format(position_error[2])  )
+        # rospy.logwarn("orientation_error: " + "{:.2f}".format(orientation_error[0]) + ", {:.2f}".format(orientation_error[1]) + ", {:.2f}".format(orientation_error[2])  )
 
-            if self.enable_body_joint_following or self.enable_admittance:
-                # Publish the command to move the end effector to the body joint
-                self.publishPoseVelCmd(self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz)
+        # With control law specify the command
+        self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz = self.controlLaw(position_error, orientation_error)
+        # rospy.logwarn("control law result : Vx, Vy, Vz, Wx, Wy, Wz = "+ str([self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz]))
 
-    def look_tfs_for_common(self):
+        if self.enable_body_joint_following or self.enable_admittance:
+            # Publish the command to move the end effector to the body joint
+            self.publishPoseVelCmd(self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz)
+        # -------------
+
+    def look_tfs_for_common(self, timeout=0.0):
         try:
             # returns type geometry_msgs.msg.TransformStamped
-            self.T_base2ee = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, self.tf_end_effector_frame_name,  rospy.Time()) # in base frame 
-
+            self.T_base2ee = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, 
+                                                            self.tf_end_effector_frame_name,  
+                                                            rospy.Time(),
+                                                            rospy.Duration(timeout)) # in base frame 
             return True
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
@@ -253,13 +266,17 @@ class BodySingleJointFollower():
             rospy.logerr_throttle(20.0, msg+" (throttled to 20s)")
             return False
 
-
-    def look_tfs_for_body_follower(self):
+    def look_tfs_for_body_follower(self, timeout=0.0):
         try:
             # returns type geometry_msgs.msg.TransformStamped
-            self.T_ee2joint = self.tfBuffer.lookup_transform(self.tf_end_effector_frame_name, self.tf_body_joint_frame_name, rospy.Time()) # in ee frame     
-            self.T_base2joint = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, self.tf_body_joint_frame_name,  rospy.Time()) # in base frame  
-
+            self.T_ee2joint = self.tfBuffer.lookup_transform(self.tf_end_effector_frame_name, 
+                                                             self.tf_body_joint_frame_name, 
+                                                             rospy.Time(),
+                                                             rospy.Duration(timeout)) # in ee frame     
+            self.T_base2joint = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, 
+                                                               self.tf_body_joint_frame_name,
+                                                               rospy.Time(),
+                                                               rospy.Duration(timeout)) # in base frame  
             return True
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
@@ -267,19 +284,19 @@ class BodySingleJointFollower():
             rospy.logwarn_throttle(20.0, "TFs_body_follower: Waiting to find the transformations (throttled to 20s)")
             return False
 
-
-    def look_tfs_for_admittance(self):
+    def look_tfs_for_admittance(self, timeout=0.0):
         try:
             # returns type geometry_msgs.msg.TransformStamped
-            self.T_base2armbase = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, self.tf_arm_base_frame_name,  rospy.Time()) # in base frame 
-
+            self.T_base2armbase = self.tfBuffer.lookup_transform(self.tf_robot_base_frame_name, 
+                                                                 self.tf_arm_base_frame_name,  
+                                                                 rospy.Time(),
+                                                                 rospy.Duration(timeout)) # in base frame 
             return True
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
             # rospy.logwarn('TFs_admittance: Waiting to find the transformations') 
             rospy.logwarn_throttle(20.0, "TFs_admittance: Waiting to find the transformations (throttled to 20s)")
             return False
-
 
 
     def publishPoseVelCmd(self, Vx, Vy, Vz, Wx, Wy, Wz):
@@ -551,7 +568,6 @@ class BodySingleJointFollower():
 
         if req.data:
             self.enable_body_joint_following = True
-            self.is_following_started = True
             rospy.loginfo("Enable body following")
         else:
             self.enable_body_joint_following = False
@@ -598,6 +614,11 @@ class BodySingleJointFollower():
         return TriggerResponse(success=True, message="The desired body poses are reset!")
 
     def reset_desired_body_pose(self):
+        # This is not required to be time critical, 
+        # so we can wait for the tfs to be available by setting timeout
+        self.is_ok_tf_common = self.look_tfs_for_common(timeout=1.0)
+        self.is_ok_tf_body_follower = self.look_tfs_for_body_follower(timeout=1.0)
+        
         if self.is_ok_tf_common and self.is_ok_tf_body_follower:
             # Save the current Pose as the desired pose btw end effector and the joint to be followed
             self.T_ee2joint_desired = self.T_ee2joint # in ee frame
