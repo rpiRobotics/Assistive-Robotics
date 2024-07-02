@@ -398,8 +398,7 @@ network:
     # Fill in the SSID_GOES_HERE and PASSWORD_GOES_HERE fields as appropriate. The password may be included
     as plain-text
     # or as a password hash. To generate the hashed password, run
-    #
-    echo -n 'WIFI_PASSWORD' | iconv -t UTF-16LE | openssl md4 -binary | xxd -p
+    # echo -n 'WIFI_PASSWORD' | iconv -t UTF-16LE | openssl md4 -binary | xxd -p
     # If you have multiple wireless cards you may include a block for each device.
     # For more options, see https://netplan.io/reference/
     WIRELESS_INTERFACE:

@@ -61,10 +61,24 @@ publish_acceleration: false
 #     3a. Set your "world_frame" to your map_frame value
 #     3b. MAKE SURE something else is generating the odom->base_link transform. Note that this can even be another state
 #         estimation node from robot_localization! However, that instance should *not* fuse the global data.
-# map_frame: cage_rgb_camera_link             # Defaults to "map" if unspecified
-odom_frame: "map" # world_floor
-base_link_frame: body_joint_neck  # Defaults to "base_link" if unspecified
-world_frame: "map" # world_floor           # Defaults to the value of odom_frame if unspecified
+
+world_frame: "cage_rgb_camera_link" # world_floor           # Defaults to the value of odom_frame if unspecified
+map_frame: "map"             # Defaults to "map" if unspecified
+odom_frame: "cage_rgb_camera_link" # world_floor
+base_link_frame: "body_joint_neck"  # Defaults to "base_link" if unspecified
+
+# OLD
+# world_frame: "map" # world_floor           # Defaults to the value of odom_frame if unspecified
+# # map_frame: cage_rgb_camera_link             # Defaults to "map" if unspecified
+# odom_frame: "map" # world_floor
+# base_link_frame: body_joint_neck  # Defaults to "base_link" if unspecified
+
+# Dingo robot localization config
+# world_frame"       map
+# map_frame"         map
+# odom_frame"        $(arg tf_prefix)odom
+# base_link_frame"   $(arg tf_prefix)base_link
+
 
 # The filter accepts an arbitrary number of inputs from each input message type (nav_msgs/Odometry,
 # geometry_msgs/PoseWithCovarianceStamped, geometry_msgs/TwistWithCovarianceStamped,
