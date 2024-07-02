@@ -284,6 +284,18 @@ You need to update the firmware of the arm. If you try to use the ROS package wh
 
 You can find the installation files of Development Center, a GUI available with the SDK [here](https://www.kinovarobotics.com/en/resources/gen2-faq) in the first question of "Usage". If the download link is missing, you can find it [here](https://drive.google.com/file/d/1UEQAow0XLcVcPCeQfHK9ERBihOCclkJ9/view) and the document [here](https://www.kinovarobotics.com/sites/default/files/UG-008_KINOVA_Software_development_kit-User_guide_EN_R02%20%281%29.pdf).
 
+#### Add Translation offset if you have Bota Rokubi FT sensors installed on Kinova robots
+
+Since the Kinematics change due to the additional hardware with the installed FT sensor, we need to add translation offset to the robot settings. 
+
+- Open up the Development Center from `/opt/JACO-SDK/GUI/DevelopmentCenter`. 
+- From `General Settings` enter `0.077` to `z-axis` (the other axes are 0).
+- Select the check box that says `Activate Offset`.
+- Hit `Save` button.
+
+Note that after reboot of the arm the check box is automatically unchecked. Instead of opening the Development Center each time, on the joystick of the arm one can press 1 button. It lits up the right most blue light on the joystick which indicates the offset is activated. 
+
+
 #### Control the arm via ROS package
 
 Please direct [here](https://github.com/eric565648/kinova-ros/tree/noetic-devel) for how to launch the arm, perform joint angle and cartetian space control.
