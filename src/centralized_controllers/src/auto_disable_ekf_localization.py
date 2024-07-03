@@ -26,7 +26,7 @@ import threading
 
 class AutoDisableLocalization():
     def __init__(self):
-        rospy.init_node('auto_disable_ekf_localization', anonymous=True)
+        rospy.init_node('auto_disable_ekf_localization', anonymous=False)
 
         ## Parameters
         # Timeout for the last message from the sensors
@@ -134,6 +134,8 @@ class AutoDisableLocalization():
                                                 'geometry_msgs/TwistWithCovarianceStamped',
                                                 'sensor_msgs/Imu']:
                             node_subscriptions.append((topic, msg_class))
+        if len(node_subscriptions) == 0:
+            rospy.logwarn("No relevant topics found for node name:'{}'. Make sure the specified node name parameter is correct".format(node_name))
         return node_subscriptions
     
     def message_callback(self, msg):
