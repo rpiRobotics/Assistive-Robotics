@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+<group ns="master_computer">
+
+    <!-- <machine name="tablet" address="192.168.1.99" env-loader="/home/tablet/catkin_ws_assistive/src/assistive_launch/scripts/env_tablet.sh" user="tablet" password="1234" default="true"/> -->
+
+    <!-- Launch Human localization sensor fusion and automatic disable if human disappears -->
+    <include file="$(find assistive_launch)/launch/test_launch/master_human_localization_ekf.launch">
+    </include>
+
+</group>
+</launch>

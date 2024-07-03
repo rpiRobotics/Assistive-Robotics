@@ -19,6 +19,7 @@ CATKIN_WHITELIST_PACKAGES=(
     "assistive_msgs"
     "assistive_gui"
     "assistive_launch"
+    # "centralized_controllers"
     # "tablet_arduino_talker"
     # "rokubi_kinova_adapter"
     # "force_torque_tools"

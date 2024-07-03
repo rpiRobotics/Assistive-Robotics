@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-    <include file="$(find assistive_launch)/launch/ui_tablet.launch" />
-    <include file="$(find assistive_launch)/launch/oarbot_silver.launch" />
-    <include file="$(find assistive_launch)/launch/oarbot_blue.launch" />
-</launch>

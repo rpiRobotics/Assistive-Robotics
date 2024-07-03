@@ -11,10 +11,8 @@ Panels:
         - /DepthCloud-OarbotBlue1/Auto Size1
         - /DepthCloud-OarbotSilver1/Auto Size1
         - /Odometry d21/Shape1
-        - /TF-body-fused1
         - /TF-body-fused1/Frames1
         - /TF-body-fused1/Tree1
-        - /TF-body-raw1
       Splitter Ratio: 0.42824602127075195
     Tree Height: 1939
   - Class: rviz/Selection
@@ -1178,8 +1176,6 @@ Visualization Manager:
         All Enabled: false
         body_joint_neck:
           Value: true
-        body_joint_neck_goal:
-          Value: false
         j2n6s300_left_body_joint_neck:
           Value: false
         j2n6s300_right_body_joint_neck:
@@ -1192,8 +1188,7 @@ Visualization Manager:
       Show Names: true
       Tree:
         body_joint_neck:
-          body_joint_neck_goal:
-            {}
+          {}
         j2n6s300_left_body_joint_neck:
           {}
         j2n6s300_right_body_joint_neck:
@@ -1298,9 +1293,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.14979848265647888
+      Pitch: 0.2597983777523041
       Target Frame: <Fixed Frame>
-      Yaw: 2.14314866065979
+      Yaw: 2.2231616973876953
     Saved: ~
 Window Geometry:
   Displays:

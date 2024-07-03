@@ -1,0 +1,5 @@
+# The following parameters are used to disable the EKF localization when the human is not detected by the kinect sensor
+
+localization_node_name: "/human_localization_ekf_se"
+
+timeout: 0.2 # seconds, timeout for waiting for at least one message is received from a sensor topic of the ekf_localization node
