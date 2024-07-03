@@ -144,7 +144,7 @@ class AutoDisableLocalization():
                         
     def toggle_node_state(self, is_requested_to_enable):
         # Request to enable or disable the localization node
-        rospy.loginfo("Request to {} the localization node '{}'".format("ENABLE" if is_requested_to_enable else "DISABLE", self.localization_node_name))
+        rospy.loginfo_throttle(10, "Request to {} the localization node '{}' (Throttled 10s)".format("ENABLE" if is_requested_to_enable else "DISABLE", self.localization_node_name))
         
         # Service address based on the localization node name
         toggle_service_address = self.localization_node_name + '/toggle'
@@ -165,7 +165,7 @@ class AutoDisableLocalization():
         try:
             response = toggle_service(request)
             if response.status:
-                rospy.loginfo("Successfully {} the localization node".format(
+                rospy.loginfo_throttle(10, "Successfully {} the localization node (Throttled 10s)".format(
                     "enabled" if is_requested_to_enable else "disabled"))
             return True
             # else:
