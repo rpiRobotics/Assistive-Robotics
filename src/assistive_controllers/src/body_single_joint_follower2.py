@@ -385,7 +385,7 @@ class BodySingleJointFollower():
         
         q_orientation_error = tf_conversions.transformations.quaternion_from_matrix(R_orientation_error_4x4)
         orientation_error = q_orientation_error[0:3].tolist()
-        rospy.logerr("here 07")
+        rospy.logerr("here 08")
         return position_error, orientation_error
 
     def poseErrorCalculator_old(self):
