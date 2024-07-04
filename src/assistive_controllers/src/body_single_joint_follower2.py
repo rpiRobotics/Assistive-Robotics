@@ -327,6 +327,53 @@ class BodySingleJointFollower():
         des: desired
         cur: current
         """
+        
+        P_ee2joint_desired_in_ee = np.array([self.T_ee2joint_desired.transform.translation.x,
+                                            self.T_ee2joint_desired.transform.translation.y,
+                                            self.T_ee2joint_desired.transform.translation.z]) # P_{EJ}(t=0) in E
+        q_ee2joint_desired = [self.T_ee2joint_desired.transform.rotation.x,
+                              self.T_ee2joint_desired.transform.rotation.y,
+                              self.T_ee2joint_desired.transform.rotation.z,
+                              self.T_ee2joint_desired.transform.rotation.w]
+        q_ee2joint_desired_inv = tf_conversions.transformations.quaternion_inverse(q_ee2joint_desired)
+        R_joint2ee_desired = tf_conversions.transformations.quaternion_matrix(q_ee2joint_desired_inv)[:3,:3] # R_{JE}(t=0)
+        # R_joint2ee_desired = np.transpose(tf_conversions.transformations.quaternion_matrix(q_ee2joint_desired)[:3,:3]) # R_{JE}(t=0)
+        P_joint2ee_desired = np.dot(-R_joint2ee_desired,P_ee2joint_desired_in_ee) # P_{JE}(t=0) in J
+        
+        self.broadcast_tf_goal(q_ee2joint_desired_inv,P_joint2ee_desired)
+        
+        P_ee2joint_in_ee = np.array([self.T_ee2joint.transform.translation.x,
+                                     self.T_ee2joint.transform.translation.y,
+                                     self.T_ee2joint.transform.translation.z]) # P_{EJ}(t) in E
+        q_ee2joint = [self.T_ee2joint.transform.rotation.x,
+                      self.T_ee2joint.transform.rotation.y,
+                      self.T_ee2joint.transform.rotation.z,
+                      self.T_ee2joint.transform.rotation.w]
+        R_ee2joint = tf_conversions.transformations.quaternion_matrix(q_ee2joint)[:3,:3] # R_{EJ}(t)
+        
+        q_base2ee = [self.T_base2ee.transform.rotation.x,
+                     self.T_base2ee.transform.rotation.y,
+                     self.T_base2ee.transform.rotation.z,
+                     self.T_base2ee.transform.rotation.w]
+        R_base2ee = tf_conversions.transformations.quaternion_matrix(q_base2ee)[:3,:3] # R_{BE}(t)
+        
+        # Position error in base
+        position_error = np.dot(R_base2ee, P_ee2joint_in_ee + np.dot(R_ee2joint, P_joint2ee_desired)).tolist() # (3,)
+        
+        # Orientation error (with quaternion vector)
+        # based on http://www.cs.cmu.edu/~cga/dynopt/readings/Yuan88-quatfeedback.pdf eqn 27,28
+
+        R_orientation_error = np.dot(R_ee2joint, R_joint2ee_desired) # R_{EJ}(t) * R_{JE}(t=0)
+        q_orientation_error = tf_conversions.transformations.quaternion_from_matrix(R_orientation_error)
+        orientation_error = q_orientation_error[0:3].tolist()
+
+        return position_error, orientation_error
+
+    def poseErrorCalculator_old(self):
+        """
+        des: desired
+        cur: current
+        """
         # Position error in base
         P_ee2joint_in_base_x = (self.T_base2joint.transform.translation.x - self.T_base2ee.transform.translation.x)
         P_ee2joint_in_base_y = (self.T_base2joint.transform.translation.y - self.T_base2ee.transform.translation.y)
