@@ -341,8 +341,8 @@ class BodySingleJointFollower():
                               self.T_ee2joint_desired.transform.rotation.w]
         rospy.logerr("here 02")
         q_ee2joint_desired_inv = tf_conversions.transformations.quaternion_inverse(q_ee2joint_desired)
-        # R_joint2ee_desired = tf_conversions.transformations.quaternion_matrix(q_ee2joint_desired_inv)[:3,:3] # R_{JE}(t=0)
-        R_joint2ee_desired = np.transpose(tf_conversions.transformations.quaternion_matrix(q_ee2joint_desired)[:3,:3]) # R_{JE}(t=0)
+        R_joint2ee_desired = tf_conversions.transformations.quaternion_matrix(q_ee2joint_desired_inv)[:3,:3] # R_{JE}(t=0)
+        # R_joint2ee_desired = np.transpose(tf_conversions.transformations.quaternion_matrix(q_ee2joint_desired)[:3,:3]) # R_{JE}(t=0)
         P_joint2ee_desired = np.dot(-R_joint2ee_desired,P_ee2joint_desired_in_ee) # P_{JE}(t=0) in J
         rospy.logerr("here 03")
         
@@ -375,7 +375,15 @@ class BodySingleJointFollower():
         # based on http://www.cs.cmu.edu/~cga/dynopt/readings/Yuan88-quatfeedback.pdf eqn 27,28
 
         R_orientation_error = np.dot(R_ee2joint, R_joint2ee_desired) # R_{EJ}(t) * R_{JE}(t=0)
-        q_orientation_error = tf_conversions.transformations.quaternion_from_matrix(R_orientation_error)
+        
+        # Create a 4x4 matrix initialized with zeros
+        R_orientation_error_4x4 = np.zeros((4, 4))
+        # Place the 3x3 matrix in the top left corner of the 4x4 matrix
+        R_orientation_error_4x4[:3, :3] = R_orientation_error
+        # Set the bottom right element to 1
+        R_orientation_error_4x4[3, 3] = 1
+        
+        q_orientation_error = tf_conversions.transformations.quaternion_from_matrix(R_orientation_error_4x4)
         orientation_error = q_orientation_error[0:3].tolist()
         rospy.logerr("here 07")
         return position_error, orientation_error
