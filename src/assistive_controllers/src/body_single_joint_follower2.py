@@ -336,8 +336,8 @@ class BodySingleJointFollower():
                               self.T_ee2joint_desired.transform.rotation.z,
                               self.T_ee2joint_desired.transform.rotation.w]
         q_ee2joint_desired_inv = tf_conversions.transformations.quaternion_inverse(q_ee2joint_desired)
-        R_joint2ee_desired = tf_conversions.transformations.quaternion_matrix(q_ee2joint_desired_inv)[:3,:3] # R_{JE}(t=0)
-        # R_joint2ee_desired = np.transpose(tf_conversions.transformations.quaternion_matrix(q_ee2joint_desired)[:3,:3]) # R_{JE}(t=0)
+        # R_joint2ee_desired = tf_conversions.transformations.quaternion_matrix(q_ee2joint_desired_inv)[:3,:3] # R_{JE}(t=0)
+        R_joint2ee_desired = np.transpose(tf_conversions.transformations.quaternion_matrix(q_ee2joint_desired)[:3,:3]) # R_{JE}(t=0)
         P_joint2ee_desired = np.dot(-R_joint2ee_desired,P_ee2joint_desired_in_ee) # P_{JE}(t=0) in J
         
         self.broadcast_tf_goal(q_ee2joint_desired_inv,P_joint2ee_desired)
