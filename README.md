@@ -249,6 +249,68 @@ rqt_image_view
 
 For further information about the topics and the usage see https://github.com/microsoft/Azure_Kinect_ROS_Driver/blob/melodic/docs/usage.md
 
+### Bonus: Installing Kinect Azure on Ubuntu 20.04
+(Source: https://github.com/microsoft/Azure-Kinect-Sensor-SDK/issues/1263#issuecomment-1705808614)
+
+```
+sudo apt purge libk4a*
+sudo apt purge k4a
+sudo apt purge k4a*
+sudo apt autoremove 
+sudo apt remove libk4a*
+sudo apt remove libk4abt*
+sudo apt remove libk4a1*
+curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
+sudo apt-add-repository https://packages.microsoft.com/ubuntu/20.04/prod
+sudo apt-get update
+curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
+sudo apt-add-repository https://packages.microsoft.com/ubuntu/20.04/prod
+curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+sudo apt-add-repository https://packages.microsoft.com/ubuntu/18.04/prod
+curl -sSL https://packages.microsoft.com/config/ubuntu/18.04/prod.list | sudo tee /etc/apt/sources.list.d/microsoft-prod.list
+curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+sudo apt-get update
+sudo apt install libk4a1.4=1.4.1
+sudo apt install libk4a1.4-dev=1.4.1
+sudo apt install libk4abt1.1-dev=1.1.2
+sudo apt install k4a-tools=1.4.1
+sudo apt install ros-noetic-rgbd-launch
+
+# Copy rules
+# sudo cp 99-k4a.rules /etc/udev/rules.d/
+
+# k4aviewer
+# k4abt_simple_3d_viewer 
+```
+
+Also hold these packages to prevent update:
+```
+sudo apt-mark hold libk4a1.4
+sudo apt-mark hold libk4a1.4-dev
+sudo apt-mark hold libk4abt1.1-dev
+sudo apt-mark hold k4a-tools
+# sudo apt-mark showhold
+# sudo apt-mark unhold <package-name>
+```
+
+Moreover, in the `cmakelists.txt` file of the kinect ros package you may need to edit:
+```
+# find_package(k4a 1.4.0 QUIET MODULE REQUIRED)
+find_package(k4a 1.3.0 QUIET MODULE REQUIRED)
+
+...
+
+# find_package(k4abt 1.1.0 QUIET MODULE)
+find_package(k4abt 1.0.0 QUIET MODULE)
+```
+
+### Bonus 2: How to resolve high CPU usage issue with body tracking
+(Source: https://github.com/microsoft/Azure-Kinect-Sensor-SDK/issues/1007)
+Set openMP environment variable as 
+`export OMP_WAIT_POLICY=Passive`
+before launching kinect!!!
+
+
 </details>
 
 <details> 
