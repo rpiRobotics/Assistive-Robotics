@@ -87,6 +87,7 @@ echo $MY_PASSWORD | sudo apt-get install -y libk4abt1.1-dev;
 echo $MY_PASSWORD | sudo apt-get install -y k4a-tools;
 # sudo apt-get --purge --reinstall install k4a-tools # If something goes wrong
 echo $MY_PASSWORD | sudo apt-get install -y ros-$MY_ROS_VERSION_NAME-rgbd-launch;
+
 cd /etc/udev/rules.d;
 echo $MY_PASSWORD | sudo wget https://raw.githubusercontent.com/microsoft/Azure-Kinect-Sensor-SDK/develop/scripts/99-k4a.rules;
 echo $MY_PASSWORD | sudo wget https://raw.githubusercontent.com/Kinovarobotics/kinova-ros/$MY_ROS_VERSION_NAME-devel/kinova_driver/udev/10-kinova-arm.rules;
