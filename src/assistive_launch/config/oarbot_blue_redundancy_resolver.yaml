@@ -9,7 +9,7 @@ debug_constrained_r_topic_name: "constrained_r"
 joint_states_arm_topic_name: "j2n6s300_right_driver/out/joint_state"
 
 control_ball_center: [0.4, -0.25, 0.50] # wrt. kinova arm base
-control_ball_radius: 0.25 # meters
+control_ball_radius: 0.5 # 0.25 # meters
 
 
 tf_world_frame_id: "map" # "world_floor"
