@@ -1,4 +1,5 @@
 cmd_vel_topic_name: "e_stop_cmd_vel" # subscribed
+cmd_vel_world_topic_name: "e_stop_cmd_vel_world" # subscribed (for commands directly represented in the world frame)
 
 cmd_vel_arm_topic_name: "cmd_vel_arm" #"j2n6s300_right_driver/in/cartesian_velocity" # published
 cmd_vel_base_topic_name: "/d1/cmd_vel_base" # published

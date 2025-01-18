@@ -20,6 +20,11 @@
             <remap from="cmd_vel_out" to="e_stop_cmd_vel"/>
             <remap from="/diagnostics" to="diagnostics"/>
         </node>
+        <node pkg="twist_mux" type="twist_mux" name="twist_mux_world" output="screen">
+            <rosparam command="load" file="$(find assistive_launch)/config/oarbot_twist_mux_world.yaml" />
+            <remap from="cmd_vel_out" to="e_stop_cmd_vel_world"/>
+            <remap from="/diagnostics" to="diagnostics"/>
+        </node>
     </group>
 
     <!-- Launch Oarbot redundancy resolver -->

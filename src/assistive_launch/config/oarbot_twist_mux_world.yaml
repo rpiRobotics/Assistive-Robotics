@@ -1,0 +1,10 @@
+topics:
+- name    : input_cmd_vel
+  topic   : cmd_vel_world
+  timeout : 0.5
+  priority: 10
+locks:
+- name    : e_stop
+  topic   : /e_stop
+  timeout : 0.1
+  priority: 255
