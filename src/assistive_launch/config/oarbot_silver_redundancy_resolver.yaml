@@ -16,6 +16,7 @@ control_ball_radius: 0.5 #0.25 # meters
 tf_world_frame_id: "map" # "world_floor"
 tf_mobile_base_frame_id: "d2_tf_base_link"
 tf_arm_base_frame_id: "root_left_arm" 
+tf_ee_frame_id: "j2n6s300_left_end_effector" 
 
 arm_joints_tf_prefix: "j2n6s300_left_" # prefix that joint states of kinova arm has in fron of each joint name
 

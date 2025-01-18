@@ -99,6 +99,7 @@ class OarbotRedundancyResolver():
         self.tf_world_frame_id = rospy.get_param("~tf_world_frame_id", "map")
         self.tf_mobile_base_frame_id = rospy.get_param("~tf_mobile_base_frame_id", "oarbot_blue_base")
         self.tf_arm_base_frame_id = rospy.get_param("~tf_arm_base_frame_id", "root_right_arm")
+        self.tf_ee_frame_id = rospy.get_param("~tf_ee_frame_id", "j2n6s300_right_end_effector")
 
         self.arm_joints_tf_prefix = rospy.get_param("~arm_joints_tf_prefix", 'j2n6s300_')
 
@@ -172,38 +173,14 @@ class OarbotRedundancyResolver():
         rospy.Timer(rospy.Duration(1.00/self.pub_rate_base), self.command_base)
         
     def split_velocity_world_callback(self, msg):
-        # TODO: Implement this by representing the angular velocity in the end effector frame
+        # Implemented by representing the angular velocity in the end effector frame
         # by multiplying it with the transpose of the rotation matrix world frame to the end effector frame
         # and represent the linear velocity in the mobile base frame by multiplying it with the transpose
         # of the rotation matrix world frame to the mobile base frame.
         # Then, everything is in the same as split_velocity_callback incoming msg,
-        # So nicely create a common function to handle both cases
-        """
-        This callback converts a Twist expressed in the world frame into:
-        - Angular velocity in the end-effector frame
-        - Linear velocity in the mobile base frame
 
-        and then reuses the same pipeline as split_velocity_callback to compute
-        arm_cmd and base_cmd.
-        """
-        # w_world = [angular.x, angular.y, angular.z]
-        # v_world = [linear.x, linear.y, linear.z]
         w_world = np.array([msg.angular.x, msg.angular.y, msg.angular.z])
         v_world = np.array([msg.linear.x, msg.linear.y, msg.linear.z])
-
-        if self.joint_state_arm is None:
-            rospy.logwarn_throttle(
-                20.0,
-                "No arm joint states yet. Skipping world->base/ee velocity splitting."
-            )
-            return
-
-        # 1) Construct the 6 arm joints from the joint states
-        joint_array_arm = np.asfarray(self.joint_state_arm.position)
-        joint_array_arm = joint_array_arm[
-            self.joint_arm_start_index : self.joint_arm_start_index+6
-        ]
-        joint_array_arm -= self.bot.q_zeros_arm
 
         # 2) Get the base transform (x,y,theta) from tf, plus arm-base vertical (z)
         try:
@@ -212,9 +189,9 @@ class OarbotRedundancyResolver():
                 self.tf_mobile_base_frame_id,
                 rospy.Time()
             )
-            self.T_mobile_base2arm_base = self.tfBuffer.lookup_transform(
-                self.tf_mobile_base_frame_id,
-                self.tf_arm_base_frame_id,
+            self.T_world2ee = self.tfBuffer.lookup_transform(
+                self.tf_world_frame_id,
+                self.tf_ee_frame_id,
                 rospy.Time()
             )
         except (tf2_ros.LookupException,
@@ -223,88 +200,49 @@ class OarbotRedundancyResolver():
             warn_msg = ("Waiting for transforms: {}->{} and/or {}->{}"
                         .format(self.tf_world_frame_id,
                                 self.tf_mobile_base_frame_id,
-                                self.tf_mobile_base_frame_id,
-                                self.tf_arm_base_frame_id))
+                                self.tf_world_frame_id,
+                                self.tf_ee_frame_id))
             rospy.logwarn_throttle(20.0, warn_msg + " (Throttled to 20s)")
             return
 
-        x = self.T_world2mobile_base.transform.translation.x
-        y = self.T_world2mobile_base.transform.translation.y
-
-        # Extract yaw from the quaternion
+        # Extract rot matrices from the quaternions
         qw = self.T_world2mobile_base.transform.rotation.w
         qx = self.T_world2mobile_base.transform.rotation.x
         qy = self.T_world2mobile_base.transform.rotation.y
         qz = self.T_world2mobile_base.transform.rotation.z
-        roll_x, pitch_y, yaw_z = self.euler_from_quaternion(qx, qy, qz, qw)
-
-        z = (self.T_mobile_base2arm_base.transform.translation.z -
-            self.base_z_low_limit)
-
-        # 3) Combine base + arm joints (total 10 DOF)
-        joint_array_base = np.asfarray([x, y, yaw_z, z])
-        joint_array = np.append(joint_array_base, joint_array_arm)
+        R_world2mobile_base_3x3 = rox.q2R([qw, qx, qy, qz])
+        
+        qw = self.T_world2ee.transform.rotation.w
+        qx = self.T_world2ee.transform.rotation.x
+        qy = self.T_world2ee.transform.rotation.y
+        qz = self.T_world2ee.transform.rotation.z
+        R_world2ee_3x3 = rox.q2R([qw, qx, qy, qz])
 
         # ------------------------------------------------------
         # Convert from world frame to base/ee frames:
         #   - Angular velocity in EE frame: w_ee = R_world2ee^T * w_world
         #   - Linear velocity in base frame: v_base = R_world2base^T * v_world
         # ------------------------------------------------------
-
-        # (a) Build R_world2mobile_base (3x3 rotation around z)
-        cos_yaw = math.cos(yaw_z)
-        sin_yaw = math.sin(yaw_z)
-        R_world2mobile_base_3x3 = np.array([
-            [ cos_yaw,  sin_yaw, 0.0],
-            [-sin_yaw,  cos_yaw, 0.0],
-            [      0.0,      0.0, 1.0]
-        ])
-
-        # (b) If it's a left arm, we often have a 180° rotation about Z
-        if self.is_left_arm_config:
-            R_mobile_base2arm_base = rox.rot([0, 0, 1], math.pi)
-        else:
-            R_mobile_base2arm_base = np.eye(3)
-
-        # Full rotation world->arm_base = R_mobile_base2arm_base * R_world2mobile_base
-        R_world2arm_base = np.dot(R_mobile_base2arm_base, R_world2mobile_base_3x3)
-
-        # Forward kinematics for the arm base->EE
-        T_armbase2ee_in_armbase = self.bot.fwdkin_arm(joint_array_arm)
-        R_arm_base2ee = T_armbase2ee_in_armbase.R  # a 3x3 from general_robotics_toolbox
-
-        # So final rotation world->ee = R_arm_base2ee * R_world2arm_base
-        R_world2ee = np.dot(R_arm_base2ee, R_world2arm_base)
-
-        # (c) Convert w_world -> w_ee
-        #     w_ee = R_world2ee^T * w_world
-        w_ee = np.dot(R_world2ee.T, w_world)
-
-        # (d) Convert v_world -> v_base
-        #     v_base = R_world2mobile_base^T * v_world
+        w_ee = np.dot(R_world2ee_3x3.T, w_world)
         v_base = np.dot(R_world2mobile_base_3x3.T, v_world)
 
         # Repackage into the same shape that splitLaw expects:
         #   des_cmd[0:3] = angular vel in EE frame
         #   des_cmd[3:6] = linear vel in mobile base frame
         des_cmd = np.concatenate([w_ee, v_base])
-
-        # 4) Call the same downstream splitting logic
-        self.arm_cmd, self.base_cmd = self.splitLaw(des_cmd.reshape(6, 1), joint_array)
-
-        # 5) Set flags so our publishing timers know to publish
-        self.time_last_cmd_vel = rospy.Time.now().to_sec()
-        self.velocity_command_sent_arm = False
-        self.velocity_command_sent_base = False
+        des_cmd = np.reshape(des_cmd,(6,1))
+        
+        self.split_velocity(des_cmd)
 
 
     def split_velocity_callback(self, msg):
-        
-        
         # Convert desired vel command as in robotics course 6x1 vector with [w,v]^T
         des_cmd = np.array([msg.angular.x,msg.angular.y,msg.angular.z,msg.linear.x,msg.linear.y,msg.linear.z])
         des_cmd = np.reshape(des_cmd,(6,1))
-
+        
+        self.split_velocity(des_cmd)
+        
+    def split_velocity(self, des_cmd):
         if self.joint_state_arm is not None:
             # Start constructing 10 DoF oarbot current joint array considering Base as 4 DoF and Arm as 6 DoF
             # Construct arm joint angles from subscribed joint states
