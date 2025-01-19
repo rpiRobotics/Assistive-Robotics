@@ -213,13 +213,15 @@
   <!-- Right uwb tag -->
   <xacro:uwb_tag tag_num="1" robot_prefix="${robot_prefix}"> 
     <!-- <origin xyz="$(optenv DINGO_UWB_TAG_1_OFFSET 0 -0.22 0.1)" rpy="0 0 0"/> -->
-    <origin xyz="$(optenv DINGO_UWB_TAG_1_OFFSET 0 -0.22 0.1)" rpy="${PI/2} ${-PI/2} 0"/>
+    <!-- <origin xyz="$(optenv DINGO_UWB_TAG_1_OFFSET 0 -0.22 0.1)" rpy="${PI/2} ${-PI/2} 0"/> -->
+    <origin xyz="$(optenv DINGO_UWB_TAG_1_OFFSET 0.177 -0.24 0.543175)" rpy="${PI/2} ${-PI/2} 0"/>
   </xacro:uwb_tag>
 
   <!-- Left uwb tag -->
   <xacro:uwb_tag tag_num="2" robot_prefix="${robot_prefix}"> 
     <!-- <origin xyz="$(optenv DINGO_UWB_TAG_2_OFFSET 0 0.22 0.1)" rpy="0 0 ${PI}"/> -->
-    <origin xyz="$(optenv DINGO_UWB_TAG_2_OFFSET 0 0.22 0.1)" rpy="${-PI/2} ${-PI/2} 0"/>
+    <!-- <origin xyz="$(optenv DINGO_UWB_TAG_2_OFFSET 0 0.22 0.1)" rpy="${-PI/2} ${-PI/2} 0"/> -->
+    <origin xyz="$(optenv DINGO_UWB_TAG_2_OFFSET 0.143 0.24 0.543175)" rpy="${-PI/2} ${-PI/2} 0"/>
   </xacro:uwb_tag>
   
   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->

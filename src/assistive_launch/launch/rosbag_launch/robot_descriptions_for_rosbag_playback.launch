@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Dingo bases -->
+    <group ns="d1">
+        <arg name="robot_namespace"       default="d1"/>
+        <arg name="tf_prefix" default="d1_tf_" />
+        <arg name="uwb_tag_1_id"       default="1DB8"/>
+        <arg name="uwb_tag_2_id"       default="DA36"/>
+
+        <param name="robot_description"
+         command="$(find xacro)/xacro $(find dingo_customization)/urdf/dingo-o-prefixed.urdf.xacro
+                  robot_namespace:=$(arg robot_namespace)
+                  tf_prefix:=$(arg tf_prefix)
+                  uwb_tag_1_id:=$(arg uwb_tag_1_id)
+                  uwb_tag_2_id:=$(arg uwb_tag_2_id)
+                  " />
+    </group>
+
+    <group ns="d2">
+        <arg name="robot_namespace"       default="d2"/>
+        <arg name="tf_prefix" default="d2_tf_" />
+        <arg name="uwb_tag_1_id"       default="2FEB"/>
+        <arg name="uwb_tag_2_id"       default="15ED"/>
+
+        <param name="robot_description"
+         command="$(find xacro)/xacro $(find dingo_customization)/urdf/dingo-o-prefixed.urdf.xacro
+                  robot_namespace:=$(arg robot_namespace)
+                  tf_prefix:=$(arg tf_prefix)
+                  uwb_tag_1_id:=$(arg uwb_tag_1_id)
+                  uwb_tag_2_id:=$(arg uwb_tag_2_id)
+                  " />
+    </group>
+
+    <!-- Kinova Robots -->
+    <group ns="oarbot_blue">
+        <arg name="kinova_robotType" default="j2n6s300" />
+        <arg name="kinova_root_name" default="root_right_arm" />
+        <arg name="kinova_prefix" default="j2n6s300_right" />
+        
+        <param name="robot_description" 
+         command="$(find xacro)/xacro '$(find assistive_launch)/urdf/oarbot_blue_$(arg kinova_robotType)_standalone_with_ft.xacro'
+                  robot_root_name:=$(arg kinova_root_name)
+                  robot_prefix:=$(arg kinova_prefix)" />
+    </group>
+    
+    <group ns="oarbot_silver">
+        <arg name="kinova_robotType" default="j2n6s300" />
+        <arg name="kinova_root_name" default="root_left_arm" />
+        <arg name="kinova_prefix" default="j2n6s300_left" />
+
+        <param name="robot_description" 
+         command="$(find xacro)/xacro '$(find assistive_launch)/urdf/oarbot_silver_$(arg kinova_robotType)_standalone_with_ft.xacro'
+                  robot_root_name:=$(arg kinova_root_name)
+                  robot_prefix:=$(arg kinova_prefix)" />
+    </group>
+
+    <!-- Kinects -->
+    <group ns="oarbot_blue">
+        <arg name="prefix_for_tf" default="j2n6s300_right" />  <!-- Applies to both kinova arm and the kinect -->
+        <arg name="tf_prefix"         value="$(arg prefix_for_tf)_" />   <!-- Prefix added to tf frame IDs. It typically contains a trailing '_' unless empty. -->
+
+        <param name="azure_description"
+         command="xacro $(find azure_kinect_ros_driver)/urdf/azure_kinect.urdf.xacro tf_prefix:=$(arg tf_prefix)" />
+    </group>
+
+    <group ns="oarbot_silver">
+        <arg name="prefix_for_tf" default="j2n6s300_left" />  <!-- Applies to both kinova arm and the kinect -->
+        <arg name="tf_prefix"         value="$(arg prefix_for_tf)_" />   <!-- Prefix added to tf frame IDs. It typically contains a trailing '_' unless empty. -->
+        
+        <param name="azure_description"
+         command="xacro $(find azure_kinect_ros_driver)/urdf/azure_kinect.urdf.xacro tf_prefix:=$(arg tf_prefix)" />
+    </group>
+
+    <group ns="nuc">
+        <arg name="prefix_for_tf" default="cage" />  <!-- Applies to both kinova arm and the kinect -->
+        <arg name="tf_prefix"         value="$(arg prefix_for_tf)_" />   <!-- Prefix added to tf frame IDs. It typically contains a trailing '_' unless empty. -->
+        
+        <param name="azure_description"
+         command="xacro $(find azure_kinect_ros_driver)/urdf/azure_kinect.urdf.xacro tf_prefix:=$(arg tf_prefix)" />
+    </group>
+</launch>
