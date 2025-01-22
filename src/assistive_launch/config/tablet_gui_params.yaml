@@ -25,20 +25,20 @@ arm_joint_angles_action_address:
   - '/oarbot_silver/j2n6s300_left_driver/joints_action/joint_angles' # For oarbot silver, left
   - '/oarbot_blue/j2n6s300_right_driver/joints_action/joint_angles' # For oarbot blue, right
 
-
-arm_joint_angles_home:
-  - [120.99264526, 180.984375, 307.55514526, 132.20454407, 281.93182373, 248.59091187] # [116.91, 167.59, 288.52, 126.34, 241.57, 275.86] # deg # Left arm config, oarbot silver
-  - [249.81617737, 175.453125, 59.50367737, 238.97727966, 84.47727203, 94.90909576] # [251.64, 190.34, 77.5, 234.34, 128.93, 70.16] # deg # Right arm config, oarbot blue
+#
+# arm_joint_angles_home:
+#   - [120.99264526, 180.984375, 307.55514526, 132.20454407, 281.93182373, 248.59091187] # [116.91, 167.59, 288.52, 126.34, 241.57, 275.86] # deg # Left arm config, oarbot silver
+#   - [249.81617737, 175.453125, 59.50367737, 238.97727966, 84.47727203, 94.90909576] # [251.64, 190.34, 77.5, 234.34, 128.93, 70.16] # deg # Right arm config, oarbot blue
 
 # # for DLO applications, last joints are rotated 90 degrees (left-silver increased by 90, right-blue decreased by 90)
 # arm_joint_angles_home:
 #   - [120.99264526, 180.984375, 307.55514526, 132.20454407, 281.93182373, 338.59091187]  # deg # Left arm config, oarbot silver
 #   - [249.81617737, 175.453125, 59.50367737, 238.97727966, 84.47727203, 4.90909576]  # deg # Right arm config, oarbot blue
 
-# # for DLO applications, last joints are rotated 90 degrees (left-silver decrease by 90, right-blue increased by 90) THIS IS THE ONE TO USE
-# arm_joint_angles_home:
-#   - [120.99264526, 180.984375, 307.55514526, 132.20454407, 281.93182373, 158.59091187]  # deg # Left arm config, oarbot silver
-#   - [249.81617737, 175.453125, 59.50367737, 238.97727966, 84.47727203, 184.90909576]  # deg # Right arm config, oarbot blue
+# for DLO applications, last joints are rotated 90 degrees (left-silver decrease by 90, right-blue increased by 90)
+arm_joint_angles_home:
+  - [120.99264526, 180.984375, 307.55514526, 132.20454407, 281.93182373, 158.59091187]  # deg # Left arm config, oarbot silver
+  - [249.81617737, 175.453125, 59.50367737, 238.97727966, 84.47727203, 184.90909576]  # deg # Right arm config, oarbot blue
 
 # # for DLO applications, last joints are rotated 60 degrees (left-silver increased by 60, right-blue decreased by 60)
 # arm_joint_angles_home:
