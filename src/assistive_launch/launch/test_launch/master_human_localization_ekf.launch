@@ -1,5 +1,5 @@
 <launch>
-
+  <!-- ................................... NECK ..................................... -->
   <!-- Human Localization sensor fusion with Robot Localization package EKF node -->
   <node pkg="robot_localization" type="ekf_localization_node" name="human_localization_ekf_se" clear_params="true">
     <rosparam command="load" file="$(find assistive_launch)/config/master_human_localization_ekf.yaml" />
@@ -14,5 +14,28 @@
   <node pkg="centralized_controllers" type="auto_disable_ekf_localization.py" name="auto_disable_ekf_localization_human" output="screen">
     <rosparam command="load" file="$(find assistive_launch)/config/master_auto_disable_ekf_localization_human.yaml" />
   </node>
+
+  <!-- ................................... WRIST LEFT ..................................... -->
+  <!-- Human Localization sensor fusion with Robot Localization package EKF node -->
+  <node pkg="robot_localization" type="ekf_localization_node" name="human_localization_ekf_se_wl" clear_params="true">
+    <rosparam command="load" file="$(find assistive_launch)/config/master_human_localization_ekf_wl.yaml" />
+  </node>
+
+  <!-- Auto disable feature -->
+  <node pkg="centralized_controllers" type="auto_disable_ekf_localization.py" name="auto_disable_ekf_localization_human_wl" output="screen">
+    <rosparam command="load" file="$(find assistive_launch)/config/master_auto_disable_ekf_localization_human_wl.yaml" />
+  </node>
+
+  <!-- ................................... WRIST RIGHT ..................................... -->
+  <!-- Human Localization sensor fusion with Robot Localization package EKF node -->
+  <node pkg="robot_localization" type="ekf_localization_node" name="human_localization_ekf_se_wr" clear_params="true">
+    <rosparam command="load" file="$(find assistive_launch)/config/master_human_localization_ekf_wr.yaml" />
+  </node>
+
+  <!-- Auto disable feature -->
+  <node pkg="centralized_controllers" type="auto_disable_ekf_localization.py" name="auto_disable_ekf_localization_human_wr" output="screen">
+    <rosparam command="load" file="$(find assistive_launch)/config/master_auto_disable_ekf_localization_human_wr.yaml" />
+  </node>
+
 
 </launch>
