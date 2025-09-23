@@ -49,7 +49,22 @@ class SimpleCollabMove():
         self.tf_robot_base_frame_name = rospy.get_param("~tf_robot_base_frame_name", "oarbot_blue_base")
         # Specified arm base tf frame name 
         self.tf_arm_base_frame_name = rospy.get_param("~tf_arm_base_frame_name", "j2n6s300_link_base")
+        # Specified target end effector tf frame name
+        self.tf_target_end_effector_frame_name = rospy.get_param("~tf_target_end_effector_frame_name", "target_end_effector")        
 
+        # TF2 listener
+        self.tfBuffer = tf2_ros.Buffer()
+        self.tfListener = tf2_ros.TransformListener(self.tfBuffer)
+
+        # TF broadcaster (for visualization purposes)
+        self.tfBroadcaster = tf2_ros.TransformBroadcaster()
+
+        # start control loop
+        rospy.Timer(rospy.Duration(self.expected_duration), self.collab_move_loop)
+
+    def collab_move_loop(self, event=None):
+        while not rospy.is_shutdown():
+            start_time = rospy.get_rostime()
         
     
     def srv_toggle_collab_move_cb(self,req):

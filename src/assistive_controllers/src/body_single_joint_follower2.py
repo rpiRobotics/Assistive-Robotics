@@ -136,6 +136,9 @@ class BodySingleJointFollower():
         # Specified body joint tf frame name to follow
         self.tf_body_joint_frame_name = rospy.get_param("~tf_followed_body_joint_frame_name", "JOINT_WRIST_LEFT").lower() 
 
+        # Specified swarm tf frame name to follow
+        self.tf_swarm_frame_name = rospy.get_param("~tf_swarm_frame_name", "swarm_center").lower()
+
         # Specified end effector tf frame name (id)
         self.tf_end_effector_frame_name = rospy.get_param("~tf_end_effector_frame_name", "j2n6s300_end_effector")
 
