@@ -14,8 +14,13 @@ Panels:
         - /TF-body-fused1/Frames1
         - /TF-body-fused1/Tree1
         - /TF-body-goals1/Frames1
-      Splitter Ratio: 0.798974335193634
-    Tree Height: 1939
+        - /TF-body-fused-wrist-left1/Frames1
+        - /TF-body-raw-wrist-left1/Frames1
+        - /TF-body-fused-wrist-right1/Frames1
+        - /TF-body-raw-wrist-right1/Frames1
+        - /TF-body-goals-wrist-right1/Frames1
+      Splitter Ratio: 0.4964856207370758
+    Tree Height: 1811
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -79,6 +84,7 @@ Visualization Manager:
       Unreliable: false
       Value: false
       Visibility:
+        "": true
         Aruco PoseWithCovariance d1: true
         Aruco PoseWithCovariance d2: true
         Axes: true
@@ -111,6 +117,7 @@ Visualization Manager:
         RobotModel-d2: true
         TF: true
         TF-body-fused: true
+        TF-body-goals: true
         TF-body-raw: true
         Value: true
         WrenchStamped-OarbotBlue: true
@@ -1227,10 +1234,6 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        body_joint_neck_goal_left:
-          Value: true
-        body_joint_neck_goal_right:
-          Value: true
       Marker Alpha: 0.5
       Marker Scale: 0.6000000238418579
       Name: TF-body-goals
@@ -1238,10 +1241,7 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        body_joint_neck_goal_left:
-          {}
-        body_joint_neck_goal_right:
-          {}
+        {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -1274,6 +1274,144 @@ Visualization Manager:
       Torque Color: 204; 204; 51
       Unreliable: false
       Value: false
+    - Class: rviz/TF
+      Enabled: true
+      Filter (blacklist): body_joint_wrist_left_goal_left|body_joint_wrist_left_goal_right
+      Filter (whitelist): body_joint_wrist_left
+      Frame Timeout: 15
+      Frames:
+        All Enabled: false
+        body_joint_wrist_left:
+          Value: true
+        j2n6s300_left_body_joint_wrist_left:
+          Value: false
+        j2n6s300_right_body_joint_wrist_left:
+          Value: false
+      Marker Alpha: 1
+      Marker Scale: 1
+      Name: TF-body-fused-wrist-left
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        body_joint_wrist_left:
+          {}
+        j2n6s300_left_body_joint_wrist_left:
+          {}
+        j2n6s300_right_body_joint_wrist_left:
+          {}
+      Update Interval: 0
+      Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Filter (blacklist): ""
+      Filter (whitelist): j2n6s300_left_body_joint_wrist_left|j2n6s300_right_body_joint_wrist_left
+      Frame Timeout: 15
+      Frames:
+        All Enabled: false
+        j2n6s300_left_body_joint_wrist_left:
+          Value: true
+        j2n6s300_right_body_joint_wrist_left:
+          Value: true
+      Marker Alpha: 1
+      Marker Scale: 0.5
+      Name: TF-body-raw-wrist-left
+      Show Arrows: false
+      Show Axes: true
+      Show Names: false
+      Tree:
+        j2n6s300_left_body_joint_wrist_left:
+          {}
+        j2n6s300_right_body_joint_wrist_left:
+          {}
+      Update Interval: 0
+      Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Filter (blacklist): ""
+      Filter (whitelist): body_joint_wrist_left_goal_left|body_joint_wrist_left_goal_right
+      Frame Timeout: 15
+      Frames:
+        All Enabled: false
+      Marker Alpha: 0.5
+      Marker Scale: 0.6000000238418579
+      Name: TF-body-goals-wrist-left
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        {}
+      Update Interval: 0
+      Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Filter (blacklist): body_joint_wrist_right_goal_left|body_joint_wrist_right_goal_right
+      Filter (whitelist): body_joint_wrist_right
+      Frame Timeout: 15
+      Frames:
+        All Enabled: false
+        body_joint_wrist_right:
+          Value: true
+        j2n6s300_left_body_joint_wrist_right:
+          Value: false
+        j2n6s300_right_body_joint_wrist_right:
+          Value: false
+      Marker Alpha: 1
+      Marker Scale: 1
+      Name: TF-body-fused-wrist-right
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        body_joint_wrist_right:
+          {}
+        j2n6s300_left_body_joint_wrist_right:
+          {}
+        j2n6s300_right_body_joint_wrist_right:
+          {}
+      Update Interval: 0
+      Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Filter (blacklist): ""
+      Filter (whitelist): j2n6s300_left_body_joint_wrist_right|j2n6s300_right_body_joint_wrist_right
+      Frame Timeout: 15
+      Frames:
+        All Enabled: false
+        j2n6s300_left_body_joint_wrist_right:
+          Value: true
+        j2n6s300_right_body_joint_wrist_right:
+          Value: true
+      Marker Alpha: 1
+      Marker Scale: 0.5
+      Name: TF-body-raw-wrist-right
+      Show Arrows: false
+      Show Axes: true
+      Show Names: false
+      Tree:
+        j2n6s300_left_body_joint_wrist_right:
+          {}
+        j2n6s300_right_body_joint_wrist_right:
+          {}
+      Update Interval: 0
+      Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Filter (blacklist): ""
+      Filter (whitelist): body_joint_wrist_right_goal_left|body_joint_wrist_right_goal_right
+      Frame Timeout: 15
+      Frames:
+        All Enabled: false
+      Marker Alpha: 0.5
+      Marker Scale: 0.6000000238418579
+      Name: TF-body-goals-wrist-right
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        {}
+      Update Interval: 0
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255
@@ -1325,12 +1463,12 @@ Visualization Manager:
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 2272
+  Height: 2090
   Hide Left Dock: false
   Hide Right Dock: true
   OverheadCamera Nuc:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000003d10000088bfc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b000000b000fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df0000018500000105fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c00610079007301000000270000088b0000018200fffffffb00000024004f007600650072006800650061006400430061006d0065007200610020004e007500630000000570000003000000002600fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c000002610000000100000205000006ecfc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000009f000006ec0000013200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000eb600000355fc0100000001fb0000000a00560069006500770073030000004e00000080000002e1000001970000000300000eb600000060fc0100000002fb0000000800540069006d0065000000000000000eb60000077d00fffffffb0000000800540069006d0065010000000000000450000000000000000000000abb0000088b00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730000000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000061f000007e9fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006d00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df0000018500000105fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000001d000007e9000000ee00fffffffb00000024004f007600650072006800650061006400430061006d0065007200610020004e007500630000000570000003000000001c00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c000002610000000100000205000006ecfc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000009f000006ec000000c700fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000eb600000355fc0100000001fb0000000a00560069006500770073030000004e00000080000002e1000001970000000300000eb600000060fc0100000002fb0000000800540069006d0065000000000000000eb60000056500fffffffb0000000800540069006d0065010000000000000450000000000000000000000872000007e900000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730000000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -1341,4 +1479,4 @@ Window Geometry:
     collapsed: true
   Width: 3736
   X: 0
-  Y: 54
+  Y: 33
