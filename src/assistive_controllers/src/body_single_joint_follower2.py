@@ -24,7 +24,7 @@ Broadcasts to:
 
 import rospy
 import time
-
+from copy import deepcopy
 
 import numpy as np
 import tf2_ros
@@ -63,7 +63,6 @@ class BodySingleJointFollower():
         elif self.robot_cartesian_cmd_vel_msg_type == "kinova_msgs.msg.PoseVelocity":
             self.pub_pose_vel_cmd = rospy.Publisher(self.robot_cartesian_cmd_vel_topic_name, kinova_msgs.msg.PoseVelocity, queue_size=1)
 
-
         # Topic name to subscribe
         self.wrench_external_topic_name = rospy.get_param("~wrench_external_topic_name", "j2n6s300_driver/out/tool_wrench_filtered")
         self.wrench_control_topic_name = rospy.get_param("~wrench_control_topic_name", "j2n6s300_driver/out/tool_wrench_control")
@@ -75,10 +74,14 @@ class BodySingleJointFollower():
         self.enable_admittance = rospy.get_param("~enable_admittance", False)
         self.toggle_body_joint_following_service_name = rospy.get_param("~toggle_body_joint_following_service_name")
         self.toggle_admittance_service_name = rospy.get_param("~toggle_admittance_service_name")
+        self.enable_collab_move = rospy.get_param("~enable_collab_move", False)
+        self.toggle_collab_move_service_name = rospy.get_param("~toggle_collab_move_service_name")
         # Service to toggle the body joint following (enable/disable)
         self.srv_toggle_body_joint_following = rospy.Service(self.toggle_body_joint_following_service_name, SetBool, self.srv_toggle_body_joint_following_cb)
         # Service to toggle the admittance control (enable/disable)
         self.srv_toggle_admittance = rospy.Service(self.toggle_admittance_service_name, SetBool, self.srv_toggle_admittance_cb)
+        # Service to toggle the collaborative moving (enable/disable)
+        self.srv_toggle_collab_move = rospy.Service(self.toggle_collab_move_service_name, SetBool, self.srv_toggle_collab_move_cb)
         
         # Service to reset the ft bias (It is called from here to reset the bias)
         self.reset_ft_bias_service_address = rospy.get_param("~reset_ft_bias_service_address", "imu_gravity_compensation/calibrate_bias")
@@ -168,6 +171,11 @@ class BodySingleJointFollower():
         self.T_base2ee_desired = None
         self.T_base2joint_desired = None
 
+        # Collaborative move transformations
+        self.T_ee2swarm = None
+        self.T_ee2swarm_desired = None
+        self.is_ok_tf_collab_move = False
+
         # TF2 broadcaster (for showing purposes)
         self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
 
@@ -231,12 +239,17 @@ class BodySingleJointFollower():
             
         if self.enable_admittance:
             self.is_ok_tf_admittance = self.look_tfs_for_admittance()
+        
+        if self.enable_collab_move:
+            self.is_ok_tf_collab_move = self.look_tfs_for_collab_move()
         # -------------
 
         # -------------
         if self.is_ok_tf_body_follower and self.is_ok_tf_body_follower_desired and self.enable_body_joint_following:
             # Calculate the error btw the desired and the current pose
             position_error, orientation_error = self.poseErrorCalculator()
+        elif self.enable_collab_move and self.is_ok_tf_collab_move:
+            position_error, orientation_error = self.poseErrorCalculator_collab_move()
         else:
             position_error = [0.0,0.0,0.0]
             orientation_error = [0.0,0.0,0.0]
@@ -303,6 +316,18 @@ class BodySingleJointFollower():
             rospy.logwarn_throttle(20.0, "TFs_admittance: Waiting to find the transformations (throttled to 20s)")
             return False
 
+    def look_tfs_for_collab_move(self, timeout=0.0):
+        try:
+            self.T_ee2swarm = self.tfBuffer.lookup_transform(self.tf_end_effector_frame_name,
+                                                             self.tf_swarm_frame_name,
+                                                             rospy.Time(),
+                                                             rospy.Duration(timeout)) # in ee frame
+            return True
+        except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
+            # Put a warning which says that the transformation could not found
+            # rospy.logwarn('TFs_collab_move: Waiting to find the transformations') 
+            rospy.logwarn_throttle(20.0, "TFs_collab_move: Waiting to find the transformations (throttled to 20s)")
+            return False
 
     def publishPoseVelCmd(self, Vx, Vy, Vz, Wx, Wy, Wz):
         if self.robot_cartesian_cmd_vel_msg_type == "geometry_msgs.msg.Twist":
@@ -379,7 +404,62 @@ class BodySingleJointFollower():
         q_orientation_error = tf_conversions.transformations.quaternion_from_matrix(R_orientation_error_4x4)
         orientation_error = q_orientation_error[0:3].tolist()
         return position_error, orientation_error
+    
+    def poseErrorCalculator_collab_move(self):
 
+        """
+        des: desired
+        cur: current
+        """
+        
+        P_ee2swarm_desired_in_ee = np.array([self.T_ee2swarm_desired.transform.translation.x,
+                                            self.T_ee2swarm_desired.transform.translation.y,
+                                            self.T_ee2swarm_desired.transform.translation.z]) # P_{EJ}(t=0) in E
+        q_ee2swarm_desired = [self.T_ee2swarm_desired.transform.rotation.x,
+                              self.T_ee2swarm_desired.transform.rotation.y,
+                              self.T_ee2swarm_desired.transform.rotation.z,
+                              self.T_ee2swarm_desired.transform.rotation.w]
+        q_ee2swarm_desired_inv = tf_conversions.transformations.quaternion_inverse(q_ee2swarm_desired)
+        R_swarm2ee_desired = tf_conversions.transformations.quaternion_matrix(q_ee2swarm_desired_inv)[:3,:3] # R_{JE}(t=0)
+        # R_joint2ee_desired = np.transpose(tf_conversions.transformations.quaternion_matrix(q_ee2joint_desired)[:3,:3]) # R_{JE}(t=0)
+        P_swarm2ee_desired = np.dot(R_swarm2ee_desired,-P_ee2swarm_desired_in_ee) # P_{JE}(t=0) in J
+
+        self.broadcast_tf_goal(q_ee2swarm_desired_inv,P_swarm2ee_desired,tf_frame=self.tf_swarm_frame_name,tf_child_frame=self.tf_end_effector_frame_name)
+
+        P_ee2swarm_in_ee = np.array([self.T_ee2swarm.transform.translation.x,
+                                     self.T_ee2swarm.transform.translation.y,
+                                     self.T_ee2swarm.transform.translation.z]) # P_{EJ}(t) in E
+        q_ee2swarm = [self.T_ee2swarm.transform.rotation.x,
+                      self.T_ee2swarm.transform.rotation.y,
+                      self.T_ee2swarm.transform.rotation.z,
+                      self.T_ee2swarm.transform.rotation.w]
+        R_ee2swarm = tf_conversions.transformations.quaternion_matrix(q_ee2swarm)[:3,:3] # R_{EJ}(t)
+        
+        q_base2ee = [self.T_base2ee.transform.rotation.x,
+                     self.T_base2ee.transform.rotation.y,
+                     self.T_base2ee.transform.rotation.z,
+                     self.T_base2ee.transform.rotation.w]
+        R_base2ee = tf_conversions.transformations.quaternion_matrix(q_base2ee)[:3,:3] # R_{BE}(t)
+        
+        # Position error in base
+        position_error = np.dot(R_base2ee, P_ee2swarm_in_ee + np.dot(R_ee2swarm, P_swarm2ee_desired)).tolist() # (3,)
+        
+        # Orientation error (with quaternion vector)
+        # based on http://www.cs.cmu.edu/~cga/dynopt/readings/Yuan88-quatfeedback.pdf eqn 27,28
+
+        R_orientation_error = np.dot(R_ee2swarm, R_swarm2ee_desired) # R_{EJ}(t) * R_{JE}(t=0)
+        
+        # Create a 4x4 matrix initialized with zeros
+        R_orientation_error_4x4 = np.zeros((4, 4))
+        # Place the 3x3 matrix in the top left corner of the 4x4 matrix
+        R_orientation_error_4x4[:3, :3] = R_orientation_error
+        # Set the bottom right element to 1
+        R_orientation_error_4x4[3, 3] = 1
+        
+        q_orientation_error = tf_conversions.transformations.quaternion_from_matrix(R_orientation_error_4x4)
+        orientation_error = q_orientation_error[0:3].tolist()
+        return position_error, orientation_error
+    
     def poseErrorCalculator_old(self):
         """
         des: desired
@@ -583,7 +663,7 @@ class BodySingleJointFollower():
         else:
             return x
 
-    def broadcast_tf_goal(self, q_joint2goal, p_joint2goal):
+    def broadcast_tf_goal(self, q_joint2goal, p_joint2goal, tf_frame=None, tf_child_frame=None):
         """
         For showing purposes,
         Broadcasts a frame to tf from the specified body joint.
@@ -592,8 +672,14 @@ class BodySingleJointFollower():
         t = geometry_msgs.msg.TransformStamped()
         t.header.stamp = rospy.Time.now()
 
-        t.header.frame_id = self.tf_body_joint_frame_name
-        t.child_frame_id = self.tf_followed_body_joint_frame_name_goal
+        if tf_frame is not None:
+            t.header.frame_id = tf_frame
+        else:
+            t.header.frame_id = self.tf_body_joint_frame_name
+        if tf_child_frame is not None:
+            t.child_frame_id = tf_child_frame
+        else:
+            t.child_frame_id = self.tf_followed_body_joint_frame_name_goal
 
         t.transform.translation.x = p_joint2goal[0]
         t.transform.translation.y = p_joint2goal[1]
@@ -681,12 +767,31 @@ class BodySingleJointFollower():
         
         if self.is_ok_tf_common and self.is_ok_tf_body_follower:
             # Save the current Pose as the desired pose btw end effector and the joint to be followed
-            self.T_ee2joint_desired = self.T_ee2joint # in ee frame
-            self.T_base2ee_desired = self.T_base2ee # in base frame
-            self.T_base2joint_desired = self.T_base2joint # in base frame
+            self.T_ee2joint_desired = deepcopy(self.T_ee2joint) # in ee frame
+            self.T_base2ee_desired = deepcopy(self.T_base2ee) # in base frame
+            self.T_base2joint_desired = deepcopy(self.T_base2joint) # in base frame
             return True
         else:
             return False
+    
+    def srv_toggle_collab_move_cb(self,req):
+        assert isinstance(req, SetBoolRequest)
+
+        if req.data:
+            self.is_ok_tf_common = self.look_tfs_for_common(timeout=1.0)
+            self.is_ok_tf_collab_move = self.look_tfs_for_collab_move(timeout=1.0)
+            if self.is_ok_tf_collab_move and self.is_ok_tf_common:
+                self.enable_collab_move = True
+                self.T_ee2swarm_desired = deepcopy(self.T_ee2swarm)
+                rospy.loginfo("Enable simple collaborative move")   
+            else:
+                self.enable_collab_move = False
+                rospy.logwarn("Could not enable simple collaborative move since the required swarm tf could not be found")
+        else:
+            self.enable_collab_move = False
+            rospy.loginfo("Disable collaborative move")
+
+        return SetBoolResponse(True, "The simple collaborative movement is now set to: {}".format(self.enable_collab_move))
 
 
 if __name__ == '__main__':
