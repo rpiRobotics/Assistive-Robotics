@@ -140,7 +140,7 @@ class BodySingleJointFollower():
         self.tf_body_joint_frame_name = rospy.get_param("~tf_followed_body_joint_frame_name", "JOINT_WRIST_LEFT").lower() 
 
         # Specified swarm tf frame name to follow
-        self.tf_swarm_frame_name = rospy.get_param("~tf_swarm_frame_name", "swarm_center").lower()
+        self.tf_swarm_frame_name = rospy.get_param("/tf_swarm_frame_name", "swarm_center").lower()
 
         # Specified end effector tf frame name (id)
         self.tf_end_effector_frame_name = rospy.get_param("~tf_end_effector_frame_name", "j2n6s300_end_effector")
@@ -776,6 +776,10 @@ class BodySingleJointFollower():
     
     def srv_toggle_collab_move_cb(self,req):
         assert isinstance(req, SetBoolRequest)
+
+        # get the swarm frame name from parameter server
+        self.tf_swarm_frame_name = rospy.get_param("/tf_swarm_frame_name", "swarm_center").lower()
+        rospy.loginfo("The swarm frame name is set to: {}".format(self.tf_swarm_frame_name))
 
         if req.data:
             self.is_ok_tf_common = self.look_tfs_for_common(timeout=1.0)
