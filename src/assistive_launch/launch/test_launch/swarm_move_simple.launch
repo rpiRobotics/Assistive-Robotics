@@ -1,0 +1,7 @@
+<launch>
+  <!-- ................................... Simple swarm moving node ..................................... -->
+  <node pkg="centralized_controllers" type="collaborative_move_simple.py" name="swarm_move_simple" output="screen">
+    <rosparam command="load" file="$(find assistive_launch)/config/master_swarm_move_simple.yaml" />
+  </node>
+
+</launch>

@@ -1,0 +1,14 @@
+number_of_robots: 2
+
+robot_tf_frames:
+  - 'j2n6s300_left_end_effector'
+  - 'j2n6s300_right_end_effector'
+
+tf_swarm_frame_name: 'swarm_center'
+
+tf_swarm_map_frame_name: 'map'
+
+trajectory_static_filename: 'swarm_move_traj' # filename of the static trajectory to be followed
+
+reset_swarm_frame_service_name: 'reset_swarm_frame'
+swarm_move_service_name: 'start_simple_swarm_move'
