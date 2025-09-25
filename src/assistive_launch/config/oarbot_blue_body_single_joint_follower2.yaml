@@ -17,8 +17,8 @@ enable_body_joint_following: False # initial state
 toggle_body_joint_following_service_name: "toggle_body_joint_following"
 enable_admittance: False # initial state
 toggle_admittance_service_name: "toggle_admittance"
-enable_swarm_move: false # initial state
-toggle_swarm_move_service_name: "toggle_swarm_move"
+enable_swarm_following: false # initial state
+toggle_swarm_following_service_name: "toggle_swarm_following"
 
 reset_ft_bias_service_address: "imu_gravity_compensation/calibrate_bias" # it is a service to zero the bias of the force torque sensor readings, provided by the gravity_compensation package. Hence the type is std_srvs/Empty based on the service definition of gravity_compensation package.
 
