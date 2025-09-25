@@ -290,8 +290,8 @@ waypoints.append(np.array([0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
 
 # convert the waypoints into trajectory
 pub_rate = 200 # Hz
-max_vel = 0.08 # m/s
-max_acc = 0.2 # m/s^2
+max_vel = 0.16 # m/s
+max_acc = 0.4 # m/s^2
 max_omg = np.deg2rad(5) # rad/s
 max_alpha = np.deg2rad(7.5) # rad/s^2
 
