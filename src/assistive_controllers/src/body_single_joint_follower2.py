@@ -250,6 +250,7 @@ class BodySingleJointFollower():
             position_error, orientation_error = self.poseErrorCalculator()
         elif self.enable_swarm_following and self.is_ok_tf_swarm_following:
             position_error, orientation_error = self.poseErrorCalculator_swarm_following()
+            print("swarm following: position_error, orientation_error = ", position_error, orientation_error)
         else:
             position_error = [0.0,0.0,0.0]
             orientation_error = [0.0,0.0,0.0]
@@ -424,7 +425,7 @@ class BodySingleJointFollower():
         # R_joint2ee_desired = np.transpose(tf_conversions.transformations.quaternion_matrix(q_ee2joint_desired)[:3,:3]) # R_{JE}(t=0)
         P_swarm2ee_desired = np.dot(R_swarm2ee_desired,-P_ee2swarm_desired_in_ee) # P_{JE}(t=0) in J
 
-        self.broadcast_tf_goal(q_ee2swarm_desired_inv,P_swarm2ee_desired,tf_frame=self.tf_swarm_frame_name,tf_child_frame=self.tf_end_effector_frame_name)
+        self.broadcast_tf_goal(q_ee2swarm_desired_inv,P_swarm2ee_desired,tf_frame=self.tf_swarm_frame_name,tf_child_frame=self.tf_end_effector_frame_name+'_goal')
 
         P_ee2swarm_in_ee = np.array([self.T_ee2swarm.transform.translation.x,
                                      self.T_ee2swarm.transform.translation.y,
@@ -780,15 +781,18 @@ class BodySingleJointFollower():
         # get the swarm frame name from parameter server
         self.tf_swarm_frame_name = rospy.get_param("/tf_swarm_frame_name", "swarm_center").lower()
         rospy.loginfo("The swarm frame name is set to: {}".format(self.tf_swarm_frame_name))
+        print("Get service call to toggle swarm following: ", req.data)
 
         if req.data:
             self.is_ok_tf_common = self.look_tfs_for_common(timeout=1.0)
             self.is_ok_tf_swarm_following = self.look_tfs_for_swarm_following(timeout=1.0)
             if self.is_ok_tf_swarm_following and self.is_ok_tf_common:
+                print("Swarm tf found!")
                 self.enable_swarm_following = True
                 self.T_ee2swarm_desired = deepcopy(self.T_ee2swarm)
                 rospy.loginfo("Enable simple swarm move")
             else:
+                print("Swarm tf NOT found!")
                 self.enable_swarm_following = False
                 rospy.logwarn("Could not enable simple swarm move since the required swarm tf could not be found")
         else:
