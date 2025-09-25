@@ -70,6 +70,10 @@ reset_desired_body_pose_service_address:
   - "/oarbot_silver/reset_desired_body_pose"
   - "/oarbot_blue/reset_desired_body_pose"
 
+swarm_following_service_address: 
+  - "/oarbot_silver/toggle_swarm_following"
+  - "/oarbot_blue/toggle_swarm_following"
+
 arm_fingers_max_turn: 
   - 6800 # or 7300 # This value is mapped btw 0-100%
   - 6800 # or 7300 # This value is mapped btw 0-100%

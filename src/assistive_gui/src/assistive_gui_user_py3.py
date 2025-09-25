@@ -215,8 +215,9 @@ class admittance_button:
             self.enabled = not(self.enabled)
 
 class body_joint_following_button:
-    def __init__(self, service_address, sizex,sizey,text):
-        self.text=text +"\nEnable Body Joint Following"
+    def __init__(self, service_address, sizex,sizey,text,function_text="Body Joint Following"):
+        self.text=text +"\nEnable " + function_text
+        self.function_text = function_text
 
         self.button=QPushButton()
         self.button.setFixedSize(sizex,sizey)
@@ -229,7 +230,7 @@ class body_joint_following_button:
         self.service_address = service_address
         
     def button_pressed(self):
-        rospy.logerr("Assistive GUI: Body Joint Following Button pressed")
+        rospy.logerr("Assistive GUI: "+self.function_text+" Button pressed")
 
         self.enabled = not(self.enabled)
 
@@ -473,6 +474,7 @@ class SWARMGUI(QtWidgets.QMainWindow):
             self.admittance_service_address = rospy.get_param('admittance_service_address')
             self.body_joint_following_service_address = rospy.get_param('body_joint_following_service_address')
             self.reset_desired_body_pose_service_address = rospy.get_param('reset_desired_body_pose_service_address')
+            self.swarm_following_service_address = rospy.get_param('swarm_following_service_address')
 
             self.arm_joint_angles_home=rospy.get_param('arm_joint_angles_home')
             self.arm_fingers_max_turn=rospy.get_param('arm_fingers_max_turn')
@@ -509,7 +511,7 @@ class SWARMGUI(QtWidgets.QMainWindow):
             led=LEDIndicator(i)
             #led.setDisabled(True)
             
-            self.Robotlayout.addWidget(led,10,i)
+            self.Robotlayout.addWidget(led,11,i)
             self.Leds.append(led)
             led.led_change(True)
     
@@ -576,6 +578,11 @@ class SWARMGUI(QtWidgets.QMainWindow):
             button_class_object8= admittance_button(self.admittance_service_address[i], buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i])
             self.Robotlayout.addWidget(button_class_object8.button,9,i)
             self.buttons_admittance.append(button_class_object8)
+
+            # swarm following button (using body_joint_following button class)
+            button_class_object9= body_joint_following_button(self.swarm_following_service_address[i], buttonwidth//self.number_of_bots,heightnew//8,self.robot_types[i],"Swarm Following")
+            self.Robotlayout.addWidget(button_class_object9.button,10,i)
+            self.buttons_body_joint_following.append(button_class_object9)
 
         """
         self.robot1led=LEDIndicator()

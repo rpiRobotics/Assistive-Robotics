@@ -74,14 +74,14 @@ class BodySingleJointFollower():
         self.enable_admittance = rospy.get_param("~enable_admittance", False)
         self.toggle_body_joint_following_service_name = rospy.get_param("~toggle_body_joint_following_service_name")
         self.toggle_admittance_service_name = rospy.get_param("~toggle_admittance_service_name")
-        self.enable_swarm_move = rospy.get_param("~enable_swarm_move", False)
-        self.toggle_swarm_move_service_name = rospy.get_param("~toggle_swarm_move_service_name")
+        self.enable_swarm_following = rospy.get_param("~enable_swarm_following", False)
+        self.toggle_swarm_following_service_name = rospy.get_param("~toggle_swarm_following_service_name")
         # Service to toggle the body joint following (enable/disable)
         self.srv_toggle_body_joint_following = rospy.Service(self.toggle_body_joint_following_service_name, SetBool, self.srv_toggle_body_joint_following_cb)
         # Service to toggle the admittance control (enable/disable)
         self.srv_toggle_admittance = rospy.Service(self.toggle_admittance_service_name, SetBool, self.srv_toggle_admittance_cb)
         # Service to toggle the swarm moving (enable/disable)
-        self.srv_toggle_swarm_move = rospy.Service(self.toggle_swarm_move_service_name, SetBool, self.srv_toggle_swarm_move_cb)
+        self.srv_toggle_swarm_following = rospy.Service(self.toggle_swarm_following_service_name, SetBool, self.srv_toggle_swarm_following_cb)
         
         # Service to reset the ft bias (It is called from here to reset the bias)
         self.reset_ft_bias_service_address = rospy.get_param("~reset_ft_bias_service_address", "imu_gravity_compensation/calibrate_bias")
@@ -174,7 +174,7 @@ class BodySingleJointFollower():
         # Swarm move transformations
         self.T_ee2swarm = None
         self.T_ee2swarm_desired = None
-        self.is_ok_tf_swarm_move = False
+        self.is_ok_tf_swarm_following = False
 
         # TF2 broadcaster (for showing purposes)
         self.tf_broadcaster = tf2_ros.TransformBroadcaster() # Create a tf broadcaster
@@ -240,16 +240,16 @@ class BodySingleJointFollower():
         if self.enable_admittance:
             self.is_ok_tf_admittance = self.look_tfs_for_admittance()
         
-        if self.enable_swarm_move:
-            self.is_ok_tf_swarm_move = self.look_tfs_for_swarm_move()
+        if self.enable_swarm_following:
+            self.is_ok_tf_swarm_following = self.look_tfs_for_swarm_following()
         # -------------
 
         # -------------
         if self.is_ok_tf_body_follower and self.is_ok_tf_body_follower_desired and self.enable_body_joint_following:
             # Calculate the error btw the desired and the current pose
             position_error, orientation_error = self.poseErrorCalculator()
-        elif self.enable_swarm_move and self.is_ok_tf_swarm_move:
-            position_error, orientation_error = self.poseErrorCalculator_swarm_move()
+        elif self.enable_swarm_following and self.is_ok_tf_swarm_following:
+            position_error, orientation_error = self.poseErrorCalculator_swarm_following()
         else:
             position_error = [0.0,0.0,0.0]
             orientation_error = [0.0,0.0,0.0]
@@ -316,7 +316,7 @@ class BodySingleJointFollower():
             rospy.logwarn_throttle(20.0, "TFs_admittance: Waiting to find the transformations (throttled to 20s)")
             return False
 
-    def look_tfs_for_swarm_move(self, timeout=0.0):
+    def look_tfs_for_swarm_following(self, timeout=0.0):
         try:
             self.T_ee2swarm = self.tfBuffer.lookup_transform(self.tf_end_effector_frame_name,
                                                              self.tf_swarm_frame_name,
@@ -325,8 +325,8 @@ class BodySingleJointFollower():
             return True
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             # Put a warning which says that the transformation could not found
-            # rospy.logwarn('TFs_swarm_move: Waiting to find the transformations') 
-            rospy.logwarn_throttle(20.0, "TFs_swarm_move: Waiting to find the transformations (throttled to 20s)")
+            # rospy.logwarn('TFs_swarm_following: Waiting to find the transformations') 
+            rospy.logwarn_throttle(20.0, "TFs_swarm_following: Waiting to find the transformations (throttled to 20s)")
             return False
 
     def publishPoseVelCmd(self, Vx, Vy, Vz, Wx, Wy, Wz):
@@ -405,7 +405,7 @@ class BodySingleJointFollower():
         orientation_error = q_orientation_error[0:3].tolist()
         return position_error, orientation_error
     
-    def poseErrorCalculator_swarm_move(self):
+    def poseErrorCalculator_swarm_following(self):
 
         """
         des: desired
@@ -774,7 +774,7 @@ class BodySingleJointFollower():
         else:
             return False
     
-    def srv_toggle_swarm_move_cb(self,req):
+    def srv_toggle_swarm_following_cb(self,req):
         assert isinstance(req, SetBoolRequest)
 
         # get the swarm frame name from parameter server
@@ -783,19 +783,19 @@ class BodySingleJointFollower():
 
         if req.data:
             self.is_ok_tf_common = self.look_tfs_for_common(timeout=1.0)
-            self.is_ok_tf_swarm_move = self.look_tfs_for_swarm_move(timeout=1.0)
-            if self.is_ok_tf_swarm_move and self.is_ok_tf_common:
-                self.enable_swarm_move = True
+            self.is_ok_tf_swarm_following = self.look_tfs_for_swarm_following(timeout=1.0)
+            if self.is_ok_tf_swarm_following and self.is_ok_tf_common:
+                self.enable_swarm_following = True
                 self.T_ee2swarm_desired = deepcopy(self.T_ee2swarm)
                 rospy.loginfo("Enable simple swarm move")
             else:
-                self.enable_swarm_move = False
+                self.enable_swarm_following = False
                 rospy.logwarn("Could not enable simple swarm move since the required swarm tf could not be found")
         else:
-            self.enable_swarm_move = False
+            self.enable_swarm_following = False
             rospy.loginfo("Disable swarm move")
 
-        return SetBoolResponse(True, "The simple swarm movement is now set to: {}".format(self.enable_swarm_move))
+        return SetBoolResponse(True, "The simple swarm movement is now set to: {}".format(self.enable_swarm_following))
 
 
 if __name__ == '__main__':
