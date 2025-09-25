@@ -313,8 +313,8 @@ class OarbotRedundancyResolver():
         # rospy.logwarn("q: " + str(q))
 
         try:
-            self.qdot_trace
-        except NameError:
+            dum = self.qdot_trace
+        except (NameError, AttributeError):
             self.qdot_trace = np.zeros(len(q))
 
         J_world2ee_in_world = self.bot.jacobian(q) # 6x10
