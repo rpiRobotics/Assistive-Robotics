@@ -312,6 +312,11 @@ class OarbotRedundancyResolver():
         # ||JA qadot + JB qbdot - vd||^2 + qadot^T W_a qadot + qbdot^T W_b qbdot
         # rospy.logwarn("q: " + str(q))
 
+        try:
+            self.qdot_trace
+        except NameError:
+            self.qdot_trace = np.zeros(len(q))
+
         J_world2ee_in_world = self.bot.jacobian(q) # 6x10
         J_armbase2ee_in_armbase = self.bot.arm_jacobian(q[4:]) # 6x6
 
@@ -355,6 +360,7 @@ class OarbotRedundancyResolver():
         # the more the weight, the less it's used
         Wa = np.ones(6)*arm_w # weighting for arm axis velocity
         Wb = np.ones(len(q)-6)*base_w # weighting for base axis velocity
+        Wb[-1] = 1e5 # There's actually no base z joint. Make it very stiff so that it won't be used.
         Wba = np.diag(np.append(Wb,Wa)) # 10x10
 
         H = np.matmul(J_world2ee_in_armbase.T,J_world2ee_in_armbase) + Wba
@@ -364,7 +370,15 @@ class OarbotRedundancyResolver():
         # print("f",f)
         # print("H",H)
 
-        qdot = solve_qp(H,f)
+        # new_qdot-self.qdot_trace < max_step
+        # new_qdot-self.qdot_trace > -max_step
+        max_step = np.array([0.1,0.1,0.1,0.1]) # max step m/s for base
+        max_step = np.append(max_step,np.radians(np.ones(6)*2)) # max step 2 deg/s for arm
+
+        qdot = solve_qp(H,f,lb=-max_step+ self.qdot_trace,ub=max_step + self.qdot_trace,initvals=self.qdot_trace)
+        if qdot is None:
+            qdot = self.qdot_trace
+        self.qdot_trace = qdot
         # print("qdot",qdot)
         # print("nu res",np.dot(Jee_sup,qdot))
         # print("=================")

@@ -277,7 +277,7 @@ waypoints.append(np.array([0.0, 1.0, 0.4, 1.0, 0.0, 0.0, 0.0]))
 rot_quat = rot2q(np.array([0,0,1]), np.radians(20))
 waypoints.append(np.array([0.0, 1.0, 0.4, rot_quat[0], rot_quat[1], rot_quat[2], rot_quat[3]]))
 # rotate -15 degrees around z axis
-rot_quat = rot2q(np.array([0,0,1]), np.radians(20))
+rot_quat = rot2q(np.array([0,0,1]), np.radians(-20))
 waypoints.append(np.array([0.0, 1.0, 0.4, rot_quat[0], rot_quat[1], rot_quat[2], rot_quat[3]]))
 # rotate back to 0 degrees around z axis
 waypoints.append(np.array([0.0, 1.0, 0.4, 1.0, 0.0, 0.0, 0.0]))
