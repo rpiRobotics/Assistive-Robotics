@@ -264,27 +264,27 @@ def generate_trajectory_3d(waypoints, pub_rate, max_vel, max_acc, max_omg, max_a
 ## list of waypoints
 waypoints = [np.array([0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0])] # start at origin with no rotation
 # move to 1m in x direction
-waypoints.append(np.array([1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
+waypoints.append(np.array([0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
 # move to 0.3m in y direction
-waypoints.append(np.array([1.0, 0.3, 0.0, 1.0, 0.0, 0.0, 0.0]))
+waypoints.append(np.array([0.3, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
 # move to -0.3m in y direction
-waypoints.append(np.array([1.0, -0.3, 0.0, 1.0, 0.0, 0.0, 0.0]))
+waypoints.append(np.array([-0.3, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
 # move to 0m in y direction
-waypoints.append(np.array([1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
+waypoints.append(np.array([0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
 # move to 0.4m in z direction
-waypoints.append(np.array([1.0, 0.0, 0.4, 1.0, 0.0, 0.0, 0.0]))
+waypoints.append(np.array([0.0, 1.0, 0.4, 1.0, 0.0, 0.0, 0.0]))
 # rotate 15 degrees around z axis
 rot_quat = rot2q(np.array([0,0,1]), np.radians(10))
-waypoints.append(np.array([1.0, 0.0, 0.4, rot_quat[0], rot_quat[1], rot_quat[2], rot_quat[3]]))
+waypoints.append(np.array([0.0, 1.0, 0.4, rot_quat[0], rot_quat[1], rot_quat[2], rot_quat[3]]))
 # rotate -15 degrees around z axis
 rot_quat = rot2q(np.array([0,0,1]), np.radians(-10))
-waypoints.append(np.array([1.0, 0.0, 0.4, rot_quat[0], rot_quat[1], rot_quat[2], rot_quat[3]]))
+waypoints.append(np.array([0.0, 1.0, 0.4, rot_quat[0], rot_quat[1], rot_quat[2], rot_quat[3]]))
 # rotate back to 0 degrees around z axis
-waypoints.append(np.array([1.0, 0.0, 0.4, 1.0, 0.0, 0.0, 0.0]))
+waypoints.append(np.array([0.0, 1.0, 0.4, 1.0, 0.0, 0.0, 0.0]))
 # move back 0.5m in x direction
-waypoints.append(np.array([0.5, 0.0, 0.4, 1.0, 0.0, 0.0, 0.0]))
+waypoints.append(np.array([0.0, 0.5, 0.4, 1.0, 0.0, 0.0, 0.0]))
 # move back to 0.0m in z direction
-waypoints.append(np.array([0.5, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
+waypoints.append(np.array([0.0, 0.5, 0.0, 1.0, 0.0, 0.0, 0.0]))
 # move back to starting point
 waypoints.append(np.array([0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
 
@@ -299,7 +299,7 @@ max_alpha = np.deg2rad(10) # rad/s^2
 traj = generate_trajectory_3d(waypoints, pub_rate, max_vel, max_acc, max_omg, max_alpha)
 
 # save it to a csv file with x,y,z,qx,qy,qz,qw
-np.savetxt("simple_swarm_trajectory.csv", np.hstack((traj['p'], np.roll(traj['q'],1,axis=1))), delimiter=",", header="x,y,z,qw,qx,qy,qz", comments="")
+np.savetxt("simple_swarm_trajectory.csv", np.hstack((traj['p'], np.roll(traj['q'],3,axis=1))), delimiter=",", header="x,y,z,qw,qx,qy,qz", comments="")
 
 # plot x y z position
 import matplotlib.pyplot as plt

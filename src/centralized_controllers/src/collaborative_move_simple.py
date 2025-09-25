@@ -1,4 +1,4 @@
-#!/usr/bin/env python  
+#!/usr/bin/env python3
 
 import rospy
 from copy import deepcopy
@@ -29,10 +29,11 @@ class SimpleSwarmMove():
         try:
             self.number_of_bots=rospy.get_param('~number_of_robots')
             self.robot_tfs_id=rospy.get_param('~robot_tf_frames')
-            assert self.number_of_bots==len(self.robot_tfs), "Number of robots does not match the number of robot tf frames"
-        except:
+            assert self.number_of_bots==len(self.robot_tfs_id), "Number of robots does not match the number of robot tf frames"
+        except Exception as e:
+            rospy.logerr(f"Error getting swarm parameters: {e}")
             self.number_of_bots=2
-            self.robot_tfs=["j2n6s300_left_end_effector","j2n6s300_right_end_effector"]
+            self.robot_tfs_id=["j2n6s300_left_end_effector","j2n6s300_right_end_effector"]
             rospy.logwarn("Could not find all swarm parameters, setting to default 2 robots with tf frames j2n6s300_left_end_effector and j2n6s300_right_end_effector")
         # Specified swarm tf frame name to follow
         self.tf_swarm_frame_name = rospy.get_param("~tf_swarm_frame_name", "swarm_center").lower()
@@ -43,7 +44,7 @@ class SimpleSwarmMove():
         self.enable_swarm_move = False # enable/disable swarm move
         self.trajectory_step_counts = 0 # counts the number of trajectory steps sent
         self.trajectory_static_filename = rospy.get_param("~trajectory_static_filename", "swarm_move_traj") # name of the static trajectory to be followed
-        self.trajectory_static = np.loadtxt(self.trajectory_static_filename, delimiter=",") # pre-load the static trajectory
+        self.trajectory_static = np.loadtxt(self.trajectory_static_filename, delimiter=",", skiprows=1) # pre-load the static trajectory
 
         # tf2 listener and buffer
         self.tfBuffer = tf2_ros.Buffer()
@@ -165,8 +166,15 @@ class SimpleSwarmMove():
             rospy.loginfo(f"Swarm frame reset to the center of the robots at position {center_p}")
             return SetBoolResponse(success=True, message="Swarm frame reset successful")
         else:
-            rospy.logwarn("Swarm frame reset failed. Cannot find all robot transformations.")
-            return SetBoolResponse(success=False, message="Swarm frame reset failed")
+            # rospy.logwarn("Swarm frame reset failed. Cannot find all robot transformations.")
+            # return SetBoolResponse(success=False, message="Swarm frame reset failed")
+
+            center_p = np.array([1.0, 1.0, 0.0])
+            center_R = np.array([0.0, 0.0, 0.0, 1.0])
+            self.broadcast_tf_goal(center_R, center_p, tf_frame=self.tf_swarm_map_frame_name, tf_child_frame=self.tf_swarm_frame_name)
+            self.T_map2swarm = np.append(np.array(center_p), np.array(center_R))
+            rospy.logwarn("Swarm frame reset failed. Cannot find all robot transformations. Setting to default position [1, 1, 0]")
+            return SetBoolResponse(success=False, message="Swarm frame reset failed. Set to default position [1, 1, 0]")
         
     def srv_swarm_move_cb(self, req):
         assert isinstance(req, SetBoolRequest)

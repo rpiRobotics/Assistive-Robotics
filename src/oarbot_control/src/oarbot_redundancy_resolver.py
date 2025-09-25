@@ -349,8 +349,8 @@ class OarbotRedundancyResolver():
         arm_w, base_w = self.weighting(T_armbase2ee_in_armbase.p,nu,constrained_r)
 
         # testing
-        # arm_w = 10
-        # base_w = 0.1
+        arm_w = 10
+        base_w = 0.1
 
         # the more the weight, the less it's used
         Wa = np.ones(6)*arm_w # weighting for arm axis velocity
