@@ -266,9 +266,9 @@ waypoints = [np.array([0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0])] # start at origin wi
 # move to 1m in x direction
 waypoints.append(np.array([0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
 # move to 0.3m in y direction
-waypoints.append(np.array([0.3, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
+waypoints.append(np.array([0.45, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
 # move to -0.3m in y direction
-waypoints.append(np.array([-0.3, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
+waypoints.append(np.array([-0.45, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
 # move to 0m in y direction
 waypoints.append(np.array([0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
 # move to 0.4m in z direction
