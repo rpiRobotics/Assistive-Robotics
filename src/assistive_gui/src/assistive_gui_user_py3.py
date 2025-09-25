@@ -101,8 +101,6 @@ class swarm_move_button:
     def button_pressed(self):
         rospy.logerr("Assistive GUI: Swarm Move Button pressed")
 
-        self.enabled = not(self.enabled)
-
         # wait for this sevice to be running
         rospy.wait_for_service(self.service_address, timeout=1.)
         try:
@@ -110,6 +108,8 @@ class swarm_move_button:
             service = rospy.ServiceProxy(self.service_address, SetBool)
             # Create an object of the type of Service Request.
             req = SetBoolRequest()
+
+            self.enabled = not(self.enabled)
 
             if self.enabled:
                 req.data = True
