@@ -262,7 +262,7 @@ class BodySingleJointFollower():
         self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz = self.controlLaw(position_error, orientation_error)
         # rospy.logwarn("control law result : Vx, Vy, Vz, Wx, Wy, Wz = "+ str([self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz]))
 
-        if self.enable_body_joint_following or self.enable_admittance:
+        if self.enable_body_joint_following or self.enable_admittance or self.enable_swarm_following:
             # Publish the command to move the end effector to the body joint
             self.publishPoseVelCmd(self.Vx, self.Vy, self.Vz, self.Wx, self.Wy, self.Wz)
         # -------------

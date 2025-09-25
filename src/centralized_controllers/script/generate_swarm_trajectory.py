@@ -292,8 +292,8 @@ waypoints.append(np.array([0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
 pub_rate = 200 # Hz
 max_vel = 0.08 # m/s
 max_acc = 0.2 # m/s^2
-max_omg = np.deg2rad(8) # rad/s
-max_alpha = np.deg2rad(10) # rad/s^2
+max_omg = np.deg2rad(5) # rad/s
+max_alpha = np.deg2rad(7.5) # rad/s^2
 
 # Build trajectory
 traj = generate_trajectory_3d(waypoints, pub_rate, max_vel, max_acc, max_omg, max_alpha)
