@@ -63,6 +63,7 @@ class swarm_frame_set_button:
         self.button=QPushButton()
         self.button.setFont(QFont('Ubuntu',13))
         self.button.setText(self.text)
+        self.button.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
         self.button.pressed.connect(self.button_clicked)
         
         self.service_address = service_address
@@ -91,6 +92,7 @@ class swarm_move_button:
         self.button=QPushButton()
         self.button.setFont(QFont('Ubuntu',13))
         self.button.setText(self.text)
+        self.button.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Expanding)
         self.enabled = False
         self.button.pressed.connect(self.button_pressed)
         
