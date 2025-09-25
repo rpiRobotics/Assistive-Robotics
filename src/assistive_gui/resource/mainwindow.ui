@@ -266,6 +266,14 @@
       </item>
       
       <item>
+       <layout class="QVBoxLayout" name="Generallayout">
+        <property name="bottomMargin">
+         <number>10</number>
+        </property>
+       </layout>
+      </item>
+      
+      <item>
        <layout class="QGridLayout" name="Robotlayout">
         <property name="bottomMargin">
          <number>30</number>

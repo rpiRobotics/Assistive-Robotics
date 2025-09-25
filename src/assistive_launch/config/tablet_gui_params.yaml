@@ -103,3 +103,6 @@ robot_tf_frames:
 real_robot_tf_frames:
   - "oarbot_silver_fusion"
   - "oarbot_blue_fusion"
+
+swarm_reset_swarm_frame_service_address: '/master_computer/swarm_move_simple/reset_swarm_frame_service_name'
+swarm_start_trajectory_service_address: '/master_computer/swarm_move_simple/swarm_move_service_name'

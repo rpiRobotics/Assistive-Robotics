@@ -56,6 +56,78 @@ class swarm_button:
             
             self.button.setStyleSheet('QPushButton {background-color: white; color: black;}')
 
+class swarm_frame_set_button:
+    def __init__(self, service_address,text):
+        self.text=text
+
+        self.button=QPushButton()
+        self.button.setFont(QFont('Ubuntu',13))
+        self.button.setText(self.text)
+        self.button.pressed.connect(self.button_clicked)
+        
+        self.service_address = service_address
+        
+    def button_clicked(self):
+
+        # wait for this sevice to be running
+        rospy.wait_for_service(self.service_address, timeout=1.)
+        try:
+            # Create the connection to the service. 
+            service = rospy.ServiceProxy(self.service_address, SetBool)
+            # Create an object of the type of Service Request.
+            req = SetBoolRequest()
+
+            req.data = True
+            # Now send the request through the connection
+            result = service(req)
+            
+        except rospy.ServiceException:
+            rospy.logerr("Service call failed")
+
+class swarm_move_button:
+    def __init__(self, service_address,text):
+        self.text=text 
+
+        self.button=QPushButton()
+        self.button.setFont(QFont('Ubuntu',13))
+        self.button.setText(self.text)
+        self.enabled = False
+        self.button.pressed.connect(self.button_pressed)
+        
+        self.service_address = service_address
+        
+    def button_pressed(self):
+        rospy.logerr("Assistive GUI: Swarm Move Button pressed")
+
+        self.enabled = not(self.enabled)
+
+        # wait for this sevice to be running
+        rospy.wait_for_service(self.service_address, timeout=1.)
+        try:
+            # Create the connection to the service. 
+            service = rospy.ServiceProxy(self.service_address, SetBool)
+            # Create an object of the type of Service Request.
+            req = SetBoolRequest()
+
+            if self.enabled:
+                req.data = True
+            else:
+                req.data = False
+            # Now send the request through the connection
+            result = service(req)
+        
+            if result:
+                if(self.enabled):
+                    self.button.setStyleSheet('QPushButton {background-color: orange; color: white;}')
+                else:
+                    self.button.setStyleSheet('QPushButton {background-color: white; color: black;}')
+            else:
+                self.enabled = not(self.enabled)
+            
+        except rospy.ServiceException:
+            rospy.logerr("Service call failed")
+            self.enabled = not(self.enabled)
+
 class robot_button:
     def __init__(self,topic,commandmode,sizex,sizey,text):
         if commandmode == "whole_robot":
@@ -475,6 +547,8 @@ class SWARMGUI(QtWidgets.QMainWindow):
             self.body_joint_following_service_address = rospy.get_param('body_joint_following_service_address')
             self.reset_desired_body_pose_service_address = rospy.get_param('reset_desired_body_pose_service_address')
             self.swarm_following_service_address = rospy.get_param('swarm_following_service_address')
+            self.swarm_reset_swarm_frame_service_address = rospy.get_param('swarm_reset_swarm_frame_service_address')
+            self.swarm_start_trajectory_service_address = rospy.get_param('swarm_start_trajectory_service_address')
 
             self.arm_joint_angles_home=rospy.get_param('arm_joint_angles_home')
             self.arm_fingers_max_turn=rospy.get_param('arm_fingers_max_turn')
@@ -504,6 +578,11 @@ class SWARMGUI(QtWidgets.QMainWindow):
         self.moveswarmframebutton = swarm_button(self.Moveswarmframe,self.open_loop_swarm_command_topic)
         self.buttons.append(self.moveswarmbutton)
         self.buttons.append(self.moveswarmframebutton)
+        self.resetswarmframebutton = swarm_frame_set_button(self.swarm_reset_swarm_frame_service_address,"Reset Swarm Frame")
+        self.swarmmovebutton = swarm_move_button(self.swarm_start_trajectory_service_address,"Start/Stop Swarm Trajectory")
+        self.Generallayout.addWidget(self.resetswarmframebutton.button,0)
+        self.Generallayout.addWidget(self.swarmmovebutton.button,1)
+
         rospy.Subscriber(self.input_command_topic, Twist, self.offset_callback, queue_size=1)
         
         for i in range(self.number_of_bots):
