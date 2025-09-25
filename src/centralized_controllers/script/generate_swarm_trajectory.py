@@ -274,10 +274,10 @@ waypoints.append(np.array([0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0]))
 # move to 0.4m in z direction
 waypoints.append(np.array([0.0, 1.0, 0.4, 1.0, 0.0, 0.0, 0.0]))
 # rotate 15 degrees around z axis
-rot_quat = rot2q(np.array([0,0,1]), np.radians(10))
+rot_quat = rot2q(np.array([0,0,1]), np.radians(20))
 waypoints.append(np.array([0.0, 1.0, 0.4, rot_quat[0], rot_quat[1], rot_quat[2], rot_quat[3]]))
 # rotate -15 degrees around z axis
-rot_quat = rot2q(np.array([0,0,1]), np.radians(-10))
+rot_quat = rot2q(np.array([0,0,1]), np.radians(20))
 waypoints.append(np.array([0.0, 1.0, 0.4, rot_quat[0], rot_quat[1], rot_quat[2], rot_quat[3]]))
 # rotate back to 0 degrees around z axis
 waypoints.append(np.array([0.0, 1.0, 0.4, 1.0, 0.0, 0.0, 0.0]))
