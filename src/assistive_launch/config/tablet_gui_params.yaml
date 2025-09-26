@@ -27,8 +27,8 @@ arm_joint_angles_action_address:
 
 # DEFAULT JOINT ANGLES FOR BODY TRACKING
 arm_joint_angles_home:
-  - [120.99264526, 180.984375, 307.55514526, 132.20454407, 281.93182373, 248.59091187] # [116.91, 167.59, 288.52, 126.34, 241.57, 275.86] # deg # Left arm config, oarbot silver
-  - [249.81617737, 175.453125, 59.50367737, 238.97727966, 84.47727203, 94.90909576] # [251.64, 190.34, 77.5, 234.34, 128.93, 70.16] # deg # Right arm config, oarbot blue
+  - [120.99264526, 180.984375, 307.55514526, 132.20454407, 281.93182373, -22.59091187] # [116.91, 167.59, 288.52, 126.34, 241.57, 275.86] # deg # Left arm config, oarbot silver
+  - [249.81617737, 175.453125, 59.50367737, 238.97727966, 84.47727203, 4.90909576] # [251.64, 190.34, 77.5, 234.34, 128.93, 70.16] # deg # Right arm config, oarbot blue
 
 # # for DLO applications, last joints are rotated 90 degrees (left-silver decrease by 90, right-blue increased by 90)
 # arm_joint_angles_home:
