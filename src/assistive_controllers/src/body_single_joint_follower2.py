@@ -250,7 +250,6 @@ class BodySingleJointFollower():
             position_error, orientation_error = self.poseErrorCalculator()
         elif self.enable_swarm_following and self.is_ok_tf_swarm_following:
             position_error, orientation_error = self.poseErrorCalculator_swarm_following()
-            print("swarm following: position_error, orientation_error = ", position_error, orientation_error)
         else:
             position_error = [0.0,0.0,0.0]
             orientation_error = [0.0,0.0,0.0]
@@ -631,6 +630,16 @@ class BodySingleJointFollower():
         v_ang_x = self.Wx + (a_ang[0] * self.expected_duration)
         v_ang_y = self.Wy + (a_ang[1] * self.expected_duration)
         v_ang_z = self.Wz + (a_ang[2] * self.expected_duration)
+
+        if self.enable_admittance and self.is_ok_tf_admittance:
+            # control law only for admittance
+            v_lin_x = (1/self.D_lin_x) * F_lin_x
+            v_lin_y = (1/self.D_lin_y) * F_lin_y
+            v_lin_z = (1/self.D_lin_z) * F_lin_z
+            v_ang_x = (1/self.D_ang_x) * F_ang_x
+            v_ang_y = (1/self.D_ang_y) * F_ang_y
+            v_ang_z = (1/self.D_ang_z) * F_ang_z
+
 
         # Limiting velocity
         v_lin = np.array([v_lin_x, v_lin_y, v_lin_z])
