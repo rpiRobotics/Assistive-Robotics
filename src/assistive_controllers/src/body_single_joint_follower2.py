@@ -613,12 +613,18 @@ class BodySingleJointFollower():
             F_ang_external[2] = self.allowence(F_ang_external[2], self.F_angz_deadzone)
 
             # Adding External Force and Desired Control Force
-            F_lin_x = F_lin_x + (self.K_admittance_lin_x * F_lin_external[0] + self.F_lin_x_control)
-            F_lin_y = F_lin_y + (self.K_admittance_lin_y * F_lin_external[1] + self.F_lin_y_control)
-            F_lin_z = F_lin_z + (self.K_admittance_lin_z * F_lin_external[2] + self.F_lin_z_control)
-            F_ang_x = F_ang_x + (self.K_admittance_ang_x * F_ang_external[0] + self.F_ang_x_control)
-            F_ang_y = F_ang_y + (self.K_admittance_ang_y * F_ang_external[1] + self.F_ang_y_control)
-            F_ang_z = F_ang_z + (self.K_admittance_ang_z * F_ang_external[2] + self.F_ang_z_control)        
+            # F_lin_x = F_lin_x + (self.K_admittance_lin_x * F_lin_external[0] + self.F_lin_x_control)
+            # F_lin_y = F_lin_y + (self.K_admittance_lin_y * F_lin_external[1] + self.F_lin_y_control)
+            # F_lin_z = F_lin_z + (self.K_admittance_lin_z * F_lin_external[2] + self.F_lin_z_control)
+            # F_ang_x = F_ang_x + (self.K_admittance_ang_x * F_ang_external[0] + self.F_ang_x_control)
+            # F_ang_y = F_ang_y + (self.K_admittance_ang_y * F_ang_external[1] + self.F_ang_y_control)
+            # F_ang_z = F_ang_z + (self.K_admittance_ang_z * F_ang_external[2] + self.F_ang_z_control)  
+            F_lin_x = self.K_admittance_lin_x * F_lin_external[0] + self.F_lin_x_control
+            F_lin_y = self.K_admittance_lin_y * F_lin_external[1] + self.F_lin_y_control
+            F_lin_z = self.K_admittance_lin_z * F_lin_external[2] + self.F_lin_z_control
+            F_ang_x = self.K_admittance_ang_x * F_ang_external[0] + self.F_ang_x_control
+            F_ang_y = self.K_admittance_ang_y * F_ang_external[1] + self.F_ang_y_control
+            F_ang_z = self.K_admittance_ang_z * F_ang_external[2] + self.F_ang_z_control
 
         # Virtual Mass (a = F/m)
         a_lin_x = F_lin_x / self.M_lin_x
