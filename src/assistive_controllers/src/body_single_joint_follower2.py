@@ -605,26 +605,32 @@ class BodySingleJointFollower():
             self.F_angx_deadzone = rospy.get_param("~F_ang_x_deadzone", self.F_angx_deadzone)
             self.F_angy_deadzone = rospy.get_param("~F_ang_y_deadzone", self.F_angy_deadzone)
             self.F_angz_deadzone = rospy.get_param("~F_ang_z_deadzone", self.F_angz_deadzone)
-            F_lin_external[0] = self.allowence(F_lin_external[0], self.F_linx_deadzone)
-            F_lin_external[1] = self.allowence(F_lin_external[1], self.F_liny_deadzone)
-            F_lin_external[2] = self.allowence(F_lin_external[2], self.F_linz_deadzone)
-            F_ang_external[0] = self.allowence(F_ang_external[0], self.F_angx_deadzone)
-            F_ang_external[1] = self.allowence(F_ang_external[1], self.F_angy_deadzone)
-            F_ang_external[2] = self.allowence(F_ang_external[2], self.F_angz_deadzone)
+            # F_lin_external[0] = self.allowence(F_lin_external[0], self.F_linx_deadzone)
+            # F_lin_external[1] = self.allowence(F_lin_external[1], self.F_liny_deadzone)
+            # F_lin_external[2] = self.allowence(F_lin_external[2], self.F_linz_deadzone)
+            # F_ang_external[0] = self.allowence(F_ang_external[0], self.F_angx_deadzone)
+            # F_ang_external[1] = self.allowence(F_ang_external[1], self.F_angy_deadzone)
+            # F_ang_external[2] = self.allowence(F_ang_external[2], self.F_angz_deadzone)
 
             # Adding External Force and Desired Control Force
-            # F_lin_x = F_lin_x + (self.K_admittance_lin_x * F_lin_external[0] + self.F_lin_x_control)
-            # F_lin_y = F_lin_y + (self.K_admittance_lin_y * F_lin_external[1] + self.F_lin_y_control)
-            # F_lin_z = F_lin_z + (self.K_admittance_lin_z * F_lin_external[2] + self.F_lin_z_control)
-            # F_ang_x = F_ang_x + (self.K_admittance_ang_x * F_ang_external[0] + self.F_ang_x_control)
-            # F_ang_y = F_ang_y + (self.K_admittance_ang_y * F_ang_external[1] + self.F_ang_y_control)
-            # F_ang_z = F_ang_z + (self.K_admittance_ang_z * F_ang_external[2] + self.F_ang_z_control)  
-            F_lin_x = self.K_admittance_lin_x * F_lin_external[0] + self.F_lin_x_control
-            F_lin_y = self.K_admittance_lin_y * F_lin_external[1] + self.F_lin_y_control
-            F_lin_z = self.K_admittance_lin_z * F_lin_external[2] + self.F_lin_z_control
-            F_ang_x = self.K_admittance_ang_x * F_ang_external[0] + self.F_ang_x_control
-            F_ang_y = self.K_admittance_ang_y * F_ang_external[1] + self.F_ang_y_control
-            F_ang_z = self.K_admittance_ang_z * F_ang_external[2] + self.F_ang_z_control
+            F_lin_x = F_lin_x + (self.K_admittance_lin_x * F_lin_external[0] + self.F_lin_x_control)
+            F_lin_y = F_lin_y + (self.K_admittance_lin_y * F_lin_external[1] + self.F_lin_y_control)
+            F_lin_z = F_lin_z + (self.K_admittance_lin_z * F_lin_external[2] + self.F_lin_z_control)
+            F_ang_x = F_ang_x + (self.K_admittance_ang_x * F_ang_external[0] + self.F_ang_x_control)
+            F_ang_y = F_ang_y + (self.K_admittance_ang_y * F_ang_external[1] + self.F_ang_y_control)
+            F_ang_z = F_ang_z + (self.K_admittance_ang_z * F_ang_external[2] + self.F_ang_z_control)  
+            # F_lin_x = self.K_admittance_lin_x * F_lin_external[0] + self.F_lin_x_control
+            # F_lin_y = self.K_admittance_lin_y * F_lin_external[1] + self.F_lin_y_control
+            # F_lin_z = self.K_admittance_lin_z * F_lin_external[2] + self.F_lin_z_control
+            # F_ang_x = self.K_admittance_ang_x * F_ang_external[0] + self.F_ang_x_control
+            # F_ang_y = self.K_admittance_ang_y * F_ang_external[1] + self.F_ang_y_control
+            # F_ang_z = self.K_admittance_ang_z * F_ang_external[2] + self.F_ang_z_control
+            F_lin_x = self.allowence(F_lin_x, self.F_linx_deadzone)
+            F_lin_y = self.allowence(F_lin_y, self.F_liny_deadzone)
+            F_lin_z = self.allowence(F_lin_z, self.F_linz_deadzone)
+            F_ang_x = self.allowence(F_ang_x, self.F_angx_deadzone)
+            F_ang_y = self.allowence(F_ang_y, self.F_angy_deadzone)
+            F_ang_z = self.allowence(F_ang_z, self.F_angz_deadzone)
 
         # Virtual Mass (a = F/m)
         a_lin_x = F_lin_x / self.M_lin_x
@@ -659,20 +665,20 @@ class BodySingleJointFollower():
         v_ang_y = self.Wy + (a_ang[1] * self.expected_duration)
         v_ang_z = self.Wz + (a_ang[2] * self.expected_duration)
 
-        if self.enable_admittance and self.is_ok_tf_admittance:
-            self.D_lin_x = rospy.get_param("~D_lin_x_admittance", self.D_lin_x)
-            self.D_lin_y = rospy.get_param("~D_lin_y_admittance", self.D_lin_y)
-            self.D_lin_z = rospy.get_param("~D_lin_z_admittance", self.D_lin_z)
-            self.D_ang_x = rospy.get_param("~D_ang_x_admittance", self.D_ang_x)
-            self.D_ang_y = rospy.get_param("~D_ang_y_admittance", self.D_ang_y)
-            self.D_ang_z = rospy.get_param("~D_ang_z_admittance", self.D_ang_z)
-            # control law only for admittance
-            v_lin_x = (1/self.D_lin_x) * F_lin_x
-            v_lin_y = (1/self.D_lin_y) * F_lin_y
-            v_lin_z = (1/self.D_lin_z) * F_lin_z
-            v_ang_x = (1/self.D_ang_x) * F_ang_x
-            v_ang_y = (1/self.D_ang_y) * F_ang_y
-            v_ang_z = (1/self.D_ang_z) * F_ang_z
+        # if self.enable_admittance and self.is_ok_tf_admittance:
+        #     self.D_lin_x = rospy.get_param("~D_lin_x_admittance", self.D_lin_x)
+        #     self.D_lin_y = rospy.get_param("~D_lin_y_admittance", self.D_lin_y)
+        #     self.D_lin_z = rospy.get_param("~D_lin_z_admittance", self.D_lin_z)
+        #     self.D_ang_x = rospy.get_param("~D_ang_x_admittance", self.D_ang_x)
+        #     self.D_ang_y = rospy.get_param("~D_ang_y_admittance", self.D_ang_y)
+        #     self.D_ang_z = rospy.get_param("~D_ang_z_admittance", self.D_ang_z)
+        #     # control law only for admittance
+        #     v_lin_x = (1/self.D_lin_x) * F_lin_x
+        #     v_lin_y = (1/self.D_lin_y) * F_lin_y
+        #     v_lin_z = (1/self.D_lin_z) * F_lin_z
+        #     v_ang_x = (1/self.D_ang_x) * F_ang_x
+        #     v_ang_y = (1/self.D_ang_y) * F_ang_y
+        #     v_ang_z = (1/self.D_ang_z) * F_ang_z
 
 
         # Limiting velocity
