@@ -372,8 +372,10 @@ class OarbotRedundancyResolver():
 
         # new_qdot-self.qdot_trace < max_step
         # new_qdot-self.qdot_trace > -max_step
-        max_step = np.array([0.05,0.05,0.05,0.05]) # max step m/s for base
-        max_step = np.append(max_step,np.radians(np.ones(6)*1)) # max step 2 deg/s for arm
+        # max_step = np.array([0.05,0.05,0.05,0.05]) # max step m/s for base
+        # max_step = np.append(max_step,np.radians(np.ones(6)*1)) # max step 2 deg/s for arm
+        max_step = np.array([5,5,5,5]) # max step m/s for base
+        max_step = np.append(max_step,np.radians(np.ones(6)*50)) # max step 2 deg/s for arm
 
         qdot = solve_qp(H,f,lb=-max_step+ self.qdot_trace,ub=max_step + self.qdot_trace,initvals=self.qdot_trace)
         if qdot is None:
