@@ -566,6 +566,13 @@ class BodySingleJointFollower():
         F_ang_y = R_err[1] * self.K_ang_y  
         F_ang_z = R_err[2] * self.K_ang_z  
 
+        self.D_lin_x = rospy.get_param("~D_lin_x_admittance", self.D_lin_x)
+        self.D_lin_y = rospy.get_param("~D_lin_y_admittance", self.D_lin_y)
+        self.D_lin_z = rospy.get_param("~D_lin_z_admittance", self.D_lin_z)
+        self.D_ang_x = rospy.get_param("~D_ang_x_admittance", self.D_ang_x)
+        self.D_ang_y = rospy.get_param("~D_ang_y_admittance", self.D_ang_y)
+        self.D_ang_z = rospy.get_param("~D_ang_z_admittance", self.D_ang_z)
+
         # Virtual Damping (Derivative Control) (F = F - D * deltaX_dot)
         F_lin_x = F_lin_x - (self.Vx * self.D_lin_x)  
         F_lin_y = F_lin_y - (self.Vy * self.D_lin_y) 
