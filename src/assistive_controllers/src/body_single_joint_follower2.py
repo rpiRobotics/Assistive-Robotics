@@ -136,6 +136,14 @@ class BodySingleJointFollower():
         self.max_ang_acc = rospy.get_param("~max_ang_acc", 1000.0)
         self.max_ang_vel = rospy.get_param("~max_ang_vel", 1000.0)
 
+        # Force deadzone for addmittance control to avoid small noise to move the arm
+        self.F_linx_deadzone = rospy.get_param("~F_lin_x_deadzone", 0.0)
+        self.F_liny_deadzone = rospy.get_param("~F_lin_y_deadzone", 0.0)
+        self.F_linz_deadzone = rospy.get_param("~F_lin_z_deadzone", 0.0)
+        self.F_angx_deadzone = rospy.get_param("~F_ang_x_deadzone", 0.0)
+        self.F_angy_deadzone = rospy.get_param("~F_ang_y_deadzone", 0.0)
+        self.F_angz_deadzone = rospy.get_param("~F_ang_z_deadzone", 0.0)
+
         # Specified body joint tf frame name to follow
         self.tf_body_joint_frame_name = rospy.get_param("~tf_followed_body_joint_frame_name", "JOINT_WRIST_LEFT").lower() 
 
@@ -590,6 +598,20 @@ class BodySingleJointFollower():
             F_lin_external = np.dot(R_base2armbase[:3,:3],F_lin_external) # Linear must be wrt mobile base
             F_ang_external = np.dot(R_ee2armbase,F_ang_external) # Angular must be wrt end effector
 
+            # Deadzone
+            self.F_linx_deadzone = rospy.get_param("~F_lin_x_deadzone", self.F_linx_deadzone)
+            self.F_liny_deadzone = rospy.get_param("~F_lin_y_deadzone", self.F_liny_deadzone)
+            self.F_linz_deadzone = rospy.get_param("~F_lin_z_deadzone", self.F_linz_deadzone)
+            self.F_angx_deadzone = rospy.get_param("~F_ang_x_deadzone", self.F_angx_deadzone)
+            self.F_angy_deadzone = rospy.get_param("~F_ang_y_deadzone", self.F_angy_deadzone)
+            self.F_angz_deadzone = rospy.get_param("~F_ang_z_deadzone", self.F_angz_deadzone)
+            F_lin_external[0] = self.allowence(F_lin_external[0], self.F_linx_deadzone)
+            F_lin_external[1] = self.allowence(F_lin_external[1], self.F_liny_deadzone)
+            F_lin_external[2] = self.allowence(F_lin_external[2], self.F_linz_deadzone)
+            F_ang_external[0] = self.allowence(F_ang_external[0], self.F_angx_deadzone)
+            F_ang_external[1] = self.allowence(F_ang_external[1], self.F_angy_deadzone)
+            F_ang_external[2] = self.allowence(F_ang_external[2], self.F_angz_deadzone)
+
             # Adding External Force and Desired Control Force
             F_lin_x = F_lin_x + (self.K_admittance_lin_x * F_lin_external[0] + self.F_lin_x_control)
             F_lin_y = F_lin_y + (self.K_admittance_lin_y * F_lin_external[1] + self.F_lin_y_control)
@@ -631,14 +653,14 @@ class BodySingleJointFollower():
         v_ang_y = self.Wy + (a_ang[1] * self.expected_duration)
         v_ang_z = self.Wz + (a_ang[2] * self.expected_duration)
 
-        if self.enable_admittance and self.is_ok_tf_admittance:
-            # control law only for admittance
-            v_lin_x = (1/self.D_lin_x) * F_lin_x
-            v_lin_y = (1/self.D_lin_y) * F_lin_y
-            v_lin_z = (1/self.D_lin_z) * F_lin_z
-            v_ang_x = (1/self.D_ang_x) * F_ang_x
-            v_ang_y = (1/self.D_ang_y) * F_ang_y
-            v_ang_z = (1/self.D_ang_z) * F_ang_z
+        # if self.enable_admittance and self.is_ok_tf_admittance:
+        #     # control law only for admittance
+        #     v_lin_x = (1/self.D_lin_x) * F_lin_x
+        #     v_lin_y = (1/self.D_lin_y) * F_lin_y
+        #     v_lin_z = (1/self.D_lin_z) * F_lin_z
+        #     v_ang_x = (1/self.D_ang_x) * F_ang_x
+        #     v_ang_y = (1/self.D_ang_y) * F_ang_y
+        #     v_ang_z = (1/self.D_ang_z) * F_ang_z
 
 
         # Limiting velocity
