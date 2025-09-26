@@ -214,8 +214,11 @@ class BodySingleJointFollower():
         self.F_lin_z_control = rospy.get_param("~F_lin_z_control", 0.0)
         self.F_ang_x_control = rospy.get_param("~F_ang_x_control", 0.0)
         self.F_ang_y_control = rospy.get_param("~F_ang_y_control", 0.0)
-        self.F_ang_z_control = rospy.get_param("~F_ang_z_control", 0.0)        
+        self.F_ang_z_control = rospy.get_param("~F_ang_z_control", 0.0)   
 
+        # parameters update rate
+        self.param_update_rate = 1 # Hz
+        rospy.Timer(rospy.Duration(1.0/self.param_update_rate), self.updateParameters)
 
     def followJoint(self, event=None):
         # Find the transform between the specified robot base and the end effector
@@ -550,6 +553,36 @@ class BodySingleJointFollower():
 
         return position_error, orientation_error
 
+    def updateParameters(self, event=None):
+
+        self.K_lin_x = rospy.get_param("~K_lin_x", self.K_lin_x)
+        self.K_lin_y = rospy.get_param("~K_lin_y", self.K_lin_y)
+        self.K_lin_z = rospy.get_param("~K_lin_z", self.K_lin_z)
+        self.K_ang_x = rospy.get_param("~K_ang_x", self.K_ang_x)
+        self.K_ang_y = rospy.get_param("~K_ang_y", self.K_ang_y)
+        self.K_ang_z = rospy.get_param("~K_ang_z", self.K_ang_z)
+
+        self.D_lin_x = rospy.get_param("~D_lin_x_admittance", self.D_lin_x)
+        self.D_lin_y = rospy.get_param("~D_lin_y_admittance", self.D_lin_y)
+        self.D_lin_z = rospy.get_param("~D_lin_z_admittance", self.D_lin_z)
+        self.D_ang_x = rospy.get_param("~D_ang_x_admittance", self.D_ang_x)
+        self.D_ang_y = rospy.get_param("~D_ang_y_admittance", self.D_ang_y)
+        self.D_ang_z = rospy.get_param("~D_ang_z_admittance", self.D_ang_z)
+
+        self.F_linx_deadzone = rospy.get_param("~F_lin_x_deadzone", self.F_linx_deadzone)
+        self.F_liny_deadzone = rospy.get_param("~F_lin_y_deadzone", self.F_liny_deadzone)
+        self.F_linz_deadzone = rospy.get_param("~F_lin_z_deadzone", self.F_linz_deadzone)
+        self.F_angx_deadzone = rospy.get_param("~F_ang_x_deadzone", self.F_angx_deadzone)
+        self.F_angy_deadzone = rospy.get_param("~F_ang_y_deadzone", self.F_angy_deadzone)
+        self.F_angz_deadzone = rospy.get_param("~F_ang_z_deadzone", self.F_angz_deadzone)
+
+        self.K_admittance_lin_x = rospy.get_param("~K_admittance_lin_x", self.K_admittance_lin_x)
+        self.K_admittance_lin_y = rospy.get_param("~K_admittance_lin_y", self.K_admittance_lin_y)
+        self.K_admittance_lin_z = rospy.get_param("~K_admittance_lin_z", self.K_admittance_lin_z)
+        self.K_admittance_ang_x = rospy.get_param("~K_admittance_ang_x", self.K_admittance_ang_x)
+        self.K_admittance_ang_y = rospy.get_param("~K_admittance_ang_y", self.K_admittance_ang_y)
+        self.K_admittance_ang_z = rospy.get_param("~K_admittance_ang_z", self.K_admittance_ang_z)
+    
     def controlLaw(self,position_error=[0.0,0.0,0.0], orientation_error=[0.0,0.0,0.0]):
         # if self.enable_body_joint_following:
         P_err = [self.allowence(n, self.position_err_thres) for n in position_error] # 0.5cm
@@ -564,14 +597,7 @@ class BodySingleJointFollower():
         F_lin_z = P_err[2] * self.K_lin_z  
         F_ang_x = R_err[0] * self.K_ang_x  
         F_ang_y = R_err[1] * self.K_ang_y  
-        F_ang_z = R_err[2] * self.K_ang_z  
-
-        self.D_lin_x = rospy.get_param("~D_lin_x_admittance", self.D_lin_x)
-        self.D_lin_y = rospy.get_param("~D_lin_y_admittance", self.D_lin_y)
-        self.D_lin_z = rospy.get_param("~D_lin_z_admittance", self.D_lin_z)
-        self.D_ang_x = rospy.get_param("~D_ang_x_admittance", self.D_ang_x)
-        self.D_ang_y = rospy.get_param("~D_ang_y_admittance", self.D_ang_y)
-        self.D_ang_z = rospy.get_param("~D_ang_z_admittance", self.D_ang_z)
+        F_ang_z = R_err[2] * self.K_ang_z 
 
         # Virtual Damping (Derivative Control) (F = F - D * deltaX_dot)
         F_lin_x = F_lin_x - (self.Vx * self.D_lin_x)  
@@ -606,12 +632,6 @@ class BodySingleJointFollower():
             F_ang_external = np.dot(R_ee2armbase,F_ang_external) # Angular must be wrt end effector
 
             # Deadzone
-            self.F_linx_deadzone = rospy.get_param("~F_lin_x_deadzone", self.F_linx_deadzone)
-            self.F_liny_deadzone = rospy.get_param("~F_lin_y_deadzone", self.F_liny_deadzone)
-            self.F_linz_deadzone = rospy.get_param("~F_lin_z_deadzone", self.F_linz_deadzone)
-            self.F_angx_deadzone = rospy.get_param("~F_ang_x_deadzone", self.F_angx_deadzone)
-            self.F_angy_deadzone = rospy.get_param("~F_ang_y_deadzone", self.F_angy_deadzone)
-            self.F_angz_deadzone = rospy.get_param("~F_ang_z_deadzone", self.F_angz_deadzone)
             # F_lin_external[0] = self.allowence(F_lin_external[0], self.F_linx_deadzone)
             # F_lin_external[1] = self.allowence(F_lin_external[1], self.F_liny_deadzone)
             # F_lin_external[2] = self.allowence(F_lin_external[2], self.F_linz_deadzone)
