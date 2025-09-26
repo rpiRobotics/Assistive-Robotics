@@ -360,7 +360,7 @@ class OarbotRedundancyResolver():
         # the more the weight, the less it's used
         Wa = np.ones(6)*arm_w # weighting for arm axis velocity
         Wb = np.ones(len(q)-6)*base_w # weighting for base axis velocity
-        Wb[-1] = 1e5 # There's actually no base z joint. Make it very stiff so that it won't be used.
+        Wb[-1] = 1e9 # There's actually no base z joint. Make it very stiff so that it won't be used.
         Wba = np.diag(np.append(Wb,Wa)) # 10x10
 
         H = np.matmul(J_world2ee_in_armbase.T,J_world2ee_in_armbase) + Wba
