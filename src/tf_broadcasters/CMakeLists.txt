@@ -8,10 +8,15 @@ add_compile_options(-std=c++11)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  assistive_msgs
+  cv_bridge
+  geometry_msgs
   roscpp
   rospy
+  sensor_msgs
   tf2
   tf2_ros
+  visualization_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -106,7 +111,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES tf_broadcasters
- CATKIN_DEPENDS roscpp rospy tf2 tf2_ros
+ CATKIN_DEPENDS assistive_msgs cv_bridge geometry_msgs roscpp rospy sensor_msgs tf2 tf2_ros visualization_msgs
 #  DEPENDS system_lib
 )
 
@@ -167,10 +172,14 @@ target_link_libraries(tf_camera_body_all_joints_broadcaster
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# catkin_install_python(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+catkin_install_python(PROGRAMS
+  src/paper_depth_processor.py
+  src/paper_tag_detector.py
+  src/paper_tag_pose_fuser.py
+  src/paper_surface_estimator.py
+  src/paper_surface_rviz_publisher.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html

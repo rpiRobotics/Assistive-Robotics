@@ -1,0 +1,27 @@
+<launch>
+    <arg name="detector_params" default="$(find assistive_launch)/config/paper_tag_detector.yaml"/>
+    <arg name="depth_processor_params" default="$(find assistive_launch)/config/paper_depth_processor.yaml"/>
+    <arg name="pose_fuser_params" default="$(find assistive_launch)/config/paper_tag_pose_fuser.yaml"/>
+    <arg name="estimator_params" default="$(find assistive_launch)/config/paper_surface_estimator.yaml"/>
+    <arg name="rviz_params" default="$(find assistive_launch)/config/paper_surface_rviz.yaml"/>
+
+    <include file="$(find tf_broadcasters)/launch/paper_tag_detector.launch">
+        <arg name="params_file" value="$(arg detector_params)"/>
+    </include>
+
+    <include file="$(find tf_broadcasters)/launch/paper_depth_processor.launch">
+        <arg name="params_file" value="$(arg depth_processor_params)"/>
+    </include>
+
+    <include file="$(find tf_broadcasters)/launch/paper_tag_pose_fuser.launch">
+        <arg name="params_file" value="$(arg pose_fuser_params)"/>
+    </include>
+
+    <include file="$(find tf_broadcasters)/launch/paper_surface_estimator.launch">
+        <arg name="params_file" value="$(arg estimator_params)"/>
+    </include>
+
+    <include file="$(find tf_broadcasters)/launch/paper_surface_rviz_publisher.launch">
+        <arg name="params_file" value="$(arg rviz_params)"/>
+    </include>
+</launch>

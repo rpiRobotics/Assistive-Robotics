@@ -1,0 +1,18 @@
+layout_json_path: "$(find assistive_launch)/vision_parameters/letter_aruco_grid_3x4_60mm_gap8mm_layout.json"
+
+pose_topic_name: "paper_surface_state"
+marker_topic_name: "paper_surface_markers"
+
+grid_line_width: 0.003
+outline_line_width: 0.006
+surface_alpha: 0.12
+predicted_surface_alpha_scale: 0.55
+
+point_scale: 0.012
+predicted_point_scale: 0.018
+uncertainty_scale_gain: 0.12
+
+text_height: 0.03
+text_z_offset: 0.01
+normal_length: 0.05
+normal_line_width: 0.003

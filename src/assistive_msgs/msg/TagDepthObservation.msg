@@ -1,0 +1,7 @@
+int32 id
+geometry_msgs/Point center_cam
+geometry_msgs/Vector3 normal_cam
+float32 mean_depth_m
+float32 valid_point_ratio
+uint32 support_point_count
+bool plane_fitted

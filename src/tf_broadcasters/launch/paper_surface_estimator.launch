@@ -1,0 +1,8 @@
+<launch>
+    <arg name="node_name" default="paper_surface_estimator"/>
+    <arg name="params_file" default="$(find assistive_launch)/config/paper_surface_estimator.yaml"/>
+
+    <node name="$(arg node_name)" pkg="tf_broadcasters" type="paper_surface_estimator.py" output="screen">
+        <rosparam command="load" file="$(arg params_file)" subst_value="true"/>
+    </node>
+</launch>
