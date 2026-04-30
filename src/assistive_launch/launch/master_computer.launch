@@ -9,8 +9,8 @@
     </include>
 
     <!-- Launch swarm moving node -->
-    <include file="$(find assistive_launch)/launch/test_launch/swarm_move_simple.launch">
-    </include>
+    <!-- <include file="$(find assistive_launch)/launch/test_launch/swarm_move_simple.launch">
+    </include> -->
 
 </group>
 </launch>

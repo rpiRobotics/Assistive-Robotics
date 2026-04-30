@@ -50,6 +50,12 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   State2D.msg
+  TagDetection.msg
+  TagDetectionArray.msg
+  TagDepthObservation.msg
+  TagDepthObservationArray.msg
+  TagPose.msg
+  TagPoseArray.msg
 )
 
 ## Generate services in the 'srv' folder
