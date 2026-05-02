@@ -1,0 +1,20 @@
+layout_json_path: "$(find assistive_launch)/vision_parameters/letter_aruco_grid_3x4_60mm_gap8mm_layout.json"
+
+detection_topic_name: "paper_tag_detections"
+camera_info_topic_name: "/nuc/rgb/camera_info"
+depth_image_topic_name: "/nuc/depth_to_rgb/image_raw"
+
+depth_observation_topic_name: "paper_tag_depth_observations"
+mask_topic_name: "paper_sheet_mask"
+point_cloud_topic_name: "paper_sheet_points"
+camera_frame_id: ""
+
+depth_unit_scale: 0.001
+depth_max_age_sec: 0.15
+depth_patch_radius_px: 2
+plane_fit_stride_px: 2
+plane_fit_min_points: 20
+sheet_depth_margin_m: 0.04
+point_cloud_stride_px: 4
+min_support_ratio: 0.15
+mask_morph_kernel_px: 5

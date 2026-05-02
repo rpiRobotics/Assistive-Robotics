@@ -1,0 +1,13 @@
+layout_json_path: "$(find assistive_launch)/vision_parameters/letter_aruco_grid_3x4_60mm_gap8mm_layout.json"
+
+input_pose_topic_name: "paper_tag_poses"
+output_pose_topic_name: "paper_surface_state"
+
+measurement_weight: 1.0
+temporal_weight: 0.3
+edge_weight: 0.35
+smoothness_weight: 0.15
+
+prediction_variance_growth: 1.5
+missing_position_variance_step: 2.5e-4
+missing_orientation_variance_step: 5.0e-3

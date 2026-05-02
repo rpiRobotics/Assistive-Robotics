@@ -1,0 +1,33 @@
+layout_json_path: "$(find assistive_launch)/vision_parameters/letter_aruco_grid_3x4_60mm_gap8mm_layout.json"
+
+image_topic_name: "/nuc/rgb/image_raw"
+camera_info_topic_name: "/nuc/rgb/camera_info"
+camera_frame_id: ""
+target_frame_id: ""
+depth_image_topic_name: "/nuc/depth_to_rgb/image_raw"   # or your aligned depth topic
+use_depth_for_3d_points: true
+depth_unit_scale: 0.001 
+depth_max_age_sec: 0.15
+depth_patch_radius_px: 2
+
+aruco_dict_name: "DICT_4X4_50"
+# Minimum detected tags needed to publish the deformable surface.
+min_markers_for_surface: 4
+# Maximum per-tag reprojection error in pixels for accepting tag 3D pose.
+pnp_reprojection_error: 3.0
+tf_lookup_timeout_sec: 0.05
+
+marker_topic_name: "paper_grid_markers"
+pose_topic_name: "paper_grid_pose"
+
+publish_debug_image: true
+debug_image_topic_name: "paper_grid_debug_image"
+
+grid_line_width: 0.003
+outline_line_width: 0.006
+surface_alpha: 0.12
+point_scale: 0.012
+text_height: 0.03
+text_z_offset: 0.01
+normal_length: 0.05
+normal_line_width: 0.003

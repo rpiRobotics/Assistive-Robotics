@@ -1,0 +1,9 @@
+int32 id
+string dictionary_name
+geometry_msgs/PoseWithCovariance pose
+geometry_msgs/Vector3 normal
+bool observed
+float32 tag_area_px
+float32 detection_score
+float32 reprojection_error_px
+bool depth_fused

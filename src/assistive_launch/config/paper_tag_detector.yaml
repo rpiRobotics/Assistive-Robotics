@@ -1,0 +1,11 @@
+layout_json_path: "$(find assistive_launch)/vision_parameters/letter_aruco_grid_3x4_60mm_gap8mm_layout.json"
+
+image_topic_name: "/nuc/rgb/image_raw"
+detection_topic_name: "paper_tag_detections"
+
+publish_debug_image: true
+debug_image_topic_name: "paper_tag_debug_image"
+
+aruco_dict_name: "DICT_4X4_50"
+min_tag_area_px: 0.0
+quality_half_area_px: 2500.0
